@@ -1,0 +1,31 @@
+name: knowledge-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  knowledge-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python scripts
+        run: python -m py_compile scripts/knowledge_check.py scripts/skill_metadata_check.py
+
+      - name: Check shell install script syntax
+        run: bash -n scripts/install.sh
+
+      - name: Validate skill metadata
+        run: python scripts/skill_metadata_check.py --root . --skills-path skills --strict
+
+      - name: Validate project harness example
+        run: python scripts/knowledge_check.py --root examples/project-harness --docs-path docs --strict
