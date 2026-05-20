@@ -7,16 +7,16 @@ AI Coding Harness is distributed as a **Skill suite**. Install the directories u
 Install globally with the helper script:
 
 ```bash
-git clone https://github.com/TangHui-Best/ai-coding-harness.git
-cd ai-coding-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+cd harness-coding-skills
 bash scripts/install.sh codex
 ```
 
 Windows PowerShell:
 
 ```powershell
-git clone https://github.com/TangHui-Best/ai-coding-harness.git
-Set-Location ai-coding-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+Set-Location harness-coding-skills
 .\scripts\install.ps1 codex
 ```
 
@@ -29,16 +29,16 @@ If your Codex environment has the skill installer available, you can also ask Co
 Install globally with the helper script:
 
 ```bash
-git clone https://github.com/TangHui-Best/ai-coding-harness.git
-cd ai-coding-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+cd harness-coding-skills
 bash scripts/install.sh claude
 ```
 
 Windows PowerShell:
 
 ```powershell
-git clone https://github.com/TangHui-Best/ai-coding-harness.git
-Set-Location ai-coding-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+Set-Location harness-coding-skills
 .\scripts\install.ps1 claude
 ```
 
@@ -48,7 +48,7 @@ For project-local installation, copy the skills into the project:
 
 ```bash
 mkdir -p .claude/skills
-cp -R /path/to/ai-coding-harness/skills/* .claude/skills/
+cp -R /path/to/harness-coding-skills/skills/* .claude/skills/
 ```
 
 Claude Code expects each Skill to have this shape:
