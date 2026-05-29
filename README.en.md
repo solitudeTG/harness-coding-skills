@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | English
 
-[![knowledge-check](https://github.com/TangHui-Best/ai-coding-harness/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/TangHui-Best/ai-coding-harness/actions/workflows/knowledge-check.yml)
+[![knowledge-check](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml)
 
 AI Coding Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code**. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
 
@@ -66,8 +66,8 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 Clone the repository:
 
 ```bash
-git clone https://github.com/TangHui-Best/ai-coding-harness.git
-cd ai-coding-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+cd harness-coding-skills
 ```
 
 Install for Codex:

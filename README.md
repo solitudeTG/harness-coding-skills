@@ -2,7 +2,7 @@
 
 简体中文 | [English](README.en.md)
 
-[![knowledge-check](https://github.com/TangHui-Best/ai-coding-harness/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/TangHui-Best/ai-coding-harness/actions/workflows/knowledge-check.yml)
+[![knowledge-check](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml)
 
 AI Coding Harness 是一套面向 **Codex / Claude Code** 的 Skill 与工程协作模板。它要解决的不是“让 Agent 多写一点代码”，而是让 AI 辅助研发在多轮会话、多 Agent、多人协作中仍然可追溯、可验收、可恢复。
 
@@ -64,8 +64,8 @@ Run -> Trace -> Diagnose -> Patch Harness -> Eval -> Deploy -> Learn
 克隆仓库：
 
 ```bash
-git clone https://github.com/TangHui-Best/ai-coding-harness.git
-cd ai-coding-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+cd harness-coding-skills
 ```
 
 安装到 Codex：
