@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | English
 
-[![knowledge-check](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml)
+[![knowledge-check](https://github.com/TangHui-Best/ai-coding-harness/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/TangHui-Best/ai-coding-harness/actions/workflows/knowledge-check.yml)
 
 AI Coding Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code**. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
 
@@ -20,7 +20,7 @@ It gives agents a reason to pause at the moments that matter: Is the request rea
 - Teams that want agents to remember project rules, preserve handoff context, and explain changes clearly
 - Projects that have already felt the pain of lost context, evidence-free completion claims, unclear PR narratives, repeated patching, or multi-agent work that does not converge
 
-For a one-off experiment, you may only need a small part of the suite.
+For a one-off experiment, you may only need a small part of the suite.  
 For a project that keeps evolving, the Harness becomes more valuable.
 
 ## Why Harness Exists
@@ -66,8 +66,8 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 Clone the repository:
 
 ```bash
-git clone https://github.com/solitudeTG/harness-coding-skills.git
-cd harness-coding-skills
+git clone https://github.com/TangHui-Best/ai-coding-harness.git
+cd ai-coding-harness
 ```
 
 Install for Codex:
@@ -207,8 +207,8 @@ After global installation, use the bundled script under the installed skill root
 
 Harness should reduce repeated rediscovery, repeated mistakes, and evidence-free completion claims. It should not become a ceremony that creates documents for every tiny change.
 
-Knowledge before orchestration.
-Gate before automation.
+Knowledge before orchestration.  
+Gate before automation.  
 Governance before scale.
 
 ## Status
