@@ -89,11 +89,11 @@ Copy-Item ".\skills\*" "$HOME\.codex\skills\" -Recurse -Force
 Copy-Item ".\skills\*" "$HOME\.claude\skills\" -Recurse -Force
 ```
 
-## Add Harness Rules To A Project
+## Optional Project Rules
 
 Installing Skills teaches the agent workflows and installs bundled Harness scripts/templates under `using-harness/`. Adding `AGENTS.md` teaches project-specific operating rules.
 
-Copy the bundled template when a project needs repository-level rules:
+Harness does not automatically modify global or project `AGENTS.md` files. When a project needs repository-level rules, copy the bundled `AGENTS.md` template and adapt it manually:
 
 ```bash
 cp ~/.codex/skills/using-harness/assets/templates/AGENTS.md /path/to/your-project/AGENTS.md
@@ -122,6 +122,8 @@ docs/decisions/
 docs/lessons/
 docs/evidence/
 ```
+
+For projects with repeated patch churn, consider adding a project rule that asks agents to run Spec Drift before changing code when real cases, validation failures, or user feedback contradict the current spec. When repeated patches add scenario-specific branches, the source may need repair before another local fix.
 
 ## Optional Hook Runtime
 

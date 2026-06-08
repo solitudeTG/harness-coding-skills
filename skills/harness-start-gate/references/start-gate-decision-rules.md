@@ -19,6 +19,7 @@ Check these before coding:
 - Work spans multiple sessions, agents, modules, or delivery steps.
 - Work changes public behavior, data shape, module boundaries, storage, infrastructure, permissions, or external contracts.
 - Prior decisions, active Feature state, stale-doc status, Lessons, or Evidence may affect the answer.
+- Real cases, validation, or user feedback contradict an existing spec, acceptance criteria, or accepted behavior.
 - The proposed path looks broader, costlier, or more complex than the user goal requires.
 - The task may have separable workstreams, parallel exploration, independent verification, or enough scope that implementation subagents should be proposed.
 - The only way to recover context later would be the chat transcript.
@@ -30,6 +31,7 @@ Check these before coding:
 | `ready` | Intent, scope, ownership, verification, and risk are clear enough for the task class. | Start implementation workflow. |
 | `needs clarification` | Missing user intent or acceptance details could change implementation. | Ask specific questions before coding. |
 | `needs retrieval` | Existing Feature, ADR, Lesson, Evidence, stale-doc, or prior decision context may affect work. | Use `harness-knowledge-retrieval`. |
+| `needs spec-drift` | A stale spec, acceptance criteria drift, or "implementation follows spec but still wrong" signal may make the current source untrustworthy. | Use `harness-spec-drift` before changing code. |
 | `needs vision gate` | The path may drift from the original goal or solve the wrong problem. | Use `harness-vision-gate` Entry Gate. |
 | `needs feature` | Work changes or starts a delivery boundary that future sessions must recover. | Use `harness-knowledge-capture` to create or update a Feature anchor. |
 | `needs spec` | Requirements or acceptance criteria need a durable source before implementation. | Create/update a spec and link it from Feature when applicable. |

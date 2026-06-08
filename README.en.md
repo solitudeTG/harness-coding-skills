@@ -55,7 +55,7 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 ## What This Repository Provides
 
 - `using-harness`: a high-recall entrypoint Skill that decides whether the current task needs Harness routing
-- Ten focused `harness-*` Skills for start gates, delegation decisions, knowledge retrieval, document lifecycle, incident learning, vision checks, readiness, change narrative, knowledge capture, and project rule promotion
+- Eleven focused `harness-*` Skills for start gates, delegation decisions, knowledge retrieval, Spec Drift checks, document lifecycle, incident learning, vision checks, readiness, change narrative, knowledge capture, and project rule promotion
 - Bundled templates for `AGENTS.md`, Feature, ADR, Lesson, and Evidence records
 - Bundled `knowledge_check.py` and `harness_closeout_check.py` for validating structured Harness documents and closeout blocks
 - Optional Stop and session recovery hook runtime examples for Codex, Claude Code, and OpenCode under `using-harness/hooks/`
@@ -104,9 +104,9 @@ If the diagnostic reports compaction events without recovery artifacts, the opti
 
 See [INSTALL.md](INSTALL.md) for more installation options.
 
-## Minimal Adoption Path
+## Optional Project Rules
 
-Copy the agent rules template into your project:
+Harness does not automatically modify global or project `AGENTS.md` files. When repository-level agent rules are useful, copy the bundled `AGENTS.md` template into your project:
 
 ```bash
 cp ~/.codex/skills/using-harness/assets/templates/AGENTS.md /path/to/your-project/AGENTS.md
@@ -125,6 +125,8 @@ Then define three things in `AGENTS.md`:
 2. Which command proves the project still works?
 3. Where should completion evidence be recorded?
 ```
+
+For projects with repeated patch churn, consider adding a project rule that asks agents to run Spec Drift before changing code when real cases, validation failures, or user feedback contradict the current spec. When repeated patches add scenario-specific branches, the source may need repair before another local fix.
 
 For projects that evolve across multiple sessions, add:
 
@@ -167,6 +169,7 @@ Not every task needs the whole chain. The point is to choose the lightest workfl
 | `harness-start-gate` | Decide whether non-trivial work may start or first needs clarification, retrieval, Vision Gate, Feature, spec, plan, or ADR. |
 | `harness-delegation-gate` | Decide whether to ask for implementation subagents or an independent reviewer. |
 | `harness-knowledge-retrieval` | Recover project context before acting. |
+| `harness-spec-drift` | Decide whether stale specs, acceptance criteria drift, or real-case feedback require source repair before code. |
 | `harness-doc-lifecycle` | Govern stale, superseded, deprecated, or archived documents. |
 | `harness-incident-learning` | Turn bugs, incidents, and patch churn into prevention. |
 | `harness-vision-gate` | Check original intent before implementation, review, merge, done, or handoff. |

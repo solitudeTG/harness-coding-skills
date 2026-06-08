@@ -53,7 +53,7 @@ Run -> Trace -> Diagnose -> Patch Harness -> Eval -> Deploy -> Learn
 ## 这个仓库提供什么
 
 - `using-harness`：高召回入口 Skill，用于判断当前任务是否需要 Harness 介入
-- 十个聚焦的 `harness-*` Skills：覆盖开工门禁、委派决策、知识检索、文档生命周期、事故学习、愿景校验、就绪状态、变更叙事、知识沉淀、项目规则晋升
+- 十一个聚焦的 `harness-*` Skills：覆盖开工门禁、委派决策、知识检索、Spec Drift 检查、文档生命周期、事故学习、愿景校验、就绪状态、变更叙事、知识沉淀、项目规则晋升
 - `AGENTS.md`、Feature、ADR、Lesson、Evidence bundled 模板
 - `knowledge_check.py` / `harness_closeout_check.py`：随 `using-harness` 安装，用于校验结构化 Harness 文档和 closeout block
 - 可选 Hook Runtime 示例：Codex、Claude Code 和 OpenCode 的 Stop / session recovery 示例位于 `using-harness/hooks/`
@@ -102,9 +102,9 @@ python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --p
 
 更多安装方式见 [INSTALL.md](INSTALL.md)。
 
-## 最小使用路径
+## Optional Project Rules
 
-先把项目规则模板复制到你的项目：
+Harness 不会自动修改全局或项目级 `AGENTS.md`。当项目需要仓库级 Agent 规则时，先把 bundled `AGENTS.md` 模板手动复制到你的项目：
 
 ```bash
 cp ~/.codex/skills/using-harness/assets/templates/AGENTS.md /path/to/your-project/AGENTS.md
@@ -123,6 +123,8 @@ Copy-Item "$HOME\.codex\skills\using-harness\assets\templates\AGENTS.md" "C:\pat
 2. 哪个命令可以证明项目仍然可用？
 3. 完成证据应该记录在哪里？
 ```
+
+如果项目已经出现重复补丁震荡，可以手动加入一条规则：当真实案例、验证失败或用户反馈推翻当前 spec / acceptance criteria 时，Agent 在改代码前应先运行 Spec Drift。Repeated patches add scenario-specific branches 时，优先怀疑上游 source 需要修复，而不是继续局部补丁。
 
 对于会跨多个会话持续演进的项目，再增加：
 
@@ -165,6 +167,7 @@ using-harness/assets/templates/EVIDENCE.md
 | `harness-start-gate` | 在非平凡工作开始前判断是否需要澄清、检索、愿景校验、Feature、spec、plan 或 ADR。 |
 | `harness-delegation-gate` | 判断是否需要请求实现子 Agent 或独立 Reviewer。 |
 | `harness-knowledge-retrieval` | 在行动前恢复项目上下文、历史决策和相关证据。 |
+| `harness-spec-drift` | 在 stale spec、acceptance criteria drift 或真实案例反馈推翻旧来源时，判断是否应先修复 source 再改代码。 |
 | `harness-doc-lifecycle` | 处理 stale、superseded、deprecated、archived 等文档生命周期状态。 |
 | `harness-incident-learning` | 把 Bug、事故和补丁震荡转化为可复用防护。 |
 | `harness-vision-gate` | 在实现、Review、Merge、Done 或 Handoff 前校验是否仍然贴合原始目标。 |

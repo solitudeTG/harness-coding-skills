@@ -40,6 +40,7 @@ Do not use this for:
 
 - Basic lint/build/test verification.
 - Deciding whether a Feature, spec, plan, or ADR must exist before coding. Use `harness-start-gate`.
+- Classifying stale spec, outdated spec, acceptance criteria drift, or implementation follows spec but still wrong cases. Use `harness-spec-drift`. Vision Gate protects original intent; Spec Drift owns stale spec classification.
 - Writing official ADR, Lesson, Evidence, or Feature updates. Route to `harness-knowledge-capture`.
 - Explaining why implementation paths were rejected. Route to `harness-change-narrative`.
 - Reopening scope because a new idea is attractive. Vision Gate protects the original goal; it is not a feature wishlist.

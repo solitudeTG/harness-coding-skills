@@ -10,6 +10,7 @@ This repository is a **Skill suite**. Each directory under `skills/` contains on
 | `harness-start-gate` | Decide whether non-trivial work may start or needs clarification, retrieval, Vision Gate, patch-churn review, Feature, spec, plan, or ADR first. |
 | `harness-delegation-gate` | Decide whether to ask for implementation subagents or independent reviewers. |
 | `harness-knowledge-retrieval` | Recover project context before acting. |
+| `harness-spec-drift` | Decide whether stale specs, acceptance criteria drift, or real-case feedback require source repair before code. |
 | `harness-doc-lifecycle` | Interpret stale, superseded, deprecated, or archived documents. |
 | `harness-incident-learning` | Turn fixed failures and repeated patch chains into prevention. |
 | `harness-vision-gate` | Check original intent and abstraction fit before implementation and before review, merge, done, release, or handoff. |
@@ -25,6 +26,7 @@ Start work
   -> harness-start-gate
   -> harness-delegation-gate, when implementation subagents or independent review may reduce risk
   -> harness-knowledge-retrieval
+  -> harness-spec-drift, when real cases contradict the current spec or acceptance criteria
   -> harness-vision-gate, when intent or scope may drift before implementation
   -> pre-work artifact, when Start Gate requires Feature, spec, plan, or ADR
   -> implementation workflow

@@ -46,6 +46,7 @@ ROUTED_SKILLS = [
     "harness-start-gate",
     "harness-delegation-gate",
     "harness-knowledge-retrieval",
+    "harness-spec-drift",
     "harness-vision-gate",
     "harness-readiness-dashboard",
     "harness-change-narrative",

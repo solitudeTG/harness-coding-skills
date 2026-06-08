@@ -1,6 +1,6 @@
 ---
 name: using-harness
-description: MUST use as the Harness entrypoint before non-trivial engineering work, behavior changes, reviews, commits, PRs, handoffs, or any completion claim; also use when the user mentions Harness, gates, Evidence, ADRs, Lessons, Feature memory, patch churn, 知识沉淀, 收尾, 完成声明, 提交信息, or PR 描述.
+description: MUST use as the Harness entrypoint before non-trivial engineering work, behavior changes, reviews, commits, PRs, handoffs, or any completion claim; also use when the user mentions Harness, gates, Evidence, ADRs, Lessons, Feature memory, patch churn, spec drift, stale spec, 知识沉淀, 收尾, 完成声明, 提交信息, or PR 描述.
 ---
 
 # Using Harness
@@ -19,7 +19,8 @@ After this skill is loaded:
 2. For non-trivial work, run `harness-start-gate` before implementation.
 3. For completion/readiness claims, route to `harness-knowledge-capture`.
 4. For commit, PR, release, handoff, progress, or rejected-path narrative, route to `harness-change-narrative`.
-5. If no Harness action is needed, say `Harness: not triggered` with a short reason and continue.
+5. When real cases, validation, or user feedback contradict an existing spec, run `harness-spec-drift` before changing code.
+6. If no Harness action is needed, say `Harness: not triggered` with a short reason and continue.
 
 ## Entry And Exit Gates
 
@@ -45,6 +46,7 @@ Trigger Harness when any of these apply:
 - The repository has Harness memory or tooling such as `docs/features`, `docs/decisions`, `docs/lessons`, `docs/evidence`, `docs/BACKLOG.md`, or vendored Harness scripts/templates.
 - The repository has Markdown with Harness `doc_kind` frontmatter, even if it is under legacy paths such as `docs/superpowers`.
 - The user reports a bug, regression, validation failure, or broken accepted behavior that may belong to an existing Feature or prior fix chain.
+- A stale spec, outdated spec, acceptance criteria drift, SDD drift, spec vs reality conflict, or implementation follows spec but still wrong signal appears.
 
 Tiny local edits may skip retrieval and formal artifacts when project memory cannot change the outcome.
 
@@ -54,14 +56,15 @@ Prefer the most specific skill that can answer the current transition:
 
 1. `harness-start-gate` before non-trivial implementation.
 2. `harness-knowledge-retrieval` when prior Feature, ADR, Lesson, spec, plan, Evidence, or bug attribution may change the fix.
-3. `harness-doc-lifecycle` for stale, archived, superseded, deprecated, invalidated, or replaced documents.
-4. `harness-incident-learning` after a fixed or stabilized bug, incident, recurring failure, or patch chain needs prevention analysis.
-5. `harness-delegation-gate` before work that may need subagents or independent review.
-6. `harness-vision-gate` when intent, scope, product direction, or acceptance may drift.
-7. `harness-readiness-dashboard` for review, release, handoff, or readiness rollups.
-8. `harness-change-narrative` for commit messages, PR descriptions, release notes, handoff notes, progress summaries, root cause, rejected paths, and history-aware change explanations.
-9. `harness-knowledge-capture` for Evidence, closeout, durable memory, completion verdict, and completion-claim permission.
-10. `harness-project-rules` before promoting a decision, Lesson, or repeated constraint into `AGENTS.md` or another project-level rule file.
+3. `harness-spec-drift` when real cases, validation, or user feedback contradict an existing spec, stale spec, acceptance criteria drift, or implementation follows spec but still wrong signal.
+4. `harness-doc-lifecycle` for stale, archived, superseded, deprecated, invalidated, or replaced documents.
+5. `harness-incident-learning` after a fixed or stabilized bug, incident, recurring failure, or patch chain needs prevention analysis.
+6. `harness-delegation-gate` before work that may need subagents or independent review.
+7. `harness-vision-gate` when intent, scope, product direction, or acceptance may drift.
+8. `harness-readiness-dashboard` for review, release, handoff, or readiness rollups.
+9. `harness-change-narrative` for commit messages, PR descriptions, release notes, handoff notes, progress summaries, root cause, rejected paths, and history-aware change explanations.
+10. `harness-knowledge-capture` for Evidence, closeout, durable memory, completion verdict, and completion-claim permission.
+11. `harness-project-rules` before promoting a decision, Lesson, or repeated constraint into `AGENTS.md` or another project-level rule file.
 
 If the user describes a long-running or unattended task, route to Delegation Gate early so the main agent explicitly chooses `single_agent`, `delegate`, or `blocked` before progress depends on that choice.
 

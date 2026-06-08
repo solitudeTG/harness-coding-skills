@@ -27,3 +27,5 @@ Ask:
 4. Has `## Patch History` reached 3+ rows, or is there equivalent evidence of repeated validation misses?
 
 If the Feature has 3+ Patch History rows and no `## Patch Churn Review`, do not return `ready`; return `needs vision gate`, `needs ADR`, or `needs retrieval` depending on missing context.
+
+If the repeated patches are adding scenario-specific branches because the old spec or acceptance criteria keeps failing real cases, return `needs spec-drift` and run `harness-spec-drift` before changing code.
