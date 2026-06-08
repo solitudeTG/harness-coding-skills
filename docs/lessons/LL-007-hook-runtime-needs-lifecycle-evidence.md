@@ -56,7 +56,7 @@ plugin_hooks = true
 
 wrapper 再用自身所在目录反推插件根目录，并调用 `skills/using-harness/hooks/harness_hook.py`。不要让 `hooks.json` 直接调用 `python ./skills/...`，除非当前目标 runtime 已经用真实触发证据证明工作目录就是插件根目录。
 
-Windows 上优先使用 `commandWindows` 和 `%PLUGIN_ROOT%`，不要假设 `cmd.exe` 会展开 `${PLUGIN_ROOT}` 或 `${CLAUDE_PLUGIN_ROOT}`。
+Windows 上优先使用 `commandWindows` 和 `%PLUGIN_ROOT%`，不要假设 `cmd.exe` 会展开 `${PLUGIN_ROOT}` 或 `${CLAUDE_PLUGIN_ROOT}`。同时不要假设 Codex 一定用 cmd.exe 执行 `commandWindows`：如果命令依赖 `%PLUGIN_ROOT%` 展开，必须显式包一层 `cmd /d /s /c`，例如 `cmd /d /s /c ""%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" stop"`。
 
 ## Protection
 
