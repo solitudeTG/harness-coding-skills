@@ -8,3 +8,5 @@ A minimal harness starts with four things:
 - git commit discipline
 
 This is enough to keep basic project rules, verification, and history outside of a single prompt.
+
+When even a minimal project needs a status answer, ask for `harness-readiness-dashboard`: it should summarize progress, maturity, gap, and blocker status from available evidence instead of inventing completion percentages.

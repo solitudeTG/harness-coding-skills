@@ -53,7 +53,7 @@ Run -> Trace -> Diagnose -> Patch Harness -> Eval -> Deploy -> Learn
 ## 这个仓库提供什么
 
 - `using-harness`：高召回入口 Skill，用于判断当前任务是否需要 Harness 介入
-- 十一个聚焦的 `harness-*` Skills：覆盖开工门禁、委派决策、知识检索、Spec Drift 检查、文档生命周期、事故学习、愿景校验、就绪状态、变更叙事、知识沉淀、项目规则晋升
+- 十一个聚焦的 `harness-*` Skills：覆盖开工门禁、委派决策、知识检索、Spec Drift 检查、文档生命周期、事故学习、愿景校验、就绪状态与 progress / maturity / gap 评估、变更叙事、知识沉淀、项目规则晋升
 - `AGENTS.md`、Feature、ADR、Lesson、Evidence bundled 模板
 - `knowledge_check.py` / `harness_closeout_check.py`：随 `using-harness` 安装，用于校验结构化 Harness 文档和 closeout block
 - 可选 Hook Runtime 示例：Codex、Claude Code 和 OpenCode 的 Stop / session recovery 示例位于 `using-harness/hooks/`
@@ -154,7 +154,7 @@ using-harness/assets/templates/EVIDENCE.md
   -> 需要时检索项目知识、澄清目标或建立 Feature / spec / plan / ADR
   -> 执行最小可验证变更
   -> 运行验证命令并记录 Evidence
-  -> 需要交付、Review 或交接时生成 readiness / change narrative / knowledge capture
+  -> 需要交付、Review、progress、maturity、gap 评估或交接时生成 readiness / change narrative / knowledge capture
 ```
 
 这条链路不是每个任务都完整走一遍。Harness 的目标是选择足够轻的流程，保护那些未来真的需要恢复、验证或解释的上下文。
@@ -171,7 +171,7 @@ using-harness/assets/templates/EVIDENCE.md
 | `harness-doc-lifecycle` | 处理 stale、superseded、deprecated、archived 等文档生命周期状态。 |
 | `harness-incident-learning` | 把 Bug、事故和补丁震荡转化为可复用防护。 |
 | `harness-vision-gate` | 在实现、Review、Merge、Done 或 Handoff 前校验是否仍然贴合原始目标。 |
-| `harness-readiness-dashboard` | 在 Review、Release、Handoff 或完成声明前汇总门禁、证据、风险和阻塞项。 |
+| `harness-readiness-dashboard` | 在 Review、Release、Handoff、完成声明、progress、maturity 或 gap 评估前汇总门禁、证据、风险和阻塞项。 |
 | `harness-change-narrative` | 为 commit、PR、交接、发布说明或变更总结写清楚“改了什么，为什么这么改”。 |
 | `harness-knowledge-capture` | 判断是否需要沉淀 Feature、ADR、Lesson、Evidence 或 Handoff 记忆。 |
 | `harness-project-rules` | 判断某条经验或约束是否应该晋升到 `AGENTS.md` 等项目级 Agent 规则。 |

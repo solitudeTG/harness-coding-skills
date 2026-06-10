@@ -12,6 +12,8 @@ A project-level harness adds durable memory and gates:
 
 Use this when the project lasts across multiple sessions, features, or contributors.
 
+Use `harness-readiness-dashboard` when the project needs a rollup of progress, maturity, gap, distance-to-target, or blocker status before review, release, handoff, or completion.
+
 This example includes a small set of structured docs under `docs/`:
 
 ```text

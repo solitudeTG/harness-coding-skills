@@ -28,6 +28,8 @@ Set-Location harness-coding-skills
 
 Restart Codex after installation. In a project, mention Harness or ask the agent to use `using-harness`; the entrypoint Skill will route to the focused `harness-*` skills.
 
+After installation, `harness-readiness-dashboard` is the Skill to ask for readiness, progress, maturity, gap, distance-to-target, or blocker status. It summarizes evidence and next action; it should not invent a percentage when the missing gates or artifacts are unclear.
+
 If your Codex environment has the skill installer available, you can also ask Codex to install this repository as a Skill source.
 
 ## Claude Code

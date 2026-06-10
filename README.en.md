@@ -4,7 +4,7 @@
 
 [![knowledge-check](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml)
 
-AI Coding Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code**, with optional hook examples for Codex, Claude Code, and OpenCode. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
+AI Coding Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code / OpenCode**, with optional hook examples for all three. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
 
 If you are opening this repository for the first time, think of it as engineering guardrails for AI coding work:
 
@@ -16,7 +16,7 @@ It gives agents a reason to pause at the moments that matter: Is the request rea
 
 ## Who This Is For
 
-- Developers using Codex, Claude Code, or similar coding agents on real projects
+- Developers using Codex, Claude Code, OpenCode, or similar coding agents on real projects
 - Teams that want agents to remember project rules, preserve handoff context, and explain changes clearly
 - Projects that have already felt the pain of lost context, evidence-free completion claims, unclear PR narratives, repeated patching, or multi-agent work that does not converge
 
@@ -55,7 +55,7 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 ## What This Repository Provides
 
 - `using-harness`: a high-recall entrypoint Skill that decides whether the current task needs Harness routing
-- Eleven focused `harness-*` Skills for start gates, delegation decisions, knowledge retrieval, Spec Drift checks, document lifecycle, incident learning, vision checks, readiness, change narrative, knowledge capture, and project rule promotion
+- Eleven focused `harness-*` Skills for start gates, delegation decisions, knowledge retrieval, Spec Drift checks, document lifecycle, incident learning, vision checks, readiness plus progress / maturity / gap assessment, change narrative, knowledge capture, and project rule promotion
 - Bundled templates for `AGENTS.md`, Feature, ADR, Lesson, and Evidence records
 - Bundled `knowledge_check.py` and `harness_closeout_check.py` for validating structured Harness documents and closeout blocks
 - Optional Stop and session recovery hook runtime examples for Codex, Claude Code, and OpenCode under `using-harness/hooks/`
@@ -156,7 +156,7 @@ Receive task
   -> retrieve project knowledge, clarify intent, or create a Feature / spec / plan / ADR when needed
   -> execute the smallest verifiable change
   -> run verification and record Evidence
-  -> use readiness / change narrative / knowledge capture when preparing review, release, or handoff
+  -> use readiness / change narrative / knowledge capture when preparing review, release, progress, maturity, gap assessment, or handoff
 ```
 
 Not every task needs the whole chain. The point is to choose the lightest workflow that protects the context future work will actually need.
@@ -173,7 +173,7 @@ Not every task needs the whole chain. The point is to choose the lightest workfl
 | `harness-doc-lifecycle` | Govern stale, superseded, deprecated, or archived documents. |
 | `harness-incident-learning` | Turn bugs, incidents, and patch churn into prevention. |
 | `harness-vision-gate` | Check original intent before implementation, review, merge, done, or handoff. |
-| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, and blocker status before review, release, handoff, or completion. |
+| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, blocker, progress, maturity, and gap status before review, release, handoff, or completion. |
 | `harness-change-narrative` | Explain what changed and why for commits, PRs, handoffs, release notes, or progress summaries. |
 | `harness-knowledge-capture` | Decide whether to record Feature, ADR, Lesson, Evidence, or handoff memory. |
 | `harness-project-rules` | Decide whether a source-backed constraint belongs in `AGENTS.md` or another project-level agent rule file. |
