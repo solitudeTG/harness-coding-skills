@@ -14,7 +14,7 @@ This repository is a **Skill suite**. Each directory under `skills/` contains on
 | `harness-doc-lifecycle` | Interpret stale, superseded, deprecated, or archived documents. |
 | `harness-incident-learning` | Turn fixed failures and repeated patch chains into prevention. |
 | `harness-vision-gate` | Check original intent and abstraction fit before implementation and before review, merge, done, release, or handoff. |
-| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, patch-churn, and knowledge status before review, release, handoff, or completion. |
+| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, patch-churn, progress, maturity, blocker, and gap status before review, release, handoff, or completion. |
 | `harness-change-narrative` | Explain a specific change for commits, PRs, handoffs, and release notes. |
 | `harness-knowledge-capture` | Decide whether durable memory is needed and record the smallest useful artifact. |
 | `harness-project-rules` | Decide whether source-backed Harness memory should become a project-level agent rule. |

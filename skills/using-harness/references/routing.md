@@ -52,9 +52,9 @@ Run before implementation for scope-sensitive work and before review, merge, don
 
 ## Readiness Dashboard
 
-Use `harness-readiness-dashboard` when a concise status rollup is needed before review, merge, release, handoff, PR readiness, or completion.
+Use `harness-readiness-dashboard` when a concise status rollup is needed before review, merge, release, handoff, PR readiness, completion, progress assessment, maturity assessment, distance to target, roadmap gap, delivery gap, or blocker triage.
 
-It summarizes gate status, source documents, reviewer independence, Evidence level, ADR/Lesson triggers, remaining blockers, and completion risk.
+It summarizes gate status, source documents, reviewer independence, Evidence level, ADR/Lesson triggers, remaining blockers, progress risk, and completion risk.
 
 ## Change Narrative
 

@@ -335,6 +335,25 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
                 f"{event} commandWindows failed under PowerShell\nstdout={result.stdout}\nstderr={result.stderr}",
             )
 
+    def test_readiness_dashboard_trigger_covers_progress_gap_language(self) -> None:
+        content = read_skill("harness-readiness-dashboard")
+        description = content.split("---", 2)[1]
+
+        for phrase in [
+            "progress assessment",
+            "maturity assessment",
+            "distance to target",
+            "roadmap gap",
+            "delivery gap",
+            "overall progress",
+            "整体进展",
+            "距离目标",
+            "还差多少",
+            "当前成熟度",
+            "交付缺口",
+        ]:
+            self.assertIn(phrase, description)
+
     def test_hot_path_constraints_remain_in_primary_skill_text(self) -> None:
         using_harness = read_skill("using-harness")
         capture = read_skill("harness-knowledge-capture")

@@ -61,7 +61,7 @@ Prefer the most specific skill that can answer the current transition:
 5. `harness-incident-learning` after a fixed or stabilized bug, incident, recurring failure, or patch chain needs prevention analysis.
 6. `harness-delegation-gate` before work that may need subagents or independent review.
 7. `harness-vision-gate` when intent, scope, product direction, or acceptance may drift.
-8. `harness-readiness-dashboard` for review, release, handoff, or readiness rollups.
+8. `harness-readiness-dashboard` for review, release, handoff, progress assessment, maturity assessment, distance to target, roadmap gap, blocker, or readiness rollups.
 9. `harness-change-narrative` for commit messages, PR descriptions, release notes, handoff notes, progress summaries, root cause, rejected paths, and history-aware change explanations.
 10. `harness-knowledge-capture` for Evidence, closeout, durable memory, completion verdict, and completion-claim permission.
 11. `harness-project-rules` before promoting a decision, Lesson, or repeated constraint into `AGENTS.md` or another project-level rule file.

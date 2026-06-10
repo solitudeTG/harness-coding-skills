@@ -1,6 +1,6 @@
 ---
 name: harness-readiness-dashboard
-description: MUST use before non-trivial review, merge, release, handoff, PR readiness, or completion claims when Codex needs to summarize Harness gate status, source documents, delegation and reviewer independence, evidence level, patch-churn risk, ADR/Lesson triggers, remaining blockers, ready 检查, 收尾前状态, 是否可以交付, 是否可以 review, 是否可以 handoff, 反复补丁, or 归零审视 without creating new artifacts.
+description: MUST use before non-trivial review, merge, release, handoff, PR readiness, completion claims, progress assessment, maturity assessment, distance to target, roadmap gap, delivery gap, remaining modules, overall progress, 整体进展, 距离目标, 还差多少, 当前成熟度, 交付缺口, 功能模块缺口, ready 检查, 收尾前状态, 是否可以交付, 是否可以 review, 是否可以 handoff, 反复补丁, or 归零审视 when Codex needs a Harness readiness rollup without creating new artifacts.
 ---
 
 # Harness Readiness Dashboard
@@ -10,10 +10,12 @@ description: MUST use before non-trivial review, merge, release, handoff, PR rea
 Answer one question:
 
 ```text
-Can this work safely move to review, release, handoff, or completion?
+Can this work safely move forward, and what is still missing before the target state?
 ```
 
 This is a status aggregation skill. It does not replace Start Gate, Vision Gate, Evidence, review, or knowledge capture, and it does not create official Feature, ADR, Lesson, or Evidence artifacts.
+
+Use it for governance-oriented progress questions such as overall progress, distance to target, maturity, roadmap gap, delivery gap, or remaining modules. The dashboard should name the current stage, missing gates or evidence, and the smallest next action instead of inventing a percentage.
 
 ## Inputs
 
@@ -55,7 +57,7 @@ Use references only when their trigger applies.
 ```text
 Harness Readiness Dashboard
 Task class: tiny | routine | non-trivial | high-risk
-Current stage: implementation | review | release | handoff | completion
+Current stage: implementation | review | release | handoff | completion | progress
 Evidence Level: quick | standard | exhaustive
 Delegation Gate: single_agent | delegate | missing | blocked
 Bugfix Attribution: pass | missing | ambiguous | not needed
