@@ -20,6 +20,35 @@ Add an optional hook runtime for Harness so Codex, Claude Code, and OpenCode can
 - Non-goals or boundaries: Do not replace Harness Skills, do not encode Start Gate or ADR judgment in hook logic, and do not make hook installation a prerequisite for installing or using Skills.
 - Exit Gate source: This Feature page, hook runner tests, updated install docs, and the final verification output.
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F003: Optional Harness Hook Runtime`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done. The optional hook runtime is bundled under `skills/using-harness/hooks/`, tested, and documented as an enhancement that does not replace Skills-only installation. F005 adds the second default slice for session recovery.
@@ -44,6 +73,19 @@ Done. The optional hook runtime is bundled under `skills/using-harness/hooks/`, 
 - [x] Installation documentation explains Basic install as Skills-only and Enhanced install as Skills + Hooks for Codex, Claude Code, and OpenCode.
 - [x] Session recovery hooks write local runtime context before compaction and expose it at session start without replacing Harness Skills.
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F003: Optional Harness Hook Runtime remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 None yet
@@ -54,6 +96,15 @@ None yet
 ## Evidence
 
 [EV-006 Optional Harness Hook Runtime](../evidence/EV-006-optional-harness-hook-runtime.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

@@ -20,6 +20,35 @@ updated: 2026-06-08
 - 非目标或边界：不切换到其他品牌命名；不自动修改用户项目 `AGENTS.md`；不新增 Architecture Review；不新增 Architecture Map；不把 Start Gate 或 Vision Gate 扩展成全量架构审查。
 - Exit Gate 对照来源：EV-009、`tests/test_spec_drift_guardrails.py`、`skill_metadata_check.py --strict`、全量 pytest、`knowledge_check.py --strict`。
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F006: Spec Drift Guardrails`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done。源码中已新增 `harness-spec-drift` Skill 和决策参考；入口路由、Start Gate、Vision Gate、README、INSTALL、Skill Index、metadata validator 与测试均已同步。默认 AGENTS 规则仍保持手动复制与手动添加，不自动接管用户项目配置。
@@ -39,6 +68,19 @@ Done。源码中已新增 `harness-spec-drift` Skill 和决策参考；入口路
 - [x] 新增或更新测试，覆盖 Skill 存在性、入口路由、Start Gate、Vision Gate、README / INSTALL 手动规则边界和 metadata validator。
 - [x] 全量测试、Skill metadata 检查和知识文档检查通过。
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F006: Spec Drift Guardrails remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 None yet.
@@ -46,6 +88,15 @@ None yet.
 ## Evidence
 
 - [EV-009 Spec Drift Guardrails](../evidence/EV-009-spec-drift-guardrails.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

@@ -20,6 +20,35 @@ Add the second default Harness hook capability: lightweight `SessionStart` / `Pr
 - Non-goals or boundaries: Do not reintroduce default `PostToolUse`; do not move Start Gate, Vision Gate, ADR, Lesson, or Feature ownership judgment into hook code; do not make recovery snapshots canonical docs.
 - Exit Gate source: Hook runner tests, example hook configs, install docs, LL-003, and EV-008.
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F005: Session Recovery Hooks`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done. The optional hook runner supports `pre-compact` and `session-start`, default examples wire session recovery hooks, same-session compact recovery can inject context, and missing, unreadable, or cross-session recovery state fails open.
@@ -43,6 +72,19 @@ OpenCode compaction recovery now uses OpenCode's native `output.context` channel
 - [x] Missing, invalid, or unreadable recovery state returns `allow` with a warning or no-context reason instead of blocking Skills-only work.
 - [x] Codex, Claude Code, and OpenCode examples wire `session-start`, `pre-compact`, and `stop` while still excluding default `PostToolUse`.
 - [x] Recovery snapshots remain local runtime state under `.harness/`, not canonical Harness knowledge under `docs/`.
+
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F005: Session Recovery Hooks remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
 
 ## Patch History
 
@@ -78,6 +120,15 @@ The next adapter change should not add another local patch until it first captur
 ## Evidence
 
 [EV-008 Session Recovery Hooks](../evidence/EV-008-session-recovery-hooks.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

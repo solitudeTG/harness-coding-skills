@@ -34,6 +34,33 @@ Keep export reports reliable.
 - Non-goals or boundaries: no new export subsystem.
 - Exit Gate source: this Feature page.
 
+## Feature Intake
+
+- Original problem: export reliability needs a durable owner.
+- User pain point: completed exports can regress without attribution.
+- Capability promise: export regressions are tracked through this Feature.
+- Non-goals: no new export subsystem.
+- Acceptance source: this Feature page.
+- Open questions: none.
+
+## Capability Contract
+
+- Export report behavior has a durable recovery and patch attribution entrypoint.
+
+## Decision Context
+
+### Why
+
+Export behavior needs a durable owner because regressions can appear after completion.
+
+### Why Not
+
+Do not create a new Feature for each export regression because patch attribution belongs to the owning Feature.
+
+### If Modifying This Area, Check
+
+- Check linked Evidence and Patch History before changing export behavior.
+
 ## Current Status
 
 Active.
@@ -46,6 +73,18 @@ None.
 
 - [ ] Export regressions are tracked.
 
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| Export regressions are tracked | Patch history rows identify follow-up fixes | Final response or linked Evidence | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-05-18 | active | test fixture | Final response | Initial state |
+
 ## Patch History
 
 {extra}
@@ -53,6 +92,14 @@ None.
 ## Evidence
 
 Final response or linked Evidence.
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: active test fixture.
+- Known risks: none.
+- Next safe action: continue only after gate checks pass.
+- Unblock condition: not blocked.
 
 ## Next Step
 
@@ -83,6 +130,33 @@ Keep export reports reliable.
 - Non-goals or boundaries: no new export subsystem.
 - Exit Gate source: this Feature page.
 
+## Feature Intake
+
+- Original problem: export reliability needs a durable owner.
+- User pain point: completed exports can regress without attribution.
+- Capability promise: export regressions are tracked through this Feature.
+- Non-goals: no new export subsystem.
+- Acceptance source: this Feature page.
+- Open questions: none.
+
+## Capability Contract
+
+- Export report behavior has a durable recovery and patch attribution entrypoint.
+
+## Decision Context
+
+### Why
+
+Export behavior needs a durable owner because regressions can appear after completion.
+
+### Why Not
+
+Do not create a new Feature for each export regression because patch attribution belongs to the owning Feature.
+
+### If Modifying This Area, Check
+
+- Check linked Evidence and Patch History before changing export behavior.
+
 ## Current Status
 
 Active.
@@ -95,6 +169,18 @@ None.
 
 - [ ] Export regressions are tracked.
 
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| Export regressions are tracked | Patch history rows identify follow-up fixes | Final response or linked Evidence | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-05-18 | active | test fixture | Final response | Initial state |
+
 ## Patch History
 
 {extra}
@@ -102,6 +188,14 @@ None.
 ## Evidence
 
 Final response or linked Evidence.
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: active test fixture.
+- Known risks: none.
+- Next safe action: continue only after gate checks pass.
+- Unblock condition: not blocked.
 
 ## Next Step
 
@@ -249,6 +343,120 @@ class KnowledgeCheckPatchHistoryTests(unittest.TestCase):
             result = run_check(docs)
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
+class KnowledgeCheckFeatureGovernanceTests(unittest.TestCase):
+    def test_allows_feature_index_without_artifact_frontmatter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            (features / "INDEX.md").write_text(
+                "# Feature Index\n\n| Feature | Domain |\n| --- | --- |\n",
+                encoding="utf-8",
+            )
+            (features / "F010-export-reports.md").write_text(
+                feature_doc(),
+                encoding="utf-8",
+            )
+
+            result = run_check(docs, "--all-markdown")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Checked 1 knowledge artifact(s)", result.stdout)
+
+    def test_rejects_feature_without_feature_intake(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            content = feature_doc().replace(
+                "## Feature Intake\n\n"
+                "- Original problem: export reliability needs a durable owner.\n"
+                "- User pain point: completed exports can regress without attribution.\n"
+                "- Capability promise: export regressions are tracked through this Feature.\n"
+                "- Non-goals: no new export subsystem.\n"
+                "- Acceptance source: this Feature page.\n"
+                "- Open questions: none.\n\n",
+                "",
+            )
+            (features / "F010-export-reports.md").write_text(content, encoding="utf-8")
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Feature Intake", result.stdout)
+
+    def test_rejects_feature_without_decision_context(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            start = feature_doc().index("## Decision Context")
+            end = feature_doc().index("## Current Status")
+            content = feature_doc()[:start] + feature_doc()[end:]
+            (features / "F010-export-reports.md").write_text(content, encoding="utf-8")
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Decision Context", result.stdout)
+
+    def test_rejects_feature_intake_missing_required_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            content = feature_doc().replace(
+                "- Open questions: none.\n",
+                "",
+            )
+            (features / "F010-export-reports.md").write_text(content, encoding="utf-8")
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Feature Intake must answer Open questions", result.stdout)
+
+    def test_rejects_ready_feature_acceptance_map_without_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            content = (
+                feature_doc()
+                .replace("status: active", "status: ready_for_review")
+                .replace(
+                    "| Export regressions are tracked | Patch history rows identify follow-up fixes | Final response or linked Evidence | active |",
+                    "| Export regressions are tracked | Patch history rows identify follow-up fixes | TBD | ready_for_review |",
+                )
+            )
+            (features / "F010-export-reports.md").write_text(content, encoding="utf-8")
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(
+            "ready-for-review feature F010 has Acceptance Map row without Evidence",
+            result.stdout,
+        )
+
+    def test_rejects_blocked_feature_without_unblock_condition(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            content = (
+                feature_doc()
+                .replace("status: active", "status: blocked")
+                .replace("- Unblock condition: not blocked.\n", "")
+            )
+            (features / "F010-export-reports.md").write_text(content, encoding="utf-8")
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("blocked feature F010 Recovery Snapshot must include Unblock condition", result.stdout)
 
 
 class KnowledgeCheckFeatureRefsTests(unittest.TestCase):

@@ -20,6 +20,35 @@ updated: 2026-05-22
 - 非目标或边界：不让脚本推断具体任务类型、不写死 runner/CLI/资产生命周期等场景关键词、不用脚本替代 Start Gate 的人工判断。
 - Exit Gate 对照来源：本 Feature 的 Acceptance Criteria、更新后的 `harness_closeout_check.py` 测试、`harness-knowledge-capture` final response contract。
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F001: Closeout Entry And Vision Anchor Validation`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done。closeout checker 已经对 Entry Gate、Vision Anchor、Patch Churn Review 做结构化阻断，root 脚本与 bundled skill 脚本保持一致，技能契约已同步。
@@ -38,6 +67,19 @@ Done。closeout checker 已经对 Entry Gate、Vision Anchor、Patch Churn Revie
 - [x] `harness-knowledge-capture` 的 Final Response Contract 与脚本字段保持一致。
 - [x] 测试覆盖通过、Harness knowledge artifacts 通过校验。
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F001: Closeout Entry And Vision Anchor Validation remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 None yet
@@ -48,6 +90,15 @@ None yet
 ## Evidence
 
 [EV-001 Closeout Entry Anchor Validation](../evidence/EV-001-closeout-entry-anchor-validation.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

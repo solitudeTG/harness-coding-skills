@@ -20,6 +20,35 @@ updated: 2026-06-10
 - 非目标或边界：不改 hook runtime；不改 skill slug；不引入上游品牌文章或命名迁移。
 - Exit Gate 对照来源：EV-011、文档一致性测试、全量 pytest、metadata check、knowledge check。
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F008: 文档安装示例一致性收口`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done。README、README.en、INSTALL、docs/workflow 和两个 examples 已同步 readiness 扩展语义，并新增文档一致性测试防止未来回退。
@@ -37,6 +66,19 @@ Done。README、README.en、INSTALL、docs/workflow 和两个 examples 已同步
 - [x] 文档一致性测试检查公开 Markdown 的 readiness 触发表面和仓库内链接。
 - [x] 验证命令通过后再提交。
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F008: 文档安装示例一致性收口 remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 None yet.
@@ -44,6 +86,15 @@ None yet.
 ## Evidence
 
 [EV-011 Doc Install Example Consistency](../evidence/EV-011-doc-install-example-consistency.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

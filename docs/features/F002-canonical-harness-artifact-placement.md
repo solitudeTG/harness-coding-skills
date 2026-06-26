@@ -20,6 +20,35 @@ updated: 2026-05-26
 - 非目标或边界：不迁移其他项目的历史文档，不把 Superpowers spec/plan 本身纳入 Harness artifact 类型，不引入项目级 registry。
 - Exit Gate 对照来源：本 Feature 的 Acceptance Criteria、ADR-005、EV-003、`tests.test_knowledge_check.KnowledgeCheckPlacementTests`。
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F002: Canonical Harness Artifact Placement`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done。validator、bundled skill validator 和 Harness skill 文案已经更新；本机 Codex skills 已同步。
@@ -43,6 +72,19 @@ Done。validator、bundled skill validator 和 Harness skill 文案已经更新�
 - [x] `using-harness`、`harness-start-gate`、`harness-knowledge-capture` 明确禁止把 Harness artifacts 放进 `docs/superpowers/**`。
 - [x] `scripts/install.ps1 codex` 可把更新后的 Harness skills 同步到本机 Codex skills。
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F002: Canonical Harness Artifact Placement remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 | Patch | Date | Commit | Symptom | Root Cause | Protection | Status |
@@ -54,6 +96,15 @@ Done。validator、bundled skill validator 和 Harness skill 文案已经更新�
 [EV-003 Canonical Artifact Placement](../evidence/EV-003-canonical-artifact-placement.md)
 [EV-004 Hot Path Harness Constraints](../evidence/EV-004-hot-path-harness-constraints.md)
 [EV-005 Skill Iteration Learning Docs](../evidence/EV-005-skill-iteration-learning-docs.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

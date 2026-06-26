@@ -20,6 +20,35 @@ Extend Harness readiness routing from release and completion checks to general g
 - Non-goals or boundaries: do not rename solitude skills or import upstream brand documents; do not create a separate roadmap-planning skill in this batch.
 - Exit Gate source: EV-010, targeted progressive-disclosure test, full pytest, metadata check, and knowledge check.
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F007: Governance Readiness Assessment`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done. Harness readiness now covers progress assessment, maturity assessment, distance to target, roadmap gap, delivery gap, overall progress, and Chinese user phrasing such as `整体进展`, `距离目标`, `还差多少`, `当前成熟度`, and `交付缺口`.
@@ -37,6 +66,19 @@ Done. Harness readiness now covers progress assessment, maturity assessment, dis
 - [x] Regression test locks the progress/gap trigger terms.
 - [x] Validation commands pass before commit.
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F007: Governance Readiness Assessment remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 None yet.
@@ -44,6 +86,15 @@ None yet.
 ## Evidence
 
 [EV-010 Governance Readiness Assessment](../evidence/EV-010-governance-readiness-assessment.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

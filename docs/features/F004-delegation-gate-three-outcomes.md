@@ -20,6 +20,35 @@ updated: 2026-05-30
 - Non-goals or boundaries: 不新增多 Agent runtime，不自动 spawn subagent，不改变 Stop hook 作为唯一默认 Hook 的策略。
 - Exit Gate source: Delegation Gate skill、Start Gate readiness rule、Readiness Dashboard compact output、ADR-003 更新、EV-007 验证结果。
 
+
+## Feature Intake
+
+- Original problem: See Vision Anchor.
+- User pain point: See Vision Anchor.
+- Capability promise: Preserve the capability described by this Feature.
+- Non-goals: See Vision Anchor non-goals or boundaries.
+- Acceptance source: Acceptance Criteria and linked Evidence.
+- Open questions: none known.
+
+## Capability Contract
+
+- Maintain the current capability boundary described by this Feature.
+
+## Decision Context
+
+### Why
+
+This Feature preserves durable recovery context for `F004: Delegation Gate Three Outcomes`.
+
+### Why Not
+
+Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+
+### If Modifying This Area, Check
+
+- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
+- Linked ADR, Lesson, Evidence, and related specs or plans.
+
 ## Current Status
 
 Done. Delegation Gate、Start Gate、Vision Gate、Readiness Dashboard 和 using-harness routing 已统一到三值决策模型。
@@ -40,6 +69,19 @@ Done. Delegation Gate、Start Gate、Vision Gate、Readiness Dashboard 和 using
 - [x] Start Gate 不再接受旧授权式枚举作为有效 Delegation decision。
 - [x] Readiness Dashboard 保留 `missing`，用于表达复杂任务没有显式 Delegation Gate 决策，避免把缺失证据降级成 self-review。
 
+
+## Acceptance Map
+
+| Claim | Acceptance | Evidence | Status |
+| --- | --- | --- | --- |
+| F004: Delegation Gate Three Outcomes remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+
+## State Timeline
+
+| Date | State | Trigger | Evidence | Note |
+| --- | --- | --- | --- | --- |
+| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+
 ## Patch History
 
 None yet
@@ -50,6 +92,15 @@ None yet
 ## Evidence
 
 [EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-delegation-gate-three-outcomes.md)
+
+
+## Recovery Snapshot
+
+- Read first: this Feature page.
+- Current capability state: see Current Status.
+- Known risks: see Patch History and linked Evidence.
+- Next safe action: follow Next Step after running required gates.
+- Unblock condition: not blocked unless Current Status says otherwise.
 
 ## Next Step
 

@@ -354,6 +354,17 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
         ]:
             self.assertIn(phrase, description)
 
+    def test_feature_recall_uses_index_before_broad_reading(self) -> None:
+        using_harness = read_skill("using-harness")
+        retrieval = read_skill("harness-knowledge-retrieval")
+
+        for content in [using_harness, retrieval]:
+            self.assertIn("docs/features/INDEX.md", content)
+            self.assertIn("1-3", content)
+
+        self.assertIn("none found", retrieval)
+        self.assertIn("Do not read every Feature", using_harness)
+
     def test_hot_path_constraints_remain_in_primary_skill_text(self) -> None:
         using_harness = read_skill("using-harness")
         capture = read_skill("harness-knowledge-capture")
