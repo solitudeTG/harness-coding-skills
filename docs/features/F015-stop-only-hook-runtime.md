@@ -36,7 +36,7 @@ invalidates:
 - `harness_hook.py` 只接受 `stop` 和实验性的 `post-tool-use` 事件，不再接受 `pre-compact` 或 `session-start`。
 - Codex、Claude Code、OpenCode hook examples 默认只 wire Stop。
 - Root `hooks.json` 和 nested `hooks/hooks.json` 只声明 Codex Stop hook。
-- `hook_diagnostics.py` 只做 Stop runner smoke，不再扫描 Codex compaction logs 或 `.Harness/session-recovery` artifact。
+- `hook_diagnostics.py` 只做 Stop runner smoke，不再扫描 Codex compaction logs 或 `.harness/session-recovery` artifact。
 - README、INSTALL、quickstart 和 `using-harness` 不再宣传 default session recovery hooks。
 - F005 标记为 superseded，并指向 F015。
 

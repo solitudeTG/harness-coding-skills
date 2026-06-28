@@ -15,7 +15,7 @@ This Evidence supports the completion or validation claim for EV-008: Session Re
 
 
 ## Verification Scope
-Verified F005: the optional Harness hook runner now supports `pre-compact` and `session-start`, writes same-session recovery snapshots under `.Harness/session-recovery/by-session/`, updates `latest.md` only for manual inspection, exposes Claude Code and Codex `SessionStart` additional context with the platform hook output shape, injects OpenCode compaction context through `output.context`, keeps Codex `PreCompact` broad enough to run on observed context compaction events, avoids cross-session recovery injection, and preserves the no-default-`PostToolUse` constraint.
+Verified F005: the optional Harness hook runner now supports `pre-compact` and `session-start`, writes same-session recovery snapshots under `.harness/session-recovery/by-session/`, updates `latest.md` only for manual inspection, exposes Claude Code and Codex `SessionStart` additional context with the platform hook output shape, injects OpenCode compaction context through `output.context`, keeps Codex `PreCompact` broad enough to run on observed context compaction events, avoids cross-session recovery injection, and preserves the no-default-`PostToolUse` constraint.
 
 F005.4 adds a diagnostic guardrail because real Codex Desktop sessions can record `compacted/context_compacted` without observable Harness `PreCompact` execution or recovery artifacts. The diagnostic distinguishes runner writability from platform lifecycle proof.
 
@@ -53,7 +53,7 @@ PowerShell execution of installed cache `commandWindows` for SessionStart, PreCo
 - `python scripts\knowledge_check.py --root . --docs-path docs --strict`: scanned 33 Markdown files, checked 26 knowledge artifacts, 0 errors, 0 warnings.
 - `python skills\using-harness\scripts\hook_diagnostics.py codex --project-root E:\Work-Project\OtherWork\ScienceClaw --format json`: exited warning; runner smoke passed, 2 Codex compaction logs were found, and 0 recovery artifacts existed.
 - F005.5 targeted hook tests: 21 tests passed, including runtime trace and Codex wrapper command assertions.
-- F005.5 manual wrapper smoke: command returned `{}` for Codex allow output and wrote `.Harness/hook-events/events.jsonl` into the temporary payload `cwd`.
+- F005.5 manual wrapper smoke: command returned `{}` for Codex allow output and wrote `.harness/hook-events/events.jsonl` into the temporary payload `cwd`.
 - F005.6 targeted OpenCode hook tests: 5 tests passed after confirming the new regression tests first failed against the direct `"session.idle"` hook key and missing session-message fetch.
 - F005.7 regression test first failed with `Unexpected token 'session-start'` when PowerShell executed the old `"%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" session-start` command.
 - F005.7 targeted regression test passed after wrapping Windows commands with `cmd /d /s /c`.
@@ -101,7 +101,7 @@ Scanned 11 skill file(s). Errors: 0. Warnings: 0.
 This Evidence does not prove behavior outside the verification scope recorded above.
 
 ## Notes
-Session recovery is runtime context, not canonical Harness memory. The automatic injection snapshot is intentionally written under `.Harness/session-recovery/by-session/<session_id>.md` so only the same session can recover from compaction. `.Harness/session-recovery/latest.md` remains a manual inspection pointer and must not be injected into unrelated new sessions.
+Session recovery is runtime context, not canonical Harness memory. The automatic injection snapshot is intentionally written under `.harness/session-recovery/by-session/<session_id>.md` so only the same session can recover from compaction. `.harness/session-recovery/latest.md` remains a manual inspection pointer and must not be injected into unrelated new sessions.
 
 The follow-up learning from F005.1 is captured in [LL-005 Session Recovery Must Be Session-Scoped](../lessons/LL-005-session-recovery-must-be-session-scoped.md).
 
@@ -109,11 +109,11 @@ The follow-up learning from F005.2 is captured in [LL-006 Platform Hooks Must Us
 
 The OpenCode example intentionally does not use `session.created` for automatic recovery. It handles `experimental.session.compacting(input, output)`, writes a same-session snapshot with `pre-compact`, reads that same-session snapshot through `session-start` with `source=compact`, and pushes recovered context into OpenCode's native `output.context` channel.
 
-The F005.3 Codex follow-up came from a real `E:\Self-Project\Multi-Agent-Assi` session where the session log contained `compacted/context_compacted` but no `.Harness/session-recovery/` file. Codex `PreCompact` now uses an empty matcher so compaction variants are not missed; `SessionStart` remains `compact`-scoped to prevent unrelated startup pollution.
+The F005.3 Codex follow-up came from a real `E:\Self-Project\Multi-Agent-Assi` session where the session log contained `compacted/context_compacted` but no `.harness/session-recovery/` file. Codex `PreCompact` now uses an empty matcher so compaction variants are not missed; `SessionStart` remains `compact`-scoped to prevent unrelated startup pollution.
 
-The F005.4 Codex follow-up came from a later new Codex Desktop session in `E:\Work-Project\OtherWork\ScienceClaw` where the session log again contained `compacted/context_compacted` but no `.Harness/session-recovery/` file. Manual runner smoke succeeded in that project root, so the protection moved from another matcher patch to a diagnostic that reports platform lifecycle evidence gaps.
+The F005.4 Codex follow-up came from a later new Codex Desktop session in `E:\Work-Project\OtherWork\ScienceClaw` where the session log again contained `compacted/context_compacted` but no `.harness/session-recovery/` file. Manual runner smoke succeeded in that project root, so the protection moved from another matcher patch to a diagnostic that reports platform lifecycle evidence gaps.
 
-The F005.5 Codex follow-up came from the same machine after Codex Settings displayed `Stop`, `PreCompact`, and `SessionStart`, while session logs and project runtime files still showed no hook execution. Local evidence showed Codex trusted `hooks/hooks.json`, while plugin examples also show root-level `hooks.json`; later comparison with Superpowers and Codex docs showed the missing user-level hook feature gates and the need for Windows-specific command expansion. The adapter now includes both config locations, routes commands through `hooks/run-harness-hook.cmd`, uses `commandWindows` with `%PLUGIN_ROOT%`, and writes `.Harness/hook-events/events.jsonl` on actual runner execution.
+The F005.5 Codex follow-up came from the same machine after Codex Settings displayed `Stop`, `PreCompact`, and `SessionStart`, while session logs and project runtime files still showed no hook execution. Local evidence showed Codex trusted `hooks/hooks.json`, while plugin examples also show root-level `hooks.json`; later comparison with Superpowers and Codex docs showed the missing user-level hook feature gates and the need for Windows-specific command expansion. The adapter now includes both config locations, routes commands through `hooks/run-harness-hook.cmd`, uses `commandWindows` with `%PLUGIN_ROOT%`, and writes `.harness/hook-events/events.jsonl` on actual runner execution.
 
 The F005.7 Codex follow-up came from local Codex Desktop UI showing `hook exited with code 1` for every Harness hook. Manual reproduction showed the runner and wrapper returned 0 when invoked directly, but the exact old `commandWindows` string returned 1 under PowerShell. The corrected config now uses `cmd /d /s /c ""%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" <event>"`, and the installed personal plugin source plus cache were updated on the local machine.
 

@@ -125,7 +125,7 @@ class HarnessHookTests(unittest.TestCase):
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
-            trace_path = root / ".Harness" / "hook-events" / "events.jsonl"
+            trace_path = root / ".harness" / "hook-events" / "events.jsonl"
             self.assertTrue(trace_path.exists())
             records = [
                 json.loads(line)
@@ -154,7 +154,7 @@ class HarnessHookTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue(
-                (root / ".Harness" / "hook-events" / "events.jsonl").exists()
+                (root / ".harness" / "hook-events" / "events.jsonl").exists()
             )
 
     def test_codex_allow_output_uses_empty_json_object(self) -> None:

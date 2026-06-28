@@ -22,7 +22,7 @@ Harness 的可选 hook runtime 经历了多轮修复：Codex 设置页能看到 
 
    平台是否在真实 `Stop`、`PreCompact`、`SessionStart` 等事件发生时派发 hook。
 
-   对 Harness 来说，证据应该来自 `.Harness/hook-events/events.jsonl`、真实 recovery artifact，或能对应到 session log 的 lifecycle trace。
+   对 Harness 来说，证据应该来自 `.harness/hook-events/events.jsonl`、真实 recovery artifact，或能对应到 session log 的 lifecycle trace。
 
 3. **命令包装层**
 
@@ -42,7 +42,7 @@ Harness 的可选 hook runtime 经历了多轮修复：Codex 设置页能看到 
 
 - 保留 root-level `hooks.json` 和 nested `hooks/hooks.json`，解决的是配置发现层。
 - 启用 `[features].hooks` / `[features].plugin_hooks`，解决的是平台是否允许插件 hook。
-- 增加 `.Harness/hook-events/events.jsonl`，解决的是生命周期触发有没有可观察证据。
+- 增加 `.harness/hook-events/events.jsonl`，解决的是生命周期触发有没有可观察证据。
 - 手动执行 `run-harness-hook.cmd stop` 和 `harness_hook.py --event stop`，证明的是 wrapper 和 Python runner 自身能跑。
 
 但这些都没有证明 **Codex 实际执行 `commandWindows` 时使用的 shell 语义**。
@@ -143,7 +143,7 @@ Stop hook 因缺少 closeout block 而拦截完成声明，是业务结果；它
 
 6. **生命周期证据**
 
-   修改后看 `.Harness/hook-events/events.jsonl` 或 recovery artifact。没有运行痕迹时，不要声称生命周期 hook 已经可依赖。
+   修改后看 `.harness/hook-events/events.jsonl` 或 recovery artifact。没有运行痕迹时，不要声称生命周期 hook 已经可依赖。
 
 7. **回归测试锁住真实失败条件**
 
@@ -174,7 +174,7 @@ Runner behavior:
 - SessionStart compact reads only same-session recovery snapshot
 
 Lifecycle proof:
-- real hook execution writes .Harness/hook-events/events.jsonl
+- real hook execution writes .harness/hook-events/events.jsonl
 - real PreCompact either writes recovery snapshot or diagnostics reports the lifecycle gap
 ```
 

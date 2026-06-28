@@ -8,7 +8,7 @@ type HarnessHookOutput = {
 }
 
 export const HarnessHookPlugin: Plugin = async ({ $, client, directory }) => {
-  const skillRoot = process.env.Harness_SKILL_ROOT
+  const skillRoot = process.env.harness_SKILL_ROOT
   if (!skillRoot) {
     return {}
   }

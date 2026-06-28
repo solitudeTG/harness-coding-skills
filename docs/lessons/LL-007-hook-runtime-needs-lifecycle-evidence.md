@@ -21,9 +21,9 @@ updated: 2026-06-07
 
 ## Case
 
-用户在 `E:\Work-Project\OtherWork\ScienceClaw` 的 2026-05-31 新会话中触发了 Codex context compaction，session log 确认存在 `compacted/context_compacted`，但项目下没有 `.Harness/session-recovery/`。后续又确认 Codex 设置页能显示三个 Harness hooks，但 `Stop`、`PreCompact`、`SessionStart` 均没有可观察执行证据。
+用户在 `E:\Work-Project\OtherWork\ScienceClaw` 的 2026-05-31 新会话中触发了 Codex context compaction，session log 确认存在 `compacted/context_compacted`，但项目下没有 `.harness/session-recovery/`。后续又确认 Codex 设置页能显示三个 Harness hooks，但 `Stop`、`PreCompact`、`SessionStart` 均没有可观察执行证据。
 
-这个案例说明：Hook UI 可见、cache 文件存在、trusted hash 存在、runner 手动成功，都不能替代真实生命周期触发证据。如果 session log 有 `compacted/context_compacted`，但没有 recovery artifact 或 `.Harness/hook-events/events.jsonl`，该 hook runtime 仍未被证明可依赖。
+这个案例说明：Hook UI 可见、cache 文件存在、trusted hash 存在、runner 手动成功，都不能替代真实生命周期触发证据。如果 session log 有 `compacted/context_compacted`，但没有 recovery artifact 或 `.harness/hook-events/events.jsonl`，该 hook runtime 仍未被证明可依赖。
 
 ## Resolution
 
@@ -32,7 +32,7 @@ updated: 2026-06-07
 - runner smoke：证明 Harness runner 在目标项目根目录可写 recovery snapshot。
 - lifecycle evidence：扫描 Codex session logs，发现 `compacted/context_compacted` 但没有 recovery artifacts 时返回 warning。
 
-同时让 `harness_hook.py` 在真实运行时写 `.Harness/hook-events/events.jsonl`。这份 trace 只记录 event、platform、session id、decision、check、severity，不记录用户或 assistant 正文。
+同时让 `harness_hook.py` 在真实运行时写 `.harness/hook-events/events.jsonl`。这份 trace 只记录 event、platform、session id、decision、check、severity，不记录用户或 assistant 正文。
 
 Codex plugin-bundled hook 配置同时保留 root-level `hooks.json` 和 `hooks/hooks.json`，并要求用户配置：
 
@@ -54,7 +54,7 @@ Windows 上优先使用 `commandWindows` 和 `%PLUGIN_ROOT%`，不要假设 `cmd
 
 ## Pitfall
 
-把“插件已安装”“Hook UI 能看到配置”“runner smoke 能手动写文件”误认为“平台生命周期事件一定会执行 hook”，会让 session recovery 看起来已经闭合，实际压缩后却没有任何 `.Harness/session-recovery/` 材料。
+把“插件已安装”“Hook UI 能看到配置”“runner smoke 能手动写文件”误认为“平台生命周期事件一定会执行 hook”，会让 session recovery 看起来已经闭合，实际压缩后却没有任何 `.harness/session-recovery/` 材料。
 
 ## Root Cause
 
@@ -70,11 +70,11 @@ Hook 集成跨了三层不同事实：配置扫描、命令 runner、平台生�
 python <skills-root>/using-harness/scripts/hook_diagnostics.py codex --project-root <repo>
 ```
 
-不要把 UI 可见、cache 文件存在、trusted hash 存在或 runner 手动成功当作 lifecycle proof。只有真实生命周期触发后产生预期 artifact、`.Harness/hook-events/events.jsonl` 记录了对应事件，或诊断没有发现压缩缺产物，才把该 hook 标记为可依赖。Windows hook 配置还需要用 PowerShell 语义回归测试验证 `commandWindows`，因为 PowerShell 能显示 UI hook 但在执行前就以 `code 1` 失败。
+不要把 UI 可见、cache 文件存在、trusted hash 存在或 runner 手动成功当作 lifecycle proof。只有真实生命周期触发后产生预期 artifact、`.harness/hook-events/events.jsonl` 记录了对应事件，或诊断没有发现压缩缺产物，才把该 hook 标记为可依赖。Windows hook 配置还需要用 PowerShell 语义回归测试验证 `commandWindows`，因为 PowerShell 能显示 UI hook 但在执行前就以 `code 1` 失败。
 
 ## Source
 
-本 Lesson 来自 F005.4/F005.5。用户在 `E:\Work-Project\OtherWork\ScienceClaw` 的 2026-05-31 新会话中触发了 Codex context compaction，session log 确认存在 `compacted/context_compacted`，但项目下没有 `.Harness/session-recovery/`。后续又确认 Codex 设置页能显示三个 Harness hooks，但 `Stop`、`PreCompact`、`SessionStart` 均没有可观察执行证据。
+本 Lesson 来自 F005.4/F005.5。用户在 `E:\Work-Project\OtherWork\ScienceClaw` 的 2026-05-31 新会话中触发了 Codex context compaction，session log 确认存在 `compacted/context_compacted`，但项目下没有 `.harness/session-recovery/`。后续又确认 Codex 设置页能显示三个 Harness hooks，但 `Stop`、`PreCompact`、`SessionStart` 均没有可观察执行证据。
 
 ## Principle
 

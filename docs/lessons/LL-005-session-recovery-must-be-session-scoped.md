@@ -13,7 +13,7 @@ updated: 2026-05-31
 
 ## Case
 
-旧 session recovery 设计把 `PreCompact` 保存的恢复材料写到项目级 `.Harness/session-recovery/latest.md`，再让 `SessionStart` 无条件读取。用户指出上下文压缩后应该继续当前会话，但新开独立会话不能读取旧会话压缩材料。
+旧 session recovery 设计把 `PreCompact` 保存的恢复材料写到项目级 `.harness/session-recovery/latest.md`，再让 `SessionStart` 无条件读取。用户指出上下文压缩后应该继续当前会话，但新开独立会话不能读取旧会话压缩材料。
 
 最终确认的事实是：`PreCompact` / `SessionStart` 配合解决的是同一会话生命周期内的上下文丢失，不是项目级记忆恢复。恢复路径只有 `latest.md`、没有 `session_id`，且 matcher 覆盖 `startup|resume|clear|compact` 时，新任务启动可能读入旧 handoff。
 
@@ -24,7 +24,7 @@ F005.1 将自动注入恢复改为同会话 compact 专用：
 - `PreCompact` 写入：
 
 ```text
-.Harness/session-recovery/by-session/<session_id>.md
+.harness/session-recovery/by-session/<session_id>.md
 ```
 
 - `latest.md` 仍可更新，但只作为人工排查入口，不参与自动注入。
@@ -48,7 +48,7 @@ F005.1 将自动注入恢复改为同会话 compact 专用：
 旧实现把恢复入口固定为：
 
 ```text
-.Harness/session-recovery/latest.md
+.harness/session-recovery/latest.md
 ```
 
 这只有项目维度，没有会话维度，也没有区分 `SessionStart` 的来源。结果是 `startup`、`resume`、`clear` 和 `compact` 都可能读取同一份旧材料。

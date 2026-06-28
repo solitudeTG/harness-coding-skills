@@ -112,7 +112,7 @@ def write_hook_trace(
         return
 
     try:
-        trace_dir = root / ".Harness" / "hook-events"
+        trace_dir = root / ".harness" / "hook-events"
         trace_dir.mkdir(parents=True, exist_ok=True)
         record: dict[str, Any] = {
             "timestamp": datetime.now(UTC).replace(microsecond=0).isoformat(),
