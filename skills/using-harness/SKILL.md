@@ -156,7 +156,7 @@ Skills-only install remains valid. Hooks are an optional runtime enhancement, no
 
 Hook resources live under this Skill so the Skill owns scripts and hook entrypoints:
 
-- `hooks/harness_hook.py`: normalized hook runner. Default examples use only `stop`; `post-tool-use` remains available for explicit experiments.
+- `hooks/Harness_hook.py`: normalized hook runner. Default examples use only `stop`; `post-tool-use` remains available for explicit experiments.
 - `hooks/codex-hooks.example.json`: Codex hook configuration example.
 - `hooks/claude-settings.example.json`: Claude Code hook configuration example.
 - `hooks/opencode-plugin.example.ts`: OpenCode plugin example.
@@ -177,7 +177,7 @@ After installing or changing Codex hooks, verify actual runner evidence instead 
 python <skills-root>/using-harness/scripts/hook_diagnostics.py codex --project-root <repo>
 ```
 
-Codex plugin-bundled hooks should keep both root-level `hooks.json` and `hooks/hooks.json` available with identical content. The user config must enable both `[features].hooks = true` and `[features].plugin_hooks = true`; UI visibility and trusted hashes do not prove runtime dispatch. Route commands through `hooks/run-harness-hook.cmd` instead of calling `python ./skills/...` directly. On Windows, `commandWindows` must be safe when Codex invokes it through PowerShell: wrap the `%PLUGIN_ROOT%` command in `cmd /d /s /c` so `%PLUGIN_ROOT%` expands in cmd.exe and the `.cmd` wrapper is actually executed. Runtime proof comes from `.Harness/hook-events/events.jsonl` or the expected Stop check output.
+Codex plugin-bundled hooks should keep both root-level `hooks.json` and `hooks/hooks.json` available with identical content. The user config must enable both `[features].hooks = true` and `[features].plugin_hooks = true`; UI visibility and trusted hashes do not prove runtime dispatch. Route commands through `hooks/run-Harness-hook.cmd` instead of calling `python ./skills/...` directly. On Windows, `commandWindows` must be safe when Codex invokes it through PowerShell: wrap the `%PLUGIN_ROOT%` command in `cmd /d /s /c` so `%PLUGIN_ROOT%` expands in cmd.exe and the `.cmd` wrapper is actually executed. Runtime proof comes from `.harness/hook-events/events.jsonl` or the expected Stop check output.
 
 ## Verification Use
 

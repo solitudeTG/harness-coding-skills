@@ -11,8 +11,6 @@ from pathlib import Path
 
 
 # Common UTF-8-as-GBK mojibake fragments seen when Chinese prose is damaged.
-# These markers are intentionally short because they appear in corrupted trigger text,
-# where the exact phrase is often already broken.
 MOJIBAKE_PATTERNS = [
     "绠",
     "鏄",
@@ -47,6 +45,8 @@ ROUTED_SKILLS = [
     "harness-delegation-gate",
     "harness-knowledge-retrieval",
     "harness-spec-drift",
+    "harness-doc-lifecycle",
+    "harness-incident-learning",
     "harness-vision-gate",
     "harness-readiness-dashboard",
     "harness-change-narrative",
@@ -54,11 +54,12 @@ ROUTED_SKILLS = [
     "harness-project-rules",
 ]
 
-USING_HARNESS_REQUIRED_RESOURCES = [
+USING_Harness_REQUIRED_RESOURCES = [
     Path("scripts/knowledge_check.py"),
     Path("scripts/harness_closeout_check.py"),
     Path("scripts/skill_metadata_check.py"),
     Path("scripts/hook_diagnostics.py"),
+    Path("scripts/usage_record.py"),
     Path("hooks/harness_hook.py"),
     Path("hooks/codex-hooks.example.json"),
     Path("hooks/claude-settings.example.json"),
@@ -182,7 +183,7 @@ def validate_skill(path: Path) -> list[Issue]:
         for heading in ["## Activation Contract", "## Harness Presence Check"]:
             if heading not in content:
                 issues.append(Issue("error", path, f"Entrypoint is missing {heading}."))
-        for relative_resource in USING_HARNESS_REQUIRED_RESOURCES:
+        for relative_resource in USING_Harness_REQUIRED_RESOURCES:
             resource_path = path.parent / relative_resource
             if not resource_path.exists():
                 issues.append(
@@ -192,12 +193,13 @@ def validate_skill(path: Path) -> list[Issue]:
                         "using-harness is missing required bundled resource.",
                     )
                 )
-    elif name.startswith("harness-") and "MUST use" not in description:
+    elif name == "ai-coding-harness" or name.startswith("ai-coding-harness-"):
         issues.append(
             Issue(
-                "warning",
+                "error",
                 path,
-                "Harness skill description should usually start with an independent trigger.",
+                "AI Coding Harness skill slug was removed by the Harness rename; "
+                "use `using-harness` or a short semantic Harness workflow slug.",
             )
         )
 

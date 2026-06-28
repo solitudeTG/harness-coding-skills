@@ -7,5 +7,11 @@ drafts/
 
 # Tool caches
 .cache/
+.harness/
+.harness/*
+!.harness/usage/
+.harness/usage/*
+!.harness/usage/events/
+!.harness/usage/events/*.jsonl
 node_modules/
 __pycache__/
