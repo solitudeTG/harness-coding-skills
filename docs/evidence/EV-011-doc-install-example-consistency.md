@@ -9,6 +9,10 @@ updated: 2026-06-10
 
 # EV-011: Doc Install Example Consistency
 
+## Supports Claim
+
+This Evidence supports the completed Harness capability described by EV-011: Doc Install Example Consistency.
+
 ## Scope
 
 验证 F008：公开文档、安装说明、workflow 和 examples 对 `harness-readiness-dashboard` 的 progress、maturity、gap、distance-to-target 与 blocker 触发表面保持一致，且仓库内 Markdown 链接可解析。
@@ -51,3 +55,15 @@ Scanned 39 markdown file(s). Checked 32 knowledge artifact(s). Errors: 0. Warnin
 ## Notes
 
 本批次只收口文档、安装和示例层的一致性。Hook runtime、Skill slug、品牌身份和脚本行为保持不变。
+
+## Verification Scope
+
+This Evidence records the validation commands and artifacts available when the capability was synchronized into the Harness-branded repository.
+
+## Checks
+
+See the command log or Results section in this document.
+
+## Limitations
+
+Historical evidence was migrated from the previous Harness sync state; re-run current tests before making a fresh completion claim.

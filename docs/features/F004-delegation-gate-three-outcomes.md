@@ -56,7 +56,7 @@ Done. Delegation Gate、Start Gate、Vision Gate、Readiness Dashboard 和 using
 
 ### Evidence
 
-- [EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-harness-delegation-gate-three-outcomes.md)
+- [EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-delegation-gate-three-outcomes.md)
 
 ### Decisions / ADRs
 
@@ -108,7 +108,7 @@ None yet
 
 ## Evidence
 
-[EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-harness-delegation-gate-three-outcomes.md)
+[EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-delegation-gate-three-outcomes.md)
 
 ## Recovery Snapshot
 

@@ -60,7 +60,7 @@ Done。核心 Skill 热路径已加入 Goal-Driven Feature Flow 和 Empty Approv
 
 ### Evidence
 
-- [EV-013 Goal Driven Feature Flow](../evidence/EV-013-goal-driven-feature-flow.md)
+- [EV-013 Goal Driven Feature Flow](../evidence/EV-012-feature-governance-sync.md)
 
 ### Decisions / ADRs
 
@@ -94,14 +94,14 @@ Done。核心 Skill 热路径已加入 Goal-Driven Feature Flow 和 Empty Approv
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| Goal 驱动替代默认逐 Feature 审批 | Skill 热路径和测试包含 Goal/Feature/approval guard 契约 | [EV-013](../evidence/EV-013-goal-driven-feature-flow.md) | completed |
-| closeout 门禁保留 | Knowledge Capture closeout 文案未移除，测试仍覆盖 closeout convergence | [EV-013](../evidence/EV-013-goal-driven-feature-flow.md) | completed |
+| Goal 驱动替代默认逐 Feature 审批 | Skill 热路径和测试包含 Goal/Feature/approval guard 契约 | [EV-013](../evidence/EV-012-feature-governance-sync.md) | completed |
+| closeout 门禁保留 | Knowledge Capture closeout 文案未移除，测试仍覆盖 closeout convergence | [EV-013](../evidence/EV-012-feature-governance-sync.md) | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-18 | completed | User approved goal-driven flow and requested local sync | [EV-013](../evidence/EV-013-goal-driven-feature-flow.md) | 默认设计审批移除，Feature 作为记忆保留。 |
+| 2026-06-18 | completed | User approved goal-driven flow and requested local sync | [EV-013](../evidence/EV-012-feature-governance-sync.md) | 默认设计审批移除，Feature 作为记忆保留。 |
 
 ## Patch History
 
@@ -112,7 +112,7 @@ None yet
 
 ## Evidence
 
-[EV-013 Goal Driven Feature Flow](../evidence/EV-013-goal-driven-feature-flow.md)
+[EV-013 Goal Driven Feature Flow](../evidence/EV-012-feature-governance-sync.md)
 
 ## Recovery Snapshot
 

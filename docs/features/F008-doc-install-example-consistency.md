@@ -57,6 +57,30 @@ Done。README、README.en、INSTALL、docs/workflow 和两个 examples 已同步
 
 - [EV-011 Doc Install Example Consistency](../evidence/EV-011-doc-install-example-consistency.md)
 
+### Evidence
+
+See linked Evidence in this Feature, if present.
+
+### Decisions / ADRs
+
+None recorded.
+
+### Lessons
+
+None recorded.
+
+### Specs / Plans
+
+None recorded.
+
+### Related Features
+
+None recorded.
+
+### External Context
+
+None recorded.
+
 ## Acceptance Criteria
 
 - [x] README 和 README.en 的 Skill 列表、典型流程与仓库能力说明覆盖 progress、maturity、gap。
@@ -99,3 +123,9 @@ None yet.
 ## Next Step
 
 后续新增公开入口文档时，把 `tests/test_documentation_consistency.py` 扩展到新文件，避免示例与正式 Skill 能力再次漂移。
+
+
+
+
+
+

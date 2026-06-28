@@ -60,7 +60,7 @@ Done。closeout checker 已经对 Entry Gate、Vision Anchor、Patch Churn Revie
 
 ### Decisions / ADRs
 
-- [ADR-001 Start Gate Before Implementation](../decisions/ADR-001-harness-start-gate-before-implementation.md)
+- [ADR-001 Start Gate Before Implementation](../decisions/ADR-001-start-gate-before-implementation.md)
 
 ### Lessons
 

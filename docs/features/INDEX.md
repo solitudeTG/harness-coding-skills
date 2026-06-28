@@ -14,3 +14,6 @@ Use this file as the coarse recall entry before opening Feature pages. Pick the 
 | [F008](F008-doc-install-example-consistency.md) | docs | docs install example consistency | README, INSTALL, examples, public docs |
 | [F009](F009-feature-intake-governance.md) | feature-memory | Feature Intake and decision context | Feature Intake, Decision Context, Acceptance Map, Recovery Snapshot |
 | [F010](F010-goal-driven-feature-flow.md) | workflow | Goal-driven Feature flow | Goal boundary, approval guard, per-Feature approval |
+| [F011](F011-lesson-case-protection-governance.md) | lessons | Lesson case protection governance | lesson, case, resolution, prevention, patch churn |
+| [F012](F012-adr-decision-boundary-governance.md) | decisions | ADR decision boundary governance | ADR, decision boundary, rejected options, change checks |
+| [F013](F013-evidence-claim-verification-governance.md) | evidence | Evidence claim verification governance | Evidence, supports claim, verification scope, limitations |

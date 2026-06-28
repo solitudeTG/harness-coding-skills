@@ -3,7 +3,7 @@ name: harness-incident-learning
 description: MUST use after a bug, incident, outage, regression, repeated process miss, recurring failure, repeated patch chain, patch churn, Fxxx.n follow-up sequence, or rule/keyword/filter growth has been fixed, stabilized, or grown enough to need root cause analysis, trigger analysis, recurrence-risk assessment, zero-base review, prevention, tests, gates, Lessons, ADRs, CI, scripts, permissions, durable Evidence, 事故复盘, bug 修完, 缺陷修复后, 反复补丁, 规则越补越多, 归零审视, 避免复发, 根因, or 以后别再出现.
 ---
 
-# Harness Incident Learning
+# Incident Learning
 
 ## Purpose
 
@@ -86,8 +86,8 @@ If recurrence risk is low, record concise Evidence and close. If recurrence risk
 | Test | Behavior can be reproduced automatically. | Regression/unit/integration test that fails before the fix and passes after. |
 | Gate | Work must not proceed without a condition. | Review, merge, done, or evidence gate with a concrete blocking rule. |
 | Skill | Future agents need procedural judgment. | Cross-project skill trigger and concise workflow. |
-| Lesson | A transferable failure mode needs a guardrail. | Lesson proposal with root cause, trigger, protection, and source anchor. |
-| ADR | The fix makes or revises a durable decision. | Decision narrative with rejected alternatives and tradeoffs. |
+| Lesson | A transferable failure mode needs a guardrail. | Lesson proposal with objective case, resolution, root cause, protection, and source anchor. |
+| ADR | The fix creates or revises a durable decision boundary. | Decision narrative with boundary, rejected options, tradeoffs, and checks before changing the decision. |
 | CI | Automation should block regressions. | Build, lint, test, schema, policy, or knowledge check in CI. |
 | Script/check | Manual inspection is unreliable or repeated. | Deterministic command with clear pass/fail output. |
 | Permission/sandbox | The incident involved unsafe access or missing authority boundaries. | Narrower permissions, approval point, or sandbox rule. |

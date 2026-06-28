@@ -82,7 +82,7 @@ OpenCode compaction recovery now uses OpenCode's native `output.context` channel
 ### Related Features
 
 - [F003 Optional Harness Hook Runtime](F003-optional-harness-hook-runtime.md)
-- [F004 Delegation Gate Three Outcomes](F004-harness-delegation-gate-three-outcomes.md)
+- [F004 Delegation Gate Three Outcomes](F004-delegation-gate-three-outcomes.md)
 - [F015 Stop Only Hook Runtime](F015-stop-only-hook-runtime.md)
 
 ### External Context

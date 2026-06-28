@@ -72,9 +72,9 @@ Completed。模板、Skill 规则、根校验器、bundled 校验器、测试和
 
 ### Evidence
 
-- [EV-012 Feature Intake Governance](../evidence/EV-012-feature-intake-governance.md)
-- [EV-014 Feature Index Coarse Retrieval](../evidence/EV-014-feature-index-coarse-retrieval.md)
-- [EV-015 Feature Decision Context](../evidence/EV-015-feature-decision-context.md)
+- [EV-012 Feature Intake Governance](../evidence/EV-012-feature-governance-sync.md)
+- [EV-014 Feature Index Coarse Retrieval](../evidence/EV-016-feature-index-local-governance.md)
+- [EV-015 Feature Decision Context](../evidence/EV-017-typed-links-and-artifact-boundaries.md)
 - [EV-016 Feature Index Local Governance](../evidence/EV-016-feature-index-local-governance.md)
 - [EV-017 Typed Links And Artifact Boundaries](../evidence/EV-017-typed-links-and-artifact-boundaries.md)
 
@@ -117,11 +117,11 @@ Completed。模板、Skill 规则、根校验器、bundled 校验器、测试和
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| Feature Intake 成为写入前门禁 | Start Gate / Knowledge Capture 规则写明缺失 Intake 应澄清 | [EV-012](../evidence/EV-012-feature-intake-governance.md) | completed |
-| Feature 页面能承载恢复索引 | 模板包含 Capability Contract、Acceptance Map、State Timeline、Recovery Snapshot | [EV-012](../evidence/EV-012-feature-intake-governance.md) | completed |
-| 校验器提供机器约束 | `test_knowledge_check` 覆盖新失败场景并通过 | [EV-012](../evidence/EV-012-feature-intake-governance.md) | completed |
-| Feature 粗召回具备低成本入口 | `docs/features/INDEX.md`、命名规则和 retrieval hot path 支持先选 1-3 个候选 Feature | [EV-014](../evidence/EV-014-feature-index-coarse-retrieval.md) | completed |
-| Feature 能支撑后续修改判断 | 模板、校验器和现有 Feature 均包含 `Decision Context`，F009 提供完整 why / why not / modification check 示例 | [EV-015](../evidence/EV-015-feature-decision-context.md) | completed |
+| Feature Intake 成为写入前门禁 | Start Gate / Knowledge Capture 规则写明缺失 Intake 应澄清 | [EV-012](../evidence/EV-012-feature-governance-sync.md) | completed |
+| Feature 页面能承载恢复索引 | 模板包含 Capability Contract、Acceptance Map、State Timeline、Recovery Snapshot | [EV-012](../evidence/EV-012-feature-governance-sync.md) | completed |
+| 校验器提供机器约束 | `test_knowledge_check` 覆盖新失败场景并通过 | [EV-012](../evidence/EV-012-feature-governance-sync.md) | completed |
+| Feature 粗召回具备低成本入口 | `docs/features/INDEX.md`、命名规则和 retrieval hot path 支持先选 1-3 个候选 Feature | [EV-014](../evidence/EV-016-feature-index-local-governance.md) | completed |
+| Feature 能支撑后续修改判断 | 模板、校验器和现有 Feature 均包含 `Decision Context`，F009 提供完整 why / why not / modification check 示例 | [EV-015](../evidence/EV-017-typed-links-and-artifact-boundaries.md) | completed |
 | Feature Index 治理局部优先 | validator 支持 `--feature-index <Feature>`，默认和 `--strict` 不触发全局审计 | [EV-016](../evidence/EV-016-feature-index-local-governance.md) | completed |
 | Feature 打开后链接与写入边界更可判断 | Feature 模板和现有 Feature 使用分类 Links；Knowledge Capture 和 artifact matrix 明确 Feature / ADR / Lesson 边界 | [EV-017](../evidence/EV-017-typed-links-and-artifact-boundaries.md) | completed |
 
@@ -129,9 +129,9 @@ Completed。模板、Skill 规则、根校验器、bundled 校验器、测试和
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-11 | completed | Feature governance optimization implemented | [EV-012](../evidence/EV-012-feature-intake-governance.md) | Superpowers brainstorming 思想被内化为 Harness Feature Intake 门禁。 |
-| 2026-06-23 | completed | Feature recall optimization implemented | [EV-014](../evidence/EV-014-feature-index-coarse-retrieval.md) | Feature Index、命名规则和粗召回流程进入热路径。 |
-| 2026-06-24 | completed | Feature decision-context optimization implemented | [EV-015](../evidence/EV-015-feature-decision-context.md) | Feature 增加 why / why not / modification check，用于支撑后续修改决策。 |
+| 2026-06-11 | completed | Feature governance optimization implemented | [EV-012](../evidence/EV-012-feature-governance-sync.md) | Superpowers brainstorming 思想被内化为 Harness Feature Intake 门禁。 |
+| 2026-06-23 | completed | Feature recall optimization implemented | [EV-014](../evidence/EV-016-feature-index-local-governance.md) | Feature Index、命名规则和粗召回流程进入热路径。 |
+| 2026-06-24 | completed | Feature decision-context optimization implemented | [EV-015](../evidence/EV-017-typed-links-and-artifact-boundaries.md) | Feature 增加 why / why not / modification check，用于支撑后续修改决策。 |
 | 2026-06-26 | completed | Feature Index local governance implemented | [EV-016](../evidence/EV-016-feature-index-local-governance.md) | 默认不全量扫描，只校验当前关联 Feature；全局审计需用户显式触发。 |
 | 2026-06-26 | completed | Typed Links and artifact boundary governance implemented | [EV-017](../evidence/EV-017-typed-links-and-artifact-boundaries.md) | Links 从自由列表变成分类入口，Feature / ADR / Lesson 写入边界进入 Knowledge Capture。 |
 
@@ -150,9 +150,9 @@ F009 已经连续承载 Feature Intake、粗召回、Decision Context、Feature 
 
 ## Evidence
 
-- [EV-012 Feature Intake Governance](../evidence/EV-012-feature-intake-governance.md)
-- [EV-014 Feature Index Coarse Retrieval](../evidence/EV-014-feature-index-coarse-retrieval.md)
-- [EV-015 Feature Decision Context](../evidence/EV-015-feature-decision-context.md)
+- [EV-012 Feature Intake Governance](../evidence/EV-012-feature-governance-sync.md)
+- [EV-014 Feature Index Coarse Retrieval](../evidence/EV-016-feature-index-local-governance.md)
+- [EV-015 Feature Decision Context](../evidence/EV-017-typed-links-and-artifact-boundaries.md)
 - [EV-016 Feature Index Local Governance](../evidence/EV-016-feature-index-local-governance.md)
 - [EV-017 Typed Links And Artifact Boundaries](../evidence/EV-017-typed-links-and-artifact-boundaries.md)
 

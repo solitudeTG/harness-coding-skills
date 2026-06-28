@@ -57,6 +57,30 @@ Done。源码中已新增 `harness-spec-drift` Skill 和决策参考；入口路
 
 - [EV-009 Spec Drift Guardrails](../evidence/EV-009-spec-drift-guardrails.md)
 
+### Evidence
+
+See linked Evidence in this Feature, if present.
+
+### Decisions / ADRs
+
+None recorded.
+
+### Lessons
+
+None recorded.
+
+### Specs / Plans
+
+None recorded.
+
+### Related Features
+
+None recorded.
+
+### External Context
+
+None recorded.
+
 ## Acceptance Criteria
 
 - [x] 新增正式 Skill：`skills/harness-spec-drift/SKILL.md`，名称、H1、触发表面和 progressive disclosure 结构完整。
@@ -101,3 +125,9 @@ None yet.
 ## Next Step
 
 后续若真实使用中出现“重复补丁已经明显变成架构边界问题”，再单独评估 Architecture Review 或 Architecture Map，不纳入 F006 第一阶段。
+
+
+
+
+
+

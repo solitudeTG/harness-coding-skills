@@ -9,6 +9,10 @@ updated: 2026-06-10
 
 # EV-010: Governance Readiness Assessment
 
+## Supports Claim
+
+This Evidence supports the completed Harness capability described by EV-010: Governance Readiness Assessment.
+
 ## Scope
 
 Validate F007: Harness readiness routing covers general governance status questions without importing upstream branding or changing public skill names.
@@ -50,3 +54,15 @@ Scanned 37 markdown file(s). Checked 30 knowledge artifact(s). Errors: 0. Warnin
 ## Notes
 
 This batch intentionally backports only the generic governance rule: readiness can answer progress, maturity, distance-to-target, roadmap-gap, delivery-gap, and blocker questions. It does not backport upstream brand rename, semantic short-skill rename, or governance article.
+
+## Verification Scope
+
+This Evidence records the validation commands and artifacts available when the capability was synchronized into the Harness-branded repository.
+
+## Checks
+
+See the command log or Results section in this document.
+
+## Limitations
+
+Historical evidence was migrated from the previous Harness sync state; re-run current tests before making a fresh completion claim.

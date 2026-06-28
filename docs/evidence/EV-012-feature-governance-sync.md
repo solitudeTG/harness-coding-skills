@@ -10,6 +10,10 @@ created: 2026-06-26
 
 # EV-012: Feature Governance Sync
 
+## Supports Claim
+
+This Evidence supports the completed Harness capability described by EV-012: Feature Governance Sync.
+
 ## Commands
 
 ```text
@@ -48,3 +52,15 @@ python skills\using-harness\scripts\knowledge_check.py --root . --docs-path docs
 ## Notes
 
 This sync keeps Harness public naming and repository identity. It backports the generic governance logic only: Feature Intake, Decision Context, Feature Index coarse retrieval, Goal-driven Feature Flow, and Empty Approval Guard.
+
+## Verification Scope
+
+This Evidence records the validation commands and artifacts available when the capability was synchronized into the Harness-branded repository.
+
+## Checks
+
+See the command log or Results section in this document.
+
+## Limitations
+
+Historical evidence was migrated from the previous Harness sync state; re-run current tests before making a fresh completion claim.

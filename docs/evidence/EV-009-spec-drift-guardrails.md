@@ -9,6 +9,10 @@ updated: 2026-06-08
 
 # EV-009: Spec Drift Guardrails
 
+## Supports Claim
+
+This Evidence supports the completed Harness capability described by EV-009: Spec Drift Guardrails.
+
 ## Scope
 
 验证 F006：Harness 已新增 Spec Drift Guardrails，并能在旧 spec / acceptance criteria 被真实案例、验证失败或用户反馈挑战时，把 Agent 从继续局部打补丁分流到 `harness-spec-drift` 判断。
@@ -58,3 +62,15 @@ Scanned 35 markdown file(s). Checked 28 knowledge artifact(s). Errors: 0. Warnin
 ## Notes
 
 本轮增强刻意保持克制：Start Gate 只识别并分流 Spec Drift 风险；Vision Gate 继续守护原始目标；Spec Drift 只判断 spec 是否仍可信。AGENTS 规则仍由用户手动复制和维护，避免把 Harness 从辅助治理能力变成侵入式项目配置接管。
+
+## Verification Scope
+
+This Evidence records the validation commands and artifacts available when the capability was synchronized into the Harness-branded repository.
+
+## Checks
+
+See the command log or Results section in this document.
+
+## Limitations
+
+Historical evidence was migrated from the previous Harness sync state; re-run current tests before making a fresh completion claim.

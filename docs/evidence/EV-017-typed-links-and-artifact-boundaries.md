@@ -51,7 +51,7 @@ python skills\using-harness\scripts\skill_metadata_check.py --root . --skills-pa
 - `docs/features/F001-closeout-entry-anchor-validation.md`
 - `docs/features/F002-canonical-harness-artifact-placement.md`
 - `docs/features/F003-optional-harness-hook-runtime.md`
-- `docs/features/F004-harness-delegation-gate-three-outcomes.md`
+- `docs/features/F004-delegation-gate-three-outcomes.md`
 - `docs/features/F005-session-recovery-hooks.md`
 - `docs/features/F006-skill-naming-compatibility.md`
 - `docs/features/F007-Harness-semantic-skill-routing.md`

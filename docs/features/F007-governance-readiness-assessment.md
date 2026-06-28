@@ -57,6 +57,30 @@ Done. Harness readiness now covers progress assessment, maturity assessment, dis
 
 - [EV-010 Governance Readiness Assessment](../evidence/EV-010-governance-readiness-assessment.md)
 
+### Evidence
+
+See linked Evidence in this Feature, if present.
+
+### Decisions / ADRs
+
+None recorded.
+
+### Lessons
+
+None recorded.
+
+### Specs / Plans
+
+None recorded.
+
+### Related Features
+
+None recorded.
+
+### External Context
+
+None recorded.
+
 ## Acceptance Criteria
 
 - [x] `harness-readiness-dashboard` frontmatter includes progress, maturity, distance-to-target, roadmap gap, delivery gap, and Chinese gap-assessment triggers.
@@ -99,3 +123,9 @@ None yet.
 ## Next Step
 
 If future real use shows roadmap planning needs decisions beyond status rollup, evaluate a separate planning or roadmap skill instead of overloading the readiness dashboard.
+
+
+
+
+
+
