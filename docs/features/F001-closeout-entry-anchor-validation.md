@@ -20,34 +20,33 @@ updated: 2026-05-22
 - 非目标或边界：不让脚本推断具体任务类型、不写死 runner/CLI/资产生命周期等场景关键词、不用脚本替代 Start Gate 的人工判断。
 - Exit Gate 对照来源：本 Feature 的 Acceptance Criteria、更新后的 `harness_closeout_check.py` 测试、`harness-knowledge-capture` final response contract。
 
-
 ## Feature Intake
 
-- Original problem: See Vision Anchor.
-- User pain point: See Vision Anchor.
-- Capability promise: Preserve the capability described by this Feature.
-- Non-goals: See Vision Anchor non-goals or boundaries.
-- Acceptance source: Acceptance Criteria and linked Evidence.
-- Open questions: none known.
+- Original problem: See `## Vision Anchor` original request or source.
+- User pain point: See `## Vision Anchor` user pain point or engineering problem.
+- Capability promise: Preserve the capability described by `## Goal` and `## Acceptance Criteria`.
+- Non-goals: See `## Vision Anchor` non-goals or boundaries.
+- Acceptance source: This Feature page and linked Evidence.
+- Open questions: none recorded for this completed Feature.
 
 ## Capability Contract
 
-- Maintain the current capability boundary described by this Feature.
+- The completed capability boundary is defined by `## Goal`, `## Vision Anchor`, and `## Acceptance Criteria`; detailed proof stays in linked Evidence.
 
 ## Decision Context
 
 ### Why
 
-This Feature preserves durable recovery context for `F001: Closeout Entry And Vision Anchor Validation`.
+完成声明是 Agent 最容易提前说出口、但最需要证据支撑的边界，因此 closeout 入口必须被显式锚定。
 
 ### Why Not
 
-Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+没有把 closeout 仅作为提示词建议处理，因为提示无法稳定阻止缺少 Evidence 的完成声明。
 
 ### If Modifying This Area, Check
 
-- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
-- Linked ADR, Lesson, Evidence, and related specs or plans.
+- 检查 closeout Evidence、`harness-knowledge-capture` 规则和 closeout 校验脚本是否仍然一致。
+- 确认修改不会削弱“完成声明前必须有 Evidence 与 completion permission”的边界。
 
 ## Current Status
 
@@ -55,8 +54,29 @@ Done。closeout checker 已经对 Entry Gate、Vision Anchor、Patch Churn Revie
 
 ## Links
 
-- [ADR-001 Start Gate Before Implementation](../decisions/ADR-001-start-gate-before-implementation.md)
+### Evidence
+
 - [EV-001 Closeout Entry Anchor Validation](../evidence/EV-001-closeout-entry-anchor-validation.md)
+
+### Decisions / ADRs
+
+- [ADR-001 Start Gate Before Implementation](../decisions/ADR-001-harness-start-gate-before-implementation.md)
+
+### Lessons
+
+- None.
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- None.
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 
@@ -67,18 +87,17 @@ Done。closeout checker 已经对 Entry Gate、Vision Anchor、Patch Churn Revie
 - [x] `harness-knowledge-capture` 的 Final Response Contract 与脚本字段保持一致。
 - [x] 测试覆盖通过、Harness knowledge artifacts 通过校验。
 
-
 ## Acceptance Map
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| F001: Closeout Entry And Vision Anchor Validation remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+| Feature acceptance criteria are satisfied | Checked items in `## Acceptance Criteria` | See `## Evidence` | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+| 2026-05-22 | completed | Feature implementation closed | See `## Evidence` | Legacy Feature migrated to the stricter governance shape. |
 
 ## Patch History
 
@@ -91,14 +110,13 @@ None yet
 
 [EV-001 Closeout Entry Anchor Validation](../evidence/EV-001-closeout-entry-anchor-validation.md)
 
-
 ## Recovery Snapshot
 
-- Read first: this Feature page.
-- Current capability state: see Current Status.
-- Known risks: see Patch History and linked Evidence.
-- Next safe action: follow Next Step after running required gates.
-- Unblock condition: not blocked unless Current Status says otherwise.
+- Read first: this Feature page, then linked Evidence.
+- Current capability state: completed; see `## Current Status`.
+- Known risks: none recorded beyond `## Patch History`.
+- Next safe action: follow `## Next Step`; record any delivered-behavior follow-up in `## Patch History`.
+- Unblock condition: not blocked.
 
 ## Next Step
 

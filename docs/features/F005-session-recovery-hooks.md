@@ -1,9 +1,10 @@
 ---
 id: F005
 doc_kind: feature
-status: completed
+status: superseded
 created: 2026-05-30
-updated: 2026-06-08
+updated: 2026-06-27
+superseded_by: F015
 ---
 
 # F005: Session Recovery Hooks
@@ -20,71 +21,94 @@ Add the second default Harness hook capability: lightweight `SessionStart` / `Pr
 - Non-goals or boundaries: Do not reintroduce default `PostToolUse`; do not move Start Gate, Vision Gate, ADR, Lesson, or Feature ownership judgment into hook code; do not make recovery snapshots canonical docs.
 - Exit Gate source: Hook runner tests, example hook configs, install docs, LL-003, and EV-008.
 
-
 ## Feature Intake
 
-- Original problem: See Vision Anchor.
-- User pain point: See Vision Anchor.
-- Capability promise: Preserve the capability described by this Feature.
-- Non-goals: See Vision Anchor non-goals or boundaries.
-- Acceptance source: Acceptance Criteria and linked Evidence.
-- Open questions: none known.
+- Original problem: See `## Vision Anchor` original request or source.
+- User pain point: See `## Vision Anchor` user pain point or engineering problem.
+- Capability promise: Preserve the capability described by `## Goal` and `## Acceptance Criteria`.
+- Non-goals: See `## Vision Anchor` non-goals or boundaries.
+- Acceptance source: This Feature page and linked Evidence.
+- Open questions: none recorded for this completed Feature.
 
 ## Capability Contract
 
-- Maintain the current capability boundary described by this Feature.
+- The completed capability boundary is defined by `## Goal`, `## Vision Anchor`, and `## Acceptance Criteria`; detailed proof stays in linked Evidence.
 
 ## Decision Context
 
 ### Why
 
-This Feature preserves durable recovery context for `F005: Session Recovery Hooks`.
+长会话、compact 和 handoff 会丢失上下文，因此需要最小恢复快照帮助未来 Agent 重新进入判断。
 
 ### Why Not
 
-Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+没有把 recovery snapshot 注入所有新会话，因为跨会话注入错误上下文会污染无关任务。
 
 ### If Modifying This Area, Check
 
-- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
-- Linked ADR, Lesson, Evidence, and related specs or plans.
+- 检查 `.Harness/session-recovery/` 语义、hook diagnostics 和 PreCompact/SessionStart 行为。
+- 确认恢复信息只在同一会话或明确 handoff 场景中使用。
 
 ## Current Status
 
-Done. The optional hook runner supports `pre-compact` and `session-start`, default examples wire session recovery hooks, same-session compact recovery can inject context, and missing, unreadable, or cross-session recovery state fails open.
+Superseded by [F015 Stop Only Hook Runtime](F015-stop-only-hook-runtime.md). Harness no longer provides default `pre-compact` / `session-start` recovery hooks because the implementation could only capture platform payload or transcript tail, not generate high-quality Agent-authored handoff. Platform compaction remains the platform's responsibility; explicit handoff is a user/task-level action, not a default hook behavior.
+
+Historical state before supersession: the optional hook runner supported `pre-compact` and `session-start`, default examples wired session recovery hooks, same-session compact recovery could inject context, and missing, unreadable, or cross-session recovery state failed open.
 OpenCode compaction recovery now uses OpenCode's native `output.context` channel instead of treating `session.created` as a recovery event. OpenCode Stop checking now listens through the plugin `event` hook for the global `session.idle` event, fetches recent session messages, and passes the latest assistant text to the normalized `stop` runner instead of registering `session.idle` as a direct trigger hook.
 
 ## Links
 
-- [F003 Optional Harness Hook Runtime](F003-optional-harness-hook-runtime.md)
-- [F004 Delegation Gate Three Outcomes](F004-delegation-gate-three-outcomes.md)
+### Evidence
+
+- [EV-008 Session Recovery Hooks](../evidence/EV-008-session-recovery-hooks.md)
+- [EV-022 Stop Only Hook Runtime](../evidence/EV-022-stop-only-hook-runtime.md)
+
+### Decisions / ADRs
+
+- None.
+
+### Lessons
+
 - [LL-003 Gate Outcomes Should Encode Next Action](../lessons/LL-003-gate-outcomes-encode-next-action.md)
 - [LL-004 Verify Codex Hook Schema Before Reinstalling Plugin Cache](../lessons/LL-004-codex-hook-plugin-schema-before-cache.md)
 - [LL-005 Session Recovery Must Be Session-Scoped](../lessons/LL-005-session-recovery-must-be-session-scoped.md)
 - [LL-006 Platform Hooks Must Use Native Context Channels](../lessons/LL-006-platform-hooks-native-context-channels.md)
 - [LL-007 Hook Runtime Needs Lifecycle Evidence](../lessons/LL-007-hook-runtime-needs-lifecycle-evidence.md)
-- [EV-008 Session Recovery Hooks](../evidence/EV-008-session-recovery-hooks.md)
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- [F003 Optional Harness Hook Runtime](F003-optional-harness-hook-runtime.md)
+- [F004 Delegation Gate Three Outcomes](F004-harness-delegation-gate-three-outcomes.md)
+- [F015 Stop Only Hook Runtime](F015-stop-only-hook-runtime.md)
+
+### External Context
+
+- [Guide: Hook Runtime Integration Lessons](../guides/hook-runtime-integration-lessons.md)
 
 ## Acceptance Criteria
 
-- [x] `pre-compact` writes `.harness/session-recovery/by-session/<session_id>.md` with deterministic recovery context from hook payload or transcript tail, and updates `latest.md` only for manual inspection.
+- [x] `pre-compact` writes `.Harness/session-recovery/by-session/<session_id>.md` with deterministic recovery context from hook payload or transcript tail, and updates `latest.md` only for manual inspection.
 - [x] `session-start` reads only the same-session compact recovery snapshot and returns additional context for platforms that can consume it.
 - [x] Missing, invalid, or unreadable recovery state returns `allow` with a warning or no-context reason instead of blocking Skills-only work.
 - [x] Codex, Claude Code, and OpenCode examples wire `session-start`, `pre-compact`, and `stop` while still excluding default `PostToolUse`.
-- [x] Recovery snapshots remain local runtime state under `.harness/`, not canonical Harness knowledge under `docs/`.
-
+- [x] Recovery snapshots remain local runtime state under `.Harness/`, not canonical Harness knowledge under `docs/`.
 
 ## Acceptance Map
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| F005: Session Recovery Hooks remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+| Feature acceptance criteria are satisfied | Checked items in `## Acceptance Criteria` | See `## Evidence` | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+| 2026-06-08 | completed | Feature implementation closed | See `## Evidence` | Legacy Feature migrated to the stricter governance shape. |
+| 2026-06-27 | superseded | Stop-only hook runtime narrowing | [EV-022](../evidence/EV-022-stop-only-hook-runtime.md) | Session recovery hooks were removed from current default hook runtime. |
 
 ## Patch History
 
@@ -93,12 +117,13 @@ OpenCode compaction recovery now uses OpenCode's native `output.context` channel
 | F005.1 | 2026-05-31 | pending | 新开独立会话可能读取同项目旧 `latest.md`，Codex `SessionStart` 输出也未使用官方 `hookSpecificOutput.additionalContext` 结构。 | 恢复快照按项目级 `latest.md` 建模，缺少 session/source 约束；Codex 分支输出复用了 generic 结构。 | 改为 `by-session/<session_id>.md`，仅 `source=compact` 且同一 session 时注入；新增污染防护和 Codex 输出结构测试。 | done |
 | F005.2 | 2026-05-31 | pending | OpenCode compaction could write a snapshot but not inject recovery context; OpenCode `sessionID` payloads also fell back to project-level `latest.md`. | The adapter copied the Codex/Claude `SessionStart` mental model instead of using OpenCode's `experimental.session.compacting(input, output)` contract and native `output.context` channel. | Recognize `sessionID`, remove `session.created` recovery wiring, inject same-session recovery context during `experimental.session.compacting`, and add regression tests for OpenCode's context output contract. | done |
 
-| F005.3 | 2026-05-31 | pending | Codex context compaction in `E:\Self-Project\Multi-Agent-Assi` produced session log events but no `.harness/session-recovery/` file. | The plugin-bundled `PreCompact` matcher used `auto|manual`; current Codex Desktop emitted `compacted/context_compacted` with no Harness hook execution evidence, so the matcher was too narrow or not interpreted as intended. | Set Codex `PreCompact` matcher to empty so all pre-compaction triggers run, while keeping `SessionStart` narrowed to `compact`; add a regression assertion for the matcher. | done |
-| F005.4 | 2026-05-31 | pending | A new Codex Desktop session in `E:\Work-Project\OtherWork\ScienceClaw` still recorded `compacted/context_compacted` without `.harness/session-recovery/` artifacts. | UI visibility, trusted hook config, and runner smoke were insufficient lifecycle proof; Codex did not provide observable evidence that plugin `PreCompact` executed for the real compaction event. | Add `hook_diagnostics.py` to run runner smoke and scan Codex session logs for compactions missing recovery artifacts; document Codex PreCompact as unproven when diagnostics warn. | done |
-| F005.5 | 2026-05-31 | pending | Codex Settings displayed all three Harness hooks, but new sessions still showed no observable `Stop`, `PreCompact`, or `SessionStart` execution. | The plugin-bundled config relied on unproven runtime assumptions: missing `[features].hooks` / `[features].plugin_hooks`, `hooks/hooks.json` versus root `hooks.json` discovery, direct `python ./skills/...` commands, and Unix-style environment expansion on Windows. UI config discovery was mistaken for command execution proof. | Enable Codex hook feature gates, keep both Codex hook config locations, route commands through `hooks/run-harness-hook.cmd` so the wrapper resolves the plugin root, use `commandWindows` with `%PLUGIN_ROOT%`, and add `.harness/hook-events/events.jsonl` runtime trace from the hook runner. | in progress |
+| F005.3 | 2026-05-31 | pending | Codex context compaction in `E:\Self-Project\Multi-Agent-Assi` produced session log events but no `.Harness/session-recovery/` file. | The plugin-bundled `PreCompact` matcher used `auto|manual`; current Codex Desktop emitted `compacted/context_compacted` with no Harness hook execution evidence, so the matcher was too narrow or not interpreted as intended. | Set Codex `PreCompact` matcher to empty so all pre-compaction triggers run, while keeping `SessionStart` narrowed to `compact`; add a regression assertion for the matcher. | done |
+| F005.4 | 2026-05-31 | pending | A new Codex Desktop session in `E:\Work-Project\OtherWork\ScienceClaw` still recorded `compacted/context_compacted` without `.Harness/session-recovery/` artifacts. | UI visibility, trusted hook config, and runner smoke were insufficient lifecycle proof; Codex did not provide observable evidence that plugin `PreCompact` executed for the real compaction event. | Add `hook_diagnostics.py` to run runner smoke and scan Codex session logs for compactions missing recovery artifacts; document Codex PreCompact as unproven when diagnostics warn. | done |
+| F005.5 | 2026-05-31 | pending | Codex Settings displayed all three Harness hooks, but new sessions still showed no observable `Stop`, `PreCompact`, or `SessionStart` execution. | The plugin-bundled config relied on unproven runtime assumptions: missing `[features].hooks` / `[features].plugin_hooks`, `hooks/hooks.json` versus root `hooks.json` discovery, direct `python ./skills/...` commands, and Unix-style environment expansion on Windows. UI config discovery was mistaken for command execution proof. | Enable Codex hook feature gates, keep both Codex hook config locations, route commands through `hooks/run-harness-hook.cmd` so the wrapper resolves the plugin root, use `commandWindows` with `%PLUGIN_ROOT%`, and add `.Harness/hook-events/events.jsonl` runtime trace from the hook runner. | done |
 | F005.6 | 2026-06-03 | pending | OpenCode example wired `session.idle` as a direct hook key, so Stop closeout checks were not supported by the current `@opencode-ai/plugin` `Hooks` contract; even a dispatched idle event only carries `sessionID`, not the final assistant text needed by the closeout checker. | The adapter conflated OpenCode's global event stream event `session.idle` with direct trigger hooks such as `experimental.session.compacting`, then treated lifecycle metadata as if it were a Stop payload. Current plugin types expose global events through `event(input)`, while `session.idle` appears only as an SDK event payload type. | Route OpenCode Stop checks through `event: async (input)`, filter `input.event.type === "session.idle"`, fetch recent session messages through `client.session.messages`, pass the latest assistant text as `last_assistant_message`, and add regression assertions for both the event entry and message extraction. | done |
-| F005.7 | 2026-06-08 | pending | Codex `commandWindows` used the cmd.exe-style command `"%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" <event>`, which fails before the wrapper starts when Codex launches the command through PowerShell. | The adapter assumed cmd.exe parsing for a command string that depends on `%PLUGIN_ROOT%` expansion. PowerShell treats the quoted path as an expression and reports the event argument as an unexpected token. | Wrap each Windows command as `cmd /d /s /c ""%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" <event>"`; add a Windows regression test that executes SessionStart, PreCompact, and Stop `commandWindows` values through PowerShell. | done |
-| F005.8 | 2026-06-08 | pending | Claude Code hook example used POSIX-style `$HARNESS_SKILL_ROOT/...` expansion, so Windows PowerShell resolved the runner path incorrectly and cmd.exe could not reliably run the example command. | The Claude example assumed shell-level environment-variable expansion was portable across bash, PowerShell, and cmd.exe. | Let Python read `HARNESS_SKILL_ROOT` and invoke `harness_hook.py`; add a Windows regression test that runs the Claude example commands through PowerShell and cmd.exe for SessionStart, PreCompact, and Stop. | done |
+| F005.7 | 2026-06-07 | pending | Codex UI showed every Harness hook exiting with `code 1`, including Stop, PreCompact, and SessionStart. | `commandWindows` used the cmd.exe-style command `"%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" <event>`, but Codex can invoke hook commands through PowerShell on Windows. PowerShell does not expand `%PLUGIN_ROOT%` and treats the quoted path as an expression, so the command fails before the wrapper reaches `harness_hook.py`. | Wrap Windows hook commands as `cmd /d /s /c ""%PLUGIN_ROOT%\hooks\run-harness-hook.cmd" <event>"`; add a regression test that executes each `commandWindows` through PowerShell with `PLUGIN_ROOT` set; sync the fixed config to the personal plugin source and cache. | done |
+| F005.8 | 2026-06-08 | pending | Claude Code hook example used POSIX-style `$Harness_SKILL_ROOT/...` expansion, so Windows PowerShell resolved the runner path incorrectly and cmd.exe could not reliably run the example command. | The Claude example assumed shell-level environment-variable expansion was portable across bash, PowerShell, and cmd.exe, repeating the same command-boundary class found in the Codex Windows adapter. | Let Python read `Harness_SKILL_ROOT` and invoke `harness_hook.py`; add a Windows regression test that runs the Claude example commands through PowerShell and cmd.exe for SessionStart, PreCompact, and Stop. | done |
+| F005.9 | 2026-06-27 | pending | Session recovery hooks duplicated platform compaction without producing Agent-authored structured handoff, creating complexity with unstable value. | `pre-compact` / `session-start` could only capture payload or transcript tail and could not make the Agent reason before compaction. | F015 removes session recovery hooks from runner, examples, docs, diagnostics, and tests; optional hook runtime is Stop-only. | superseded |
 
 ## Patch Churn Review
 
@@ -112,7 +137,7 @@ The fixes have moved progressively upstream:
 - F005.4 corrected the verification boundary: Codex hook recovery is not considered proven by config or smoke alone; it needs lifecycle evidence or a diagnostic warning.
 - F005.5 corrected the command execution assumption: Codex hook UI discovery is not enough; hook config must cover both observed discovery locations, command paths must avoid current-working-directory assumptions, and actual execution must produce trace evidence.
 - F005.6 corrected the OpenCode event contract: global lifecycle events must enter through `event(input)`, while direct trigger hooks remain limited to names present in the OpenCode `Hooks` interface.
-- F005.7 corrected the Codex Windows shell boundary: `commandWindows` cannot assume cmd.exe parsing when Codex may launch through PowerShell.
+- F005.7 corrected the Windows shell boundary: `commandWindows` cannot assume cmd.exe parsing when Codex may launch through PowerShell, so the config explicitly enters cmd.exe before relying on `%PLUGIN_ROOT%`.
 - F005.8 corrected the Claude Code example command boundary: hook examples should not rely on POSIX `$ENV` expansion when the same setting may be copied into Windows shells.
 
 The next adapter change should not add another local patch until it first captures a real trigger sample or platform contract for the affected hook. If another Codex/Claude/OpenCode hook issue appears, run `hook_diagnostics.py` or add a small adapter verification note/test fixture that records the observed event shape before changing matcher, payload, or output behavior.
@@ -121,15 +146,14 @@ The next adapter change should not add another local patch until it first captur
 
 [EV-008 Session Recovery Hooks](../evidence/EV-008-session-recovery-hooks.md)
 
-
 ## Recovery Snapshot
 
-- Read first: this Feature page.
-- Current capability state: see Current Status.
-- Known risks: see Patch History and linked Evidence.
-- Next safe action: follow Next Step after running required gates.
-- Unblock condition: not blocked unless Current Status says otherwise.
+- Read first: this Feature page, then linked Evidence.
+- Current capability state: superseded by F015; do not treat pre-compact/session-start recovery as current behavior.
+- Known risks: none recorded beyond `## Patch History`.
+- Next safe action: read F015 before modifying hook runtime behavior.
+- Unblock condition: not blocked.
 
 ## Next Step
 
-Use `hook_diagnostics.py` after Codex hook installation or update. Treat Codex `PreCompact` recovery as optional and unproven on machines where diagnostics find compaction events without recovery artifacts.
+Read F015 for current hook runtime behavior. Do not reintroduce `pre-compact` / `session-start` recovery unless a new decision explicitly accepts the runtime complexity and a high-quality handoff source.

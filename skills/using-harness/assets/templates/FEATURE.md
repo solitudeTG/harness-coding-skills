@@ -38,7 +38,7 @@ updated: YYYY-MM-DD
 
 用中文列出这个 Feature 当前承诺提供的能力边界。只写能力，不写实施流水。
 
--
+- 
 
 ## Decision Context
 
@@ -65,7 +65,31 @@ updated: YYYY-MM-DD
 
 ## Links
 
-链接相关 spec、plan、discussion、ADR、Lesson、Evidence、PR 或 commit。链接路径和文件名保持原样。
+按类型链接相关材料，避免把不同性质的材料堆在一起。没有内容的分类写 `None`，不要删除分类标题。
+
+### Evidence
+
+- None.
+
+### Decisions / ADRs
+
+- None.
+
+### Lessons
+
+- None.
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- None.
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 

@@ -20,34 +20,33 @@ updated: 2026-05-26
 - 非目标或边界：不迁移其他项目的历史文档，不把 Superpowers spec/plan 本身纳入 Harness artifact 类型，不引入项目级 registry。
 - Exit Gate 对照来源：本 Feature 的 Acceptance Criteria、ADR-005、EV-003、`tests.test_knowledge_check.KnowledgeCheckPlacementTests`。
 
-
 ## Feature Intake
 
-- Original problem: See Vision Anchor.
-- User pain point: See Vision Anchor.
-- Capability promise: Preserve the capability described by this Feature.
-- Non-goals: See Vision Anchor non-goals or boundaries.
-- Acceptance source: Acceptance Criteria and linked Evidence.
-- Open questions: none known.
+- Original problem: See `## Vision Anchor` original request or source.
+- User pain point: See `## Vision Anchor` user pain point or engineering problem.
+- Capability promise: Preserve the capability described by `## Goal` and `## Acceptance Criteria`.
+- Non-goals: See `## Vision Anchor` non-goals or boundaries.
+- Acceptance source: This Feature page and linked Evidence.
+- Open questions: none recorded for this completed Feature.
 
 ## Capability Contract
 
-- Maintain the current capability boundary described by this Feature.
+- The completed capability boundary is defined by `## Goal`, `## Vision Anchor`, and `## Acceptance Criteria`; detailed proof stays in linked Evidence.
 
 ## Decision Context
 
 ### Why
 
-This Feature preserves durable recovery context for `F002: Canonical Harness Artifact Placement`.
+Harness artifact 需要稳定路径，未来 Agent 才能用相同规则检索 Feature、ADR、Lesson 和 Evidence。
 
 ### Why Not
 
-Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+没有沿用 `docs/superpowers/**` 作为正式 artifact 目录，因为 Superpowers spec/plan 是 linked material，不是 Harness 的事实源目录。
 
 ### If Modifying This Area, Check
 
-- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
-- Linked ADR, Lesson, Evidence, and related specs or plans.
+- 检查 `knowledge_check.py` 的 canonical directory 规则。
+- 检查 Feature、ADR、Lesson、Evidence 模板和相关安装文档是否需要同步更新。
 
 ## Current Status
 
@@ -55,12 +54,31 @@ Done。validator、bundled skill validator 和 Harness skill 文案已经更新�
 
 ## Links
 
-- [ADR-005 Canonical Harness Artifact Placement](../decisions/ADR-005-canonical-harness-artifact-placement.md)
-- [ADR-006 Skill Progressive Disclosure Boundary](../decisions/ADR-006-skill-progressive-disclosure-boundary.md)
-- [LL-002 Skill Hot Path Constraints Must Stay Visible](../lessons/LL-002-skill-hot-path-constraints.md)
+### Evidence
+
 - [EV-003 Canonical Artifact Placement](../evidence/EV-003-canonical-artifact-placement.md)
 - [EV-004 Hot Path Harness Constraints](../evidence/EV-004-hot-path-harness-constraints.md)
 - [EV-005 Skill Iteration Learning Docs](../evidence/EV-005-skill-iteration-learning-docs.md)
+
+### Decisions / ADRs
+
+- [ADR-005 Canonical Harness Artifact Placement](../decisions/ADR-005-canonical-harness-artifact-placement.md)
+- [ADR-006 Skill Progressive Disclosure Boundary](../decisions/ADR-006-skill-progressive-disclosure-boundary.md)
+
+### Lessons
+
+- [LL-002 Skill Hot Path Constraints Must Stay Visible](../lessons/LL-002-skill-hot-path-constraints.md)
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- None.
+
+### External Context
+
 - [Guide: Harness Skill 迭代复盘](../guides/skill-iteration-lessons.md)
 
 ## Acceptance Criteria
@@ -72,18 +90,17 @@ Done。validator、bundled skill validator 和 Harness skill 文案已经更新�
 - [x] `using-harness`、`harness-start-gate`、`harness-knowledge-capture` 明确禁止把 Harness artifacts 放进 `docs/superpowers/**`。
 - [x] `scripts/install.ps1 codex` 可把更新后的 Harness skills 同步到本机 Codex skills。
 
-
 ## Acceptance Map
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| F002: Canonical Harness Artifact Placement remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+| Feature acceptance criteria are satisfied | Checked items in `## Acceptance Criteria` | See `## Evidence` | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+| 2026-05-26 | completed | Feature implementation closed | See `## Evidence` | Legacy Feature migrated to the stricter governance shape. |
 
 ## Patch History
 
@@ -97,14 +114,13 @@ Done。validator、bundled skill validator 和 Harness skill 文案已经更新�
 [EV-004 Hot Path Harness Constraints](../evidence/EV-004-hot-path-harness-constraints.md)
 [EV-005 Skill Iteration Learning Docs](../evidence/EV-005-skill-iteration-learning-docs.md)
 
-
 ## Recovery Snapshot
 
-- Read first: this Feature page.
-- Current capability state: see Current Status.
-- Known risks: see Patch History and linked Evidence.
-- Next safe action: follow Next Step after running required gates.
-- Unblock condition: not blocked unless Current Status says otherwise.
+- Read first: this Feature page, then linked Evidence.
+- Current capability state: completed; see `## Current Status`.
+- Known risks: none recorded beyond `## Patch History`.
+- Next safe action: follow `## Next Step`; record any delivered-behavior follow-up in `## Patch History`.
+- Unblock condition: not blocked.
 
 ## Next Step
 

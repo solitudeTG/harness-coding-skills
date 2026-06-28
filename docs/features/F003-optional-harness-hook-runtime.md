@@ -3,7 +3,7 @@ id: F003
 doc_kind: feature
 status: completed
 created: 2026-05-30
-updated: 2026-05-31
+updated: 2026-06-27
 ---
 
 # F003: Optional Harness Hook Runtime
@@ -20,49 +20,69 @@ Add an optional hook runtime for Harness so Codex, Claude Code, and OpenCode can
 - Non-goals or boundaries: Do not replace Harness Skills, do not encode Start Gate or ADR judgment in hook logic, and do not make hook installation a prerequisite for installing or using Skills.
 - Exit Gate source: This Feature page, hook runner tests, updated install docs, and the final verification output.
 
-
 ## Feature Intake
 
-- Original problem: See Vision Anchor.
-- User pain point: See Vision Anchor.
-- Capability promise: Preserve the capability described by this Feature.
-- Non-goals: See Vision Anchor non-goals or boundaries.
-- Acceptance source: Acceptance Criteria and linked Evidence.
-- Open questions: none known.
+- Original problem: See `## Vision Anchor` original request or source.
+- User pain point: See `## Vision Anchor` user pain point or engineering problem.
+- Capability promise: Preserve the capability described by `## Goal` and `## Acceptance Criteria`.
+- Non-goals: See `## Vision Anchor` non-goals or boundaries.
+- Acceptance source: This Feature page and linked Evidence.
+- Open questions: none recorded for this completed Feature.
 
 ## Capability Contract
 
-- Maintain the current capability boundary described by this Feature.
+- The completed capability boundary is defined by `## Goal`, `## Vision Anchor`, and `## Acceptance Criteria`; detailed proof stays in linked Evidence.
 
 ## Decision Context
 
 ### Why
 
-This Feature preserves durable recovery context for `F003: Optional Harness Hook Runtime`.
+Hook runtime 可以提升恢复和 closeout 自动化，但必须保持可选，避免 broken hook 阻断正常 Skill 使用。
 
 ### Why Not
 
-Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+没有把 Start Gate、Vision Gate 或 Feature ownership 判断移入 deterministic hook，因为这些判断需要上下文和语义裁量。
 
 ### If Modifying This Area, Check
 
-- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
-- Linked ADR, Lesson, Evidence, and related specs or plans.
+- 检查 hook examples、hook diagnostics 和 install docs 是否同步。
+- 确认 hook failure 仍然 fail open，除非 completion boundary 已被明确证明失败。
 
 ## Current Status
 
-Done. The optional hook runtime is bundled under `skills/using-harness/hooks/`, tested, and documented as an enhancement that does not replace Skills-only installation. F005 adds the second default slice for session recovery.
+Done. The optional hook runtime is bundled under `skills/using-harness/hooks/`, tested, and documented as an enhancement that does not replace Skills-only installation. F015 narrows the default hook surface to Stop-only completion-claim checking; session recovery hooks are no longer a current capability.
 
 ## Links
 
-- [F001 Closeout Entry And Vision Anchor Validation](F001-closeout-entry-anchor-validation.md)
-- [F002 Canonical Harness Artifact Placement](F002-canonical-harness-artifact-placement.md)
-- [ADR-006 Skill Progressive Disclosure Boundary](../decisions/ADR-006-skill-progressive-disclosure-boundary.md)
-- [LL-002 Skill Hot Path Constraints Must Stay Visible](../lessons/LL-002-skill-hot-path-constraints.md)
-- [LL-004 Verify Codex Hook Schema Before Reinstalling Plugin Cache](../lessons/LL-004-codex-hook-plugin-schema-before-cache.md)
-- [F005 Session Recovery Hooks](F005-session-recovery-hooks.md)
+### Evidence
+
 - [EV-006 Optional Harness Hook Runtime](../evidence/EV-006-optional-harness-hook-runtime.md)
 - [EV-008 Session Recovery Hooks](../evidence/EV-008-session-recovery-hooks.md)
+- [EV-022 Stop Only Hook Runtime](../evidence/EV-022-stop-only-hook-runtime.md)
+
+### Decisions / ADRs
+
+- [ADR-006 Skill Progressive Disclosure Boundary](../decisions/ADR-006-skill-progressive-disclosure-boundary.md)
+
+### Lessons
+
+- [LL-002 Skill Hot Path Constraints Must Stay Visible](../lessons/LL-002-skill-hot-path-constraints.md)
+- [LL-004 Verify Codex Hook Schema Before Reinstalling Plugin Cache](../lessons/LL-004-codex-hook-plugin-schema-before-cache.md)
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- [F001 Closeout Entry And Vision Anchor Validation](F001-closeout-entry-anchor-validation.md)
+- [F002 Canonical Harness Artifact Placement](F002-canonical-harness-artifact-placement.md)
+- [F005 Session Recovery Hooks](F005-session-recovery-hooks.md)
+- [F015 Stop Only Hook Runtime](F015-stop-only-hook-runtime.md)
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 
@@ -71,20 +91,20 @@ Done. The optional hook runtime is bundled under `skills/using-harness/hooks/`, 
 - [x] Hook runner failures caused by missing hook dependencies, missing docs roots, or platform JSON differences fail open with a warning instead of breaking Skill-only workflows.
 - [x] Hook resources are bundled under `skills/using-harness/` so Skill installation owns the script resources and hook installation can remain optional.
 - [x] Installation documentation explains Basic install as Skills-only and Enhanced install as Skills + Hooks for Codex, Claude Code, and OpenCode.
-- [x] Session recovery hooks write local runtime context before compaction and expose it at session start without replacing Harness Skills.
-
+- [x] Default hook examples are narrowed to Stop-only completion-claim checking; session recovery hooks are historical and superseded by F015.
 
 ## Acceptance Map
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| F003: Optional Harness Hook Runtime remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+| Feature acceptance criteria are satisfied | Checked items in `## Acceptance Criteria` | See `## Evidence` | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+| 2026-05-31 | completed | Feature implementation closed | See `## Evidence` | Legacy Feature migrated to the stricter governance shape. |
+| 2026-06-27 | completed | Stop-only hook runtime narrowing | [EV-022](../evidence/EV-022-stop-only-hook-runtime.md) | Default hook examples no longer wire pre-compact/session-start recovery. |
 
 ## Patch History
 
@@ -95,17 +115,17 @@ None yet
 
 ## Evidence
 
-[EV-006 Optional Harness Hook Runtime](../evidence/EV-006-optional-harness-hook-runtime.md)
-
+- [EV-006 Optional Harness Hook Runtime](../evidence/EV-006-optional-harness-hook-runtime.md)
+- [EV-022 Stop Only Hook Runtime](../evidence/EV-022-stop-only-hook-runtime.md)
 
 ## Recovery Snapshot
 
-- Read first: this Feature page.
-- Current capability state: see Current Status.
-- Known risks: see Patch History and linked Evidence.
-- Next safe action: follow Next Step after running required gates.
-- Unblock condition: not blocked unless Current Status says otherwise.
+- Read first: this Feature page, then linked Evidence.
+- Current capability state: completed; current default hook surface is Stop-only.
+- Known risks: none recorded beyond `## Patch History`.
+- Next safe action: follow `## Next Step`; record any delivered-behavior follow-up in `## Patch History`.
+- Unblock condition: not blocked.
 
 ## Next Step
 
-Use the Stop and session recovery slices in local plugin trials for Codex, Claude Code, and OpenCode before tightening platform-specific adapters.
+Use the Stop hook in local plugin trials for Codex, Claude Code, and OpenCode before tightening platform-specific adapters.

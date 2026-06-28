@@ -67,7 +67,29 @@ Active.
 
 ## Links
 
-None.
+### Evidence
+
+- Final response or linked Evidence.
+
+### Decisions / ADRs
+
+- None.
+
+### Lessons
+
+- None.
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- None.
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 
@@ -163,7 +185,29 @@ Active.
 
 ## Links
 
-None.
+### Evidence
+
+- Final response or linked Evidence.
+
+### Decisions / ADRs
+
+- None.
+
+### Lessons
+
+- None.
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- None.
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 
@@ -214,7 +258,15 @@ created: 2026-05-18
 
 # EV-010: Export Reports
 
-## Commands
+## Supports Claim
+
+Export report behavior is backed by the recorded validation.
+
+## Verification Scope
+
+The check covers feature relationship resolution for export report evidence.
+
+## Checks
 
 `python scripts/knowledge_check.py --root . --docs-path docs`
 
@@ -225,6 +277,10 @@ Passed.
 ## Artifacts
 
 None.
+
+## Limitations
+
+This fixture does not validate production export behavior.
 
 ## Notes
 
@@ -243,7 +299,15 @@ created: 2026-05-18
 
 # EV-010: Export Reports
 
-## Commands
+## Supports Claim
+
+Export report behavior is backed by the recorded validation.
+
+## Verification Scope
+
+The check covers feature relationship resolution for export report evidence.
+
+## Checks
 
 `python scripts/knowledge_check.py --root . --docs-path docs`
 
@@ -255,10 +319,118 @@ Passed.
 
 None.
 
+## Limitations
+
+This fixture does not validate production export behavior.
+
 ## Notes
 
 Feature relationship is expressed through feature_refs.
 """
+
+
+def lesson_doc() -> str:
+    return """---
+id: LL-010
+doc_kind: lesson
+status: active
+scope: project
+feature_refs: []
+applies_to: [exports, reports]
+created: 2026-05-18
+updated: 2026-05-18
+---
+
+# LL-010: Export Report Protection
+
+## Case
+
+Export report validation failed after a completed workflow changed.
+
+## Resolution
+
+The report validation path was stabilized and documented.
+
+## Pitfall
+
+Do not treat repeated export report failures as unrelated local bugs.
+
+## Root Cause
+
+The owning Feature and prior validation evidence were not checked first.
+
+## Protection
+
+Run the owning Feature retrieval and linked Evidence checks before changing export report behavior.
+
+## Source
+
+Final response or linked Evidence.
+
+## Principle
+
+Repeated failures should be attributed before patching.
+"""
+
+
+def adr_doc() -> str:
+    return """---
+id: ADR-010
+doc_kind: adr
+status: accepted
+scope: project
+feature_refs: []
+decision_area: test-decision
+created: 2026-05-18
+updated: 2026-05-18
+---
+
+# ADR-010: Test Decision Boundary
+
+## Context
+
+A durable test decision needs a recoverable rationale.
+
+## Decision
+
+Use the accepted test decision.
+
+## Decision Boundary
+
+### Applies To
+
+- Test ADR validation fixtures.
+
+### Does Not Apply To
+
+- Production runtime behavior.
+
+## Rejected Options
+
+- Keep the old structure: rejected because it does not capture decision boundaries.
+
+## Consequences
+
+Future readers can see the accepted tradeoff and its cost.
+
+## Before Changing This Decision
+
+Check the linked Feature, Evidence, validator expectations, and affected ADR docs.
+
+## Evidence
+
+Final response or linked Evidence.
+"""
+
+
+def feature_index(*rows: str) -> str:
+    return (
+        "# Feature Index\n\n"
+        "Use this file as the coarse recall entry before opening Feature pages.\n\n"
+        "| Feature | Domain | Trigger Terms | Owned Paths | Read When |\n"
+        "| --- | --- | --- | --- | --- |\n"
+        + "".join(rows)
+    )
 
 
 def run_check(docs: Path, *extra_args: str) -> subprocess.CompletedProcess[str]:
@@ -457,6 +629,313 @@ class KnowledgeCheckFeatureGovernanceTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("blocked feature F010 Recovery Snapshot must include Unblock condition", result.stdout)
+
+    def test_rejects_feature_links_without_required_categories(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            start = feature_doc().index("## Links")
+            end = feature_doc().index("## Acceptance Criteria")
+            content = (
+                feature_doc()[:start]
+                + "## Links\n\n- [EV-010](../evidence/EV-010-export-reports.md)\n\n"
+                + feature_doc()[end:]
+            )
+            (features / "F010-export-reports.md").write_text(content, encoding="utf-8")
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Links must include category: ### Evidence", result.stdout)
+
+
+class KnowledgeCheckFeatureIndexTests(unittest.TestCase):
+    def test_feature_index_local_check_accepts_current_feature_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            (features / "INDEX.md").write_text(
+                feature_index(
+                    "| [F010](F010-export-reports.md) | exports | export, reports, regression | `exports/` | read when export reports change |\n"
+                ),
+                encoding="utf-8",
+            )
+            (features / "F010-export-reports.md").write_text(feature_doc(), encoding="utf-8")
+
+            result = run_check(docs, "--feature-index", "F010-export-reports")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_feature_index_local_check_rejects_missing_current_feature_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            (features / "INDEX.md").write_text(
+                feature_index(
+                    "| [F011](F011-import-reports.md) | imports | import, reports | `imports/` | read when import reports change |\n"
+                ),
+                encoding="utf-8",
+            )
+            (features / "F010-export-reports.md").write_text(feature_doc(), encoding="utf-8")
+            (features / "F011-import-reports.md").write_text(
+                feature_doc_with_id("F011"),
+                encoding="utf-8",
+            )
+
+            result = run_check(docs, "--feature-index", "F010-export-reports")
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Feature Index missing local Feature entry: F010-export-reports", result.stdout)
+
+    def test_feature_index_local_check_rejects_duplicate_current_feature_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            (features / "INDEX.md").write_text(
+                feature_index(
+                    "| [F010](F010-export-reports.md) | exports | export, reports | `exports/` | read when export reports change |\n"
+                    "| [F010 again](F010-export-reports.md) | exports | regression | `exports/` | read when regressions appear |\n"
+                ),
+                encoding="utf-8",
+            )
+            (features / "F010-export-reports.md").write_text(feature_doc(), encoding="utf-8")
+
+            result = run_check(docs, "--feature-index", "F010-export-reports")
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Feature Index has duplicate local Feature entry: F010-export-reports", result.stdout)
+
+    def test_feature_index_global_audit_is_explicit_only(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            features = docs / "features"
+            features.mkdir(parents=True)
+            (features / "INDEX.md").write_text(
+                feature_index(
+                    "| [F010](F010-export-reports.md) | exports | export, reports | `exports/` | read when export reports change |\n"
+                ),
+                encoding="utf-8",
+            )
+            (features / "F010-export-reports.md").write_text(feature_doc(), encoding="utf-8")
+            (features / "F011-import-reports.md").write_text(
+                feature_doc_with_id("F011"),
+                encoding="utf-8",
+            )
+
+            default_result = run_check(docs)
+            global_result = run_check(docs, "--feature-index-all")
+
+        self.assertEqual(default_result.returncode, 0, default_result.stdout + default_result.stderr)
+        self.assertNotEqual(global_result.returncode, 0)
+        self.assertIn("Feature Index missing active/completed Feature entry: F011-import-reports", global_result.stdout)
+
+
+class KnowledgeCheckLessonGovernanceTests(unittest.TestCase):
+    def test_allows_lesson_case_resolution_structure(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            lessons = docs / "lessons"
+            lessons.mkdir(parents=True)
+            (lessons / "LL-010-export-report-protection.md").write_text(
+                lesson_doc(),
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_rejects_lesson_without_case(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            lessons = docs / "lessons"
+            lessons.mkdir(parents=True)
+            content = lesson_doc().replace(
+                "## Case\n\nExport report validation failed after a completed workflow changed.\n\n",
+                "",
+            )
+            (lessons / "LL-010-export-report-protection.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Case", result.stdout)
+
+    def test_rejects_lesson_without_resolution(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            lessons = docs / "lessons"
+            lessons.mkdir(parents=True)
+            content = lesson_doc().replace(
+                "## Resolution\n\nThe report validation path was stabilized and documented.\n\n",
+                "",
+            )
+            (lessons / "LL-010-export-report-protection.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Resolution", result.stdout)
+
+
+class KnowledgeCheckAdrGovernanceTests(unittest.TestCase):
+    def test_allows_adr_decision_boundary_structure(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            decisions = docs / "decisions"
+            decisions.mkdir(parents=True)
+            (decisions / "ADR-010-test-decision-boundary.md").write_text(
+                adr_doc(),
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_rejects_adr_without_decision_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            decisions = docs / "decisions"
+            decisions.mkdir(parents=True)
+            start = adr_doc().index("## Decision Boundary")
+            end = adr_doc().index("## Rejected Options")
+            content = adr_doc()[:start] + adr_doc()[end:]
+            (decisions / "ADR-010-test-decision-boundary.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Decision Boundary", result.stdout)
+
+    def test_rejects_adr_without_rejected_options(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            decisions = docs / "decisions"
+            decisions.mkdir(parents=True)
+            content = adr_doc().replace(
+                "## Rejected Options\n\n"
+                "- Keep the old structure: rejected because it does not capture decision boundaries.\n\n",
+                "",
+            )
+            (decisions / "ADR-010-test-decision-boundary.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Rejected Options", result.stdout)
+
+    def test_rejects_adr_without_before_changing_decision(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            decisions = docs / "decisions"
+            decisions.mkdir(parents=True)
+            content = adr_doc().replace(
+                "## Before Changing This Decision\n\n"
+                "Check the linked Feature, Evidence, validator expectations, and affected ADR docs.\n\n",
+                "",
+            )
+            (decisions / "ADR-010-test-decision-boundary.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Before Changing This Decision", result.stdout)
+
+
+class KnowledgeCheckEvidenceGovernanceTests(unittest.TestCase):
+    def test_allows_evidence_claim_bound_structure(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            evidence = docs / "evidence"
+            evidence.mkdir(parents=True)
+            (evidence / "EV-010-export-reports-validation.md").write_text(
+                evidence_doc("[]"),
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_rejects_evidence_without_supported_claim(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            evidence = docs / "evidence"
+            evidence.mkdir(parents=True)
+            content = evidence_doc("[]").replace(
+                "## Supports Claim\n\n"
+                "Export report behavior is backed by the recorded validation.\n\n",
+                "",
+            )
+            (evidence / "EV-010-export-reports-validation.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Supports Claim", result.stdout)
+
+    def test_rejects_evidence_without_checks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            evidence = docs / "evidence"
+            evidence.mkdir(parents=True)
+            content = evidence_doc("[]").replace(
+                "## Checks\n\n"
+                "`python scripts/knowledge_check.py --root . --docs-path docs`\n\n",
+                "",
+            )
+            (evidence / "EV-010-export-reports-validation.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Checks", result.stdout)
+
+    def test_rejects_evidence_without_limitations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp) / "docs"
+            evidence = docs / "evidence"
+            evidence.mkdir(parents=True)
+            content = evidence_doc("[]").replace(
+                "## Limitations\n\n"
+                "This fixture does not validate production export behavior.\n\n",
+                "",
+            )
+            (evidence / "EV-010-export-reports-validation.md").write_text(
+                content,
+                encoding="utf-8",
+            )
+
+            result = run_check(docs)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing required section: ## Limitations", result.stdout)
 
 
 class KnowledgeCheckFeatureRefsTests(unittest.TestCase):

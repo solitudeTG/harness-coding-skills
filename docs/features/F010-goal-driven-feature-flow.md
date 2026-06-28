@@ -2,102 +2,126 @@
 id: F010
 doc_kind: feature
 status: completed
-created: 2026-06-26
-updated: 2026-06-26
+created: 2026-06-18
+updated: 2026-06-18
 ---
 
-# F010: Goal Driven Feature Flow
+# F010: Goal-Driven Feature Flow
 
 ## Goal
 
-把默认逐 Feature 设计审批收敛为 Goal 驱动执行：用户已经给出清晰 Goal 后，Agent 可以在 Goal 范围内连续创建或更新 Feature 记忆并推进实现；只有目标不清、范围越界、重大取舍、验收冲突或 patch churn 时才回问用户。
+让 Harness 从默认逐 Feature 设计审批，收敛为 Goal 驱动执行：用户在开始前把需求、目标、边界和验收讲清楚后，Agent 可以在 Goal 范围内连续创建 Feature 记忆并推进实现；只有目标不清、范围越界、重大取舍、验收冲突或 patch churn 时才回问用户。
 
 ## Vision Anchor
 
-- 原始请求或来源：上游项目新增 Goal-driven Feature Flow 和 Empty Approval Guard，用户要求同步通用逻辑到 solitude。
-- 用户痛点或工程问题：要求用户批准不存在或未展示的 Feature/design/plan，会把工程记忆误当成审批关卡，也会打断连续开发。
-- 期望结果：`using-harness`、`harness-start-gate` 和 `harness-knowledge-capture` 明确 Goal 是授权边界，Feature 是工程记忆，不默认逐 Feature 设计审批。
-- 非目标或边界：不移除 closeout/knowledge-capture 完成门禁；不新增复杂状态机；不把 Hook 变成 Start Gate 或 Feature ownership 判断器。
-- Exit Gate 对照来源：EV-012、`tests/test_goal_driven_feature_flow.py`、全量 pytest。
+- 原始请求或来源：用户指出一次项目会话要求“批准 F002 设计”，但该项目中没有 F002，也没有可审批设计；随后明确认可移除默认设计审批 gate，并要求完整落地到本机 Skill。
+- 用户痛点或工程问题：逐 Feature 设计审批会打断 Goal 驱动的连续开发，还可能让 Agent 把“应该先创建 Feature/设计”误写成“已有设计等待审批”。
+- 期望结果：默认移除 per-Feature design approval；Feature 是工程记忆而不是审批关卡；清晰 Goal 成为授权边界；closeout 门禁继续保留。
+- 非目标或边界：不新增复杂状态机；不移除 closeout/harness-knowledge-capture 完成门禁；不让 Hook 接管 Start Gate、Vision Gate 或 Feature ownership 判断。
+- Exit Gate 对照来源：本 Feature、EV-013、`tests/test_goal_driven_feature_flow.py`、更新后的 `using-harness` / `harness-start-gate` / `harness-knowledge-capture`。
 
 ## Feature Intake
 
-- Original problem: Agent 可能要求用户批准不存在或未展示的设计。
-- User pain point: 用户无法审批空 artifact，且逐 Feature 暂停会破坏 Goal 范围内的连续开发。
-- Capability promise: Harness 明确 Goal 授权边界和 Empty Approval Guard。
-- Non-goals: 不取消完成声明前的 Evidence/closeout 门禁。
-- Acceptance source: EV-012 和 Goal-driven regression tests。
-- Open questions: 是否未来需要 Goal Intake 模板，等待真实使用反馈后决定。
+- Original problem: Agent 在缺少 Feature 和设计产物时仍请求用户批准“F002 设计”，说明审批 gate 没有绑定真实 artifact。
+- User pain point: 用户无法审批不存在或未展示的设计，而且逐 Feature 暂停会破坏 Codex Goal 下的连续开发体验。
+- Capability promise: Harness 明确 Goal 是授权边界，Feature 是工程记忆；默认不逐 Feature 设计审批，只在边界、风险或方向问题上回问用户。
+- Non-goals: 不拆出一串新状态，不移除 closeout 门禁，不把 Feature 变成完整 spec/plan/log 容器。
+- Acceptance source: 本 Feature、EV-013 和新增回归测试。
+- Open questions: 是否后续需要把 Goal Intake 模板化为独立文档，等待真实使用反馈后再决定。
 
 ## Capability Contract
 
-- 清晰 Goal 授权范围内，Agent 可连续拆分并推进多个 Feature。
-- 非平凡工作仍需创建或更新 Feature 记忆，用于恢复、验收、Evidence 和 Patch History。
+- 清晰 Goal 授权范围内，Agent 可以连续拆分和实现多个 Feature。
+- 非平凡 Feature 仍必须创建或更新 Feature page，用于恢复、验收、Evidence 和 Patch History。
 - 默认不要求用户逐 Feature 审批设计。
 - 只有 Goal 缺失/模糊、Feature 越界、重大取舍、验收冲突或 patch churn 时才 ask user。
+- closeout/harness-knowledge-capture 门禁继续作为完成声明前的硬约束。
 
 ## Decision Context
 
 ### Why
 
-Goal 是用户授权边界。Feature 是工程记忆，不是审批关卡。把两者混在一起会让 Agent 在没有真实 artifact 的情况下请求“批准设计”，反而降低推进效率和可追溯性。
+清晰 Goal 已经是用户授权边界，Agent 在 Goal 范围内应能连续创建或更新 Feature 记忆并推进实现。
 
 ### Why Not
 
-没有删除 closeout 门禁，因为 Goal 授权只回答“能否推进”，不回答“是否完成且有证据”。完成声明仍由 Knowledge Capture 和 Evidence 约束。
+没有默认要求逐 Feature 设计审批，因为这会把工程记忆误当成用户审批关卡，并打断 Goal 驱动开发。
 
 ### If Modifying This Area, Check
 
-- `using-harness` 的 Goal-Driven Feature Flow。
-- `harness-start-gate` 的 Goal-Driven Feature Flow 和 Empty Approval Guard。
-- `harness-knowledge-capture` 是否仍拥有 closeout/completion permission。
-- `tests/test_goal_driven_feature_flow.py`。
+- 检查 `using-harness`、`harness-start-gate` 和 `harness-knowledge-capture` 是否仍区分 Goal 授权与 Feature 记忆。
+- 确认没有重新引入对不存在或未展示 artifact 的空审批请求。
 
 ## Current Status
 
-Completed。Goal-driven flow 和 Empty Approval Guard 已进入 Harness 热路径，并由测试覆盖。
+Done。核心 Skill 热路径已加入 Goal-Driven Feature Flow 和 Empty Approval Guard，新增回归测试和 Evidence。
 
 ## Links
 
-- [EV-012 Feature Governance Sync](../evidence/EV-012-feature-governance-sync.md)
-- [F009 Feature Intake Governance](F009-feature-intake-governance.md)
+### Evidence
+
+- [EV-013 Goal Driven Feature Flow](../evidence/EV-013-goal-driven-feature-flow.md)
+
+### Decisions / ADRs
+
+- None.
+
+### Lessons
+
+- [LL-003 Gate Outcomes Should Encode Next Action](../lessons/LL-003-gate-outcomes-encode-next-action.md)
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- None.
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 
-- [x] `using-harness` 明确 Goal 是用户授权边界。
-- [x] `harness-start-gate` 明确 Feature 记忆不是用户审批 checkpoint。
-- [x] `harness-knowledge-capture` 保留 closeout/completion permission。
-- [x] Empty Approval Guard 禁止请求用户批准不存在或未展示的 artifact。
+- [x] `using-harness` 明确 Goal 是用户授权边界，Feature 是工程记忆，不默认逐 Feature 设计审批。
+- [x] `harness-start-gate` 明确 Goal 范围内创建 Feature 是记忆动作，不是用户审批 checkpoint。
+- [x] `harness-knowledge-capture` 保留 closeout/completion permission，同时说明 Feature 不是审批关卡。
+- [x] 空审批被禁止：不得要求用户批准不存在或未展示的 Feature/design/plan。
+- [x] 新增回归测试覆盖上述契约。
 
 ## Acceptance Map
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| Goal 替代默认逐 Feature 审批 | Skill 热路径和测试包含 Goal/Feature/approval guard 契约 | [EV-012](../evidence/EV-012-feature-governance-sync.md) | completed |
-| closeout 门禁保留 | Knowledge Capture completion permission 文案保留 | [EV-012](../evidence/EV-012-feature-governance-sync.md) | completed |
+| Goal 驱动替代默认逐 Feature 审批 | Skill 热路径和测试包含 Goal/Feature/approval guard 契约 | [EV-013](../evidence/EV-013-goal-driven-feature-flow.md) | completed |
+| closeout 门禁保留 | Knowledge Capture closeout 文案未移除，测试仍覆盖 closeout convergence | [EV-013](../evidence/EV-013-goal-driven-feature-flow.md) | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-26 | completed | solitude 同步 Goal-driven flow | [EV-012](../evidence/EV-012-feature-governance-sync.md) | 默认设计审批移除，Feature 作为记忆保留。 |
+| 2026-06-18 | completed | User approved goal-driven flow and requested local sync | [EV-013](../evidence/EV-013-goal-driven-feature-flow.md) | 默认设计审批移除，Feature 作为记忆保留。 |
 
 ## Patch History
 
-None yet.
+None yet
+
+| Patch | Date | Commit | Symptom | Root Cause | Protection | Status |
+| --- | --- | --- | --- | --- | --- | --- |
 
 ## Evidence
 
-[EV-012 Feature Governance Sync](../evidence/EV-012-feature-governance-sync.md)
+[EV-013 Goal Driven Feature Flow](../evidence/EV-013-goal-driven-feature-flow.md)
 
 ## Recovery Snapshot
 
-- Read first: this Feature page, then EV-012.
-- Current capability state: completed; Goal-driven Feature flow is in primary Skill text.
-- Known risks: Goal Intake 仍是会话层判断，不是独立模板。
-- Next safe action: 观察真实多 Feature 任务是否仍过度请求审批。
+- Read first: this Feature page, then EV-013.
+- Current capability state: completed; Goal-driven Feature execution is now documented in primary Skill text.
+- Known risks: Goal Intake is still conversational, not a separate template or validator.
+- Next safe action: observe real Goal-driven multi-Feature sessions; if agents still over-ask for approval, add a focused routing fixture or project rule.
 - Unblock condition: not blocked.
 
 ## Next Step
 
-若后续再次出现“批准不存在的 Fxxx 设计”或每个 Feature 都停下审批，优先补 routing fixture 和 tests，而不是新增状态机。
+在真实项目中观察是否仍出现“批准不存在的 Fxxx 设计”或“每个 Feature 都停下审批”的行为；若复发，优先补 routing fixture 和 skill tests，而不是新增状态机。

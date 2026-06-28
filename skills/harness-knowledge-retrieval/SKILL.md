@@ -3,13 +3,15 @@ name: harness-knowledge-retrieval
 description: MUST use when starting or resuming non-trivial work that may depend on project context, prior decisions, ADRs, Lessons, Features, specs, plans, Evidence, stale documents, rejected approaches, recovery context, 恢复上下文, 查历史决策, 查 ADR, 查 Lesson, 查 Feature, 查知识库, or 避免重复踩坑 before acting.
 ---
 
-# Harness Knowledge Retrieval
+# Knowledge Retrieval
 
 ## Purpose
 
 Retrieve durable project knowledge before acting. Use this skill to rebuild context from structured project memory: Feature pages, ADRs, Lessons, specs, plans, Evidence, research, discussions, bug reports, and archive records.
 
 Retrieval reads and judges existing knowledge. It does not build indexes, invent a knowledge service, or write durable memory. Route missing or stale durable memory to `harness-knowledge-capture`.
+
+Usage telemetry is a narrow exception: when a retrieved Harness document is actually used to change the current task judgment, append one usage event with `usage_record.py`. This records decision impact, not raw reading.
 
 ## When To Use
 
@@ -28,13 +30,39 @@ Retrieval reads and judges existing knowledge. It does not build indexes, invent
 ## Core Retrieval Flow
 
 1. Start with direct `feature_refs` when present. Open path-like refs directly.
-2. If no direct Feature ref is present, use `docs/features/INDEX.md` as the coarse recall entry when it exists.
-3. Open only the 1-3 most plausible Feature candidates from the index or filenames. Do not read every Feature merely because memory exists.
-4. Prefer filename/path lookup before broad text search when a Feature path, stem, or unambiguous ID exists.
+2. Prefer filename/path lookup before broad text search when a Feature path, stem, or unambiguous ID exists.
+3. When there is no direct Feature ref, check `docs/features/INDEX.md` if present; otherwise list `docs/features/*.md` filenames. Use task terms and touched paths to select at most 1-3 candidate Features before opening content.
+4. If no clear candidate exists, record `none found` instead of reading every Feature.
 5. Read the Feature page first when found; treat it as the delivery boundary and navigation entry.
 6. Open linked ADR, Lesson, spec, plan, Evidence, research, discussion, bug report, PR, commit, and archive records only as needed.
 7. Follow `stale`, `superseded`, `deprecated`, `invalidated`, or `superseded_by` pointers before relying on old material.
 8. Summarize what was read: paths, document kinds, status, feature IDs, decisions, stale items, confidence, and open questions.
+
+If retrieval discovers that a current Feature was missing, duplicated, or misleading in `docs/features/INDEX.md`, route the closeout to `harness-knowledge-capture` and run a local Feature Index check with `knowledge_check.py --feature-index <Feature>`. Do not turn this into a global index audit unless the user explicitly asks for one.
+
+## Usage Recording
+
+Only record documents that were used, not documents that were merely opened, skimmed, or considered as candidates.
+
+After an Harness Feature, ADR, Lesson, Evidence, or AGENTS document materially changes the current scope, design choice, fix direction, verification gate, completion-claim judgment, or recurrence-prevention action, run:
+
+```bash
+python <skills-root>/using-harness/scripts/usage_record.py --root <repo> --doc <relative-doc-path> --doc-type <feature|adr|lesson|evidence|agents|other> --task "<short task>" --impact <impact>
+```
+
+Use one of these impact values:
+
+```text
+changed_scope
+changed_design
+changed_fix_direction
+changed_verification_gate
+supported_completion_claim
+prevented_repeat_failure
+shaped_change_narrative
+```
+
+Do not record Feature Index scans, candidate reads that did not affect the outcome, stale documents that were rejected, or files opened only to find a path.
 
 ## Bug Retrieval Mode
 

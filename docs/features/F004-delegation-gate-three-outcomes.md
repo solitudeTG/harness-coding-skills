@@ -3,7 +3,7 @@ id: F004
 doc_kind: feature
 status: completed
 created: 2026-05-30
-updated: 2026-05-30
+updated: 2026-06-27
 ---
 
 # F004: Delegation Gate Three Outcomes
@@ -20,34 +20,33 @@ updated: 2026-05-30
 - Non-goals or boundaries: 不新增多 Agent runtime，不自动 spawn subagent，不改变 Stop hook 作为唯一默认 Hook 的策略。
 - Exit Gate source: Delegation Gate skill、Start Gate readiness rule、Readiness Dashboard compact output、ADR-003 更新、EV-007 验证结果。
 
-
 ## Feature Intake
 
-- Original problem: See Vision Anchor.
-- User pain point: See Vision Anchor.
-- Capability promise: Preserve the capability described by this Feature.
-- Non-goals: See Vision Anchor non-goals or boundaries.
-- Acceptance source: Acceptance Criteria and linked Evidence.
-- Open questions: none known.
+- Original problem: See `## Vision Anchor` original request or source.
+- User pain point: See `## Vision Anchor` user pain point or engineering problem.
+- Capability promise: Preserve the capability described by `## Goal` and `## Acceptance Criteria`.
+- Non-goals: See `## Vision Anchor` non-goals or boundaries.
+- Acceptance source: This Feature page and linked Evidence.
+- Open questions: none recorded for this completed Feature.
 
 ## Capability Contract
 
-- Maintain the current capability boundary described by this Feature.
+- The completed capability boundary is defined by `## Goal`, `## Vision Anchor`, and `## Acceptance Criteria`; detailed proof stays in linked Evidence.
 
 ## Decision Context
 
 ### Why
 
-This Feature preserves durable recovery context for `F004: Delegation Gate Three Outcomes`.
+非平凡工作需要先判断是否派 subagent，否则 Agent 容易在复杂任务中默默选择单 agent 并丢失并行验证机会。
 
 ### Why Not
 
-Do not replace this Feature with chat-only memory; future agents need a stable source of truth.
+没有默认强制派 subagent，因为 delegation 的关键是显式决策，而不是自动增加协作复杂度。
 
 ### If Modifying This Area, Check
 
-- This Feature's Acceptance Criteria, Acceptance Map, Evidence, and Patch History.
-- Linked ADR, Lesson, Evidence, and related specs or plans.
+- 检查 `harness-start-gate` 是否仍要求非平凡工作给出 Delegation decision。
+- 确认三态输出 `single_agent | delegate | blocked` 没有被模糊成普通建议。
 
 ## Current Status
 
@@ -55,10 +54,29 @@ Done. Delegation Gate、Start Gate、Vision Gate、Readiness Dashboard 和 using
 
 ## Links
 
+### Evidence
+
+- [EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-harness-delegation-gate-three-outcomes.md)
+
+### Decisions / ADRs
+
 - [ADR-003 Explicit Delegation Decision Before Complex Work](../decisions/ADR-003-explicit-delegation-decision-before-complex-work.md)
+
+### Lessons
+
 - [LL-003 Gate Outcomes Should Encode Next Action](../lessons/LL-003-gate-outcomes-encode-next-action.md)
-- [EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-delegation-gate-three-outcomes.md)
-- [F005 Session Recovery Hooks](F005-session-recovery-hooks.md)
+
+### Specs / Plans
+
+- None.
+
+### Related Features
+
+- [F015 Stop Only Hook Runtime](F015-stop-only-hook-runtime.md)
+
+### External Context
+
+- None.
 
 ## Acceptance Criteria
 
@@ -69,18 +87,17 @@ Done. Delegation Gate、Start Gate、Vision Gate、Readiness Dashboard 和 using
 - [x] Start Gate 不再接受旧授权式枚举作为有效 Delegation decision。
 - [x] Readiness Dashboard 保留 `missing`，用于表达复杂任务没有显式 Delegation Gate 决策，避免把缺失证据降级成 self-review。
 
-
 ## Acceptance Map
 
 | Claim | Acceptance | Evidence | Status |
 | --- | --- | --- | --- |
-| F004: Delegation Gate Three Outcomes remains recoverable | Acceptance Criteria describe the expected state | Linked Evidence or this Feature history | active |
+| Feature acceptance criteria are satisfied | Checked items in `## Acceptance Criteria` | See `## Evidence` | completed |
 
 ## State Timeline
 
 | Date | State | Trigger | Evidence | Note |
 | --- | --- | --- | --- | --- |
-| 2026-06-26 | active | Feature governance migration | This Feature | Added recall and recovery structure |
+| 2026-05-30 | completed | Feature implementation closed | See `## Evidence` | Legacy Feature migrated to the stricter governance shape. |
 
 ## Patch History
 
@@ -91,17 +108,16 @@ None yet
 
 ## Evidence
 
-[EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-delegation-gate-three-outcomes.md)
-
+[EV-007 Delegation Gate Three Outcomes](../evidence/EV-007-harness-delegation-gate-three-outcomes.md)
 
 ## Recovery Snapshot
 
-- Read first: this Feature page.
-- Current capability state: see Current Status.
-- Known risks: see Patch History and linked Evidence.
-- Next safe action: follow Next Step after running required gates.
-- Unblock condition: not blocked unless Current Status says otherwise.
+- Read first: this Feature page, then linked Evidence.
+- Current capability state: completed; see `## Current Status`.
+- Known risks: none recorded beyond `## Patch History`.
+- Next safe action: follow `## Next Step`; record any delivered-behavior follow-up in `## Patch History`.
+- Unblock condition: not blocked.
 
 ## Next Step
 
-Done in F005: SessionStart / PreCompact recovery hooks use a small action surface and keep permission/source/recovery details outside the main hook outcome.
+Done. Hook runtime remains separate from Delegation Gate; current optional hook behavior is Stop-only in F015.

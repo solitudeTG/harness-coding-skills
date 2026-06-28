@@ -3,7 +3,7 @@ name: harness-knowledge-capture
 description: MUST use before claiming engineering work is complete, fixed, verified, reviewed, ready to commit, ready for PR, ready for handoff, or safely closed; also use for Evidence, Feature state, ADR/Lesson decisions, Backlog or handoff state, patch churn, bugfix attribution, 知识沉淀, 经验沉淀, 完成声明, 收尾, 准备提交, 准备 PR, or 交接.
 ---
 
-# Harness Knowledge Capture
+# Knowledge Capture
 
 ## Purpose
 
@@ -109,6 +109,15 @@ Feature pages are the long-lived governance entrypoint. Keep detailed specs, pla
 - State changes in `## State Timeline`.
 - Future-session recovery context in `## Recovery Snapshot`.
 
+Use this write-boundary rule before creating durable memory:
+
+- Feature: use for delivery boundary, capability promise, acceptance, state, linked material, recovery entrypoint, and modification checks.
+- ADR: use when a decision creates or changes a durable boundary that future maintainers or agents may need to preserve, challenge, or revise; include decision boundary, rejected options, consequences, and checks before changing the decision.
+- Lesson: use when a failure mode can recur and needs an objective case, resolution, root cause, and protection mechanism; do not write a Lesson that only says to be careful.
+- Evidence: use to bind a completion, capability, or decision claim to verifiable facts; include supported claim, verification scope, checks, results, artifacts, limitations, and notes.
+
+If the same fact seems to belong in multiple artifacts, keep the fact in the most specific artifact and link it from the Feature. Do not duplicate full ADR, Lesson, or Evidence content into the Feature page.
+
 ## Templates
 
 Copy the matching bundled template from `using-harness/assets/templates/` and fill every required field and section. If a project vendors templates, prefer the project copy only when it is intentionally current with this Harness suite.
@@ -121,9 +130,9 @@ Copy the matching bundled template from `using-harness/assets/templates/` and fi
 Use Stable IDs:
 
 - Feature: `F001`, with filename `docs/features/F001-slug.md`.
-- ADR: `ADR-001`, with filename `docs/decisions/ADR-001-slug.md`.
-- Lesson: `LL-001`, with filename `docs/lessons/LL-001-slug.md`.
-- Evidence: `EV-001`, with filename `docs/evidence/EV-001-slug.md`.
+- ADR: `ADR-001`, with filename `docs/decisions/ADR-001-decision-area-accepted-choice.md`; include decision area and accepted choice.
+- Lesson: `LL-001`, with filename `docs/lessons/LL-001-domain-failure-protection.md`; include domain, observable failure symptom, and protection point.
+- Evidence: `EV-001`, with filename `docs/evidence/EV-001-work-or-feature-verification-focus.md`; include work item and verification focus.
 
 Keep titles specific enough to scan in search results.
 
@@ -148,6 +157,14 @@ Run the bundled knowledge validator when Harness artifacts changed:
 ```bash
 python <skills-root>/using-harness/scripts/knowledge_check.py --root <repo> --docs-path docs --strict
 ```
+
+When the current work creates, renames, archives, deprecates, supersedes, splits, merges, or materially changes the boundary, title, filename, owned paths, or recall terms of a Feature, also validate that specific Feature's Index entry:
+
+```bash
+python <skills-root>/using-harness/scripts/knowledge_check.py --root <repo> --docs-path docs --feature-index <Feature path-or-stem-or-id>
+```
+
+Use this local check when a bugfix or retrieval attempt shows that the related Feature was not recalled correctly. Do not run a global Feature Index audit by default. Use `--feature-index-all` only when the user explicitly requests a full Feature Index audit, all-link check, or duplicate check.
 
 Run the bundled closeout validator when a closeout block exists in a file:
 

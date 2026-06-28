@@ -1,6 +1,6 @@
 ---
 name: using-harness
-description: MUST use as the Harness entrypoint before non-trivial engineering work, behavior changes, reviews, commits, PRs, handoffs, or any completion claim; also use when the user mentions Harness, gates, Evidence, ADRs, Lessons, Feature memory, patch churn, spec drift, stale spec, 知识沉淀, 收尾, 完成声明, 提交信息, or PR 描述.
+description: MUST use as the Harness entrypoint before non-trivial engineering work, behavior changes, reviews, commits, PRs, handoffs, or any completion claim; also use when the user mentions Harness, harness, gates, Evidence, ADRs, Lessons, Feature memory, patch churn, spec drift, stale spec, 知识沉淀, 收尾, 完成声明, 提交信息, or PR 描述.
 ---
 
 # Using Harness
@@ -10,6 +10,16 @@ description: MUST use as the Harness entrypoint before non-trivial engineering w
 Use this skill as the lightweight router for Harness. Keep it in memory only long enough to decide which specific Harness skill, reference, or script is needed.
 
 This skill does not create Feature, ADR, Lesson, Evidence, Backlog, or handoff artifacts. It routes to the smallest next action.
+
+## Naming Boundary
+
+The formal system name is `Harness`. Use the full name when introducing the system, writing durable project memory, or distinguishing it from a project's own test harness, runtime harness, evaluation harness, or business feature named "harness".
+
+Do not use `Harness` as the skill-suite short name. Treat lowercase `harness` as a generic engineering word unless the current context explicitly defines it as Harness history.
+
+The installed skill slugs are `using-harness` plus short semantic workflow slugs such as `harness-start-gate`, `harness-readiness-dashboard`, and `harness-knowledge-capture`. Pre-rename public skill slugs were removed by the breaking rename. Do not create `harness-*`, `ai-coding-harness-*`, or suite-prefixed workflow skills unless a future ADR explicitly accepts another migration path.
+
+When the user or repository mentions "harness" ambiguously, distinguish project-internal harness code from Harness gates before acting.
 
 ## Activation Contract
 
@@ -29,7 +39,7 @@ For non-trivial work, Harness is a two-gate protocol:
 - Entry Gate: run `harness-start-gate` before implementation and satisfy any required retrieval, Vision Anchor, Feature, spec, plan, ADR, or delegation decision before coding.
 - Exit Gate: run `harness-knowledge-capture` before saying the work is complete, fixed, verified, ready for PR, ready for review, ready for handoff, safely closed, or mergeable.
 - A spec, plan, ADR, Feature page, or Evidence document created during the work is an input to Exit Gate, not a substitute for it.
-- If Exit Gate has not produced Evidence level, check status, closeout verdict, and completion-claim permission, describe the state as `implementation done, harness closeout pending`.
+- If Exit Gate has not produced Evidence level, check status, closeout verdict, and completion-claim permission, describe the state as `implementation done, Harness closeout pending`.
 
 ## Goal-Driven Feature Flow
 
@@ -37,7 +47,7 @@ Goal is the user authorization boundary. When the user has stated a clear Goal w
 
 Feature pages are engineering memory, not approval gates. For non-trivial work inside an approved Goal, create or update the Feature page before implementation so later agents can recover the capability boundary, acceptance source, Evidence, Patch History, and Recovery Snapshot. Do not require default per-Feature design approval.
 
-Ask the user only when the Goal is missing or ambiguous, a proposed Feature exceeds the approved Goal, acceptance criteria conflict, high-risk architecture/data/security/cost/external-contract choices are needed, or patch churn suggests the direction may be wrong. Otherwise, route to the next implementation or knowledge-capture action.
+Ask the user only when the Goal is missing or ambiguous, a proposed Feature exceeds the approved Goal, acceptance criteria conflict, high-risk architecture/data/security/cost/external-contract choices are needed, or patch churn suggests the direction may be wrong. Otherwise, route to the next implementation or harness-knowledge-capture action.
 
 ## Empty Approval Guard
 
@@ -53,7 +63,7 @@ Harness is not a documentation tax. The required behavior is checking whether sh
 
 Trigger Harness when any of these apply:
 
-- The user mentions Harness, gates, Start Gate, Evidence, ADR, Lesson, Feature, Backlog, handoff, recovery, project memory, patch churn, or process drift.
+- The user mentions Harness, harness, gates, Start Gate, Evidence, ADR, Lesson, Feature, Backlog, handoff, recovery, project memory, patch churn, or process drift.
 - The task is non-trivial: multi-file change, behavior change, refactor, cross-module bugfix, review, merge, release, handoff, or a decision future agents may question.
 - The repository has Harness memory or tooling such as `docs/features`, `docs/decisions`, `docs/lessons`, `docs/evidence`, `docs/BACKLOG.md`, or vendored Harness scripts/templates.
 - The repository has Markdown with Harness `doc_kind` frontmatter, even if it is under legacy paths such as `docs/superpowers`.
@@ -85,6 +95,14 @@ For non-trivial or high-risk implementation work, Start Gate must produce an exp
 For a non-tiny bug, regression, validation failure, or broken accepted behavior, retrieval should establish Feature attribution before code search or edits.
 
 When no direct Feature ref is present, retrieval should use `docs/features/INDEX.md` as the coarse recall entry if it exists, then open only the 1-3 most plausible Feature candidates. If the index is absent, fall back to Feature filenames. Do not read every Feature merely because memory exists.
+
+Feature Index governance is local by default. When the current work creates, renames, archives, deprecates, supersedes, splits, merges, or materially changes the boundary of a Feature, or when a bugfix shows that the related Feature was not recalled, validate only the current Feature entry:
+
+```bash
+python <skills-root>/using-harness/scripts/knowledge_check.py --root <repo> --docs-path docs --feature-index <Feature path-or-stem-or-id>
+```
+
+Do not run a global Feature Index audit by default, including during ordinary `--strict` closeout. Run `--feature-index-all` only when the user explicitly asks for a full Feature Index audit or all-links/duplicates check.
 
 Harness knowledge artifacts must use canonical directories under the selected docs root:
 
@@ -123,11 +141,14 @@ Execute bundled scripts; do not read script source unless debugging or editing t
 - `scripts/knowledge_check.py`: execute to validate Harness Markdown artifacts.
 - `scripts/harness_closeout_check.py`: execute to validate a closeout block.
 - `scripts/skill_metadata_check.py`: execute to validate skill metadata and bundled resources.
-- `scripts/hook_diagnostics.py`: execute after optional hook installation or suspected hook drift to check local runner smoke and Codex compaction evidence.
+- `scripts/hook_diagnostics.py`: execute after optional hook installation or suspected hook drift to check local Stop runner smoke.
+- `scripts/usage_record.py`: execute to append a doc-used event after an Harness document materially affects a decision or change narrative.
 
 For this repository, prefer `scripts/install.ps1 codex` or `scripts/install.sh codex` to sync Harness skills into the local Codex skills directory instead of hand-copying individual files.
 
 Run `knowledge_check.py` in `--strict` mode for review, closeout, or CI. The validator checks every Markdown file with `doc_kind` frontmatter and rejects Harness artifacts outside their canonical directory.
+
+`--strict` does not run the global Feature Index audit. Use `--feature-index <Feature>` for current-Feature recall-entry governance, and reserve `--feature-index-all` for explicit user-requested global audits.
 
 ## Optional Hook Runtime
 
@@ -135,29 +156,28 @@ Skills-only install remains valid. Hooks are an optional runtime enhancement, no
 
 Hook resources live under this Skill so the Skill owns scripts and hook entrypoints:
 
-- `hooks/harness_hook.py`: normalized hook runner. Default examples use `stop`, `session-start`, and `pre-compact`; `post-tool-use` remains available for explicit experiments.
+- `hooks/harness_hook.py`: normalized hook runner. Default examples use only `stop`; `post-tool-use` remains available for explicit experiments.
 - `hooks/codex-hooks.example.json`: Codex hook configuration example.
 - `hooks/claude-settings.example.json`: Claude Code hook configuration example.
 - `hooks/opencode-plugin.example.ts`: OpenCode plugin example.
 
-Default examples install only `stop`, `session-start`, and `pre-compact`. Hook installation or runtime failure must fail open unless the hook clearly proves a Harness rule failed at a completion boundary. A broken hook config must not roll back Skills, block Skill loading, or replace normal Skill-triggered gates. The default hook slice only automates:
+Default examples install only `stop`. Hook installation or runtime failure must fail open unless the hook clearly proves an Harness rule failed at a completion boundary. A broken hook config must not roll back Skills, block Skill loading, or replace normal Skill-triggered gates. The default hook slice only automates:
 
 - Checking completion claims with `harness_closeout_check.py` before the agent stops. This is the default hard boundary for incomplete closeout blocks.
-- Writing a lightweight `.harness/session-recovery/by-session/<session_id>.md` snapshot before compaction, then exposing it only when the same session resumes from `compact` and the platform supports contextual hook output. `.harness/session-recovery/latest.md` is updated for manual inspection only and must not be injected into unrelated new sessions.
+
+Harness no longer provides default `pre-compact` / `session-start` recovery hooks. Platform compaction remains the platform's responsibility. Use explicit handoff notes only when the user asks for handoff or an unfinished task is intentionally paused.
 
 Do not run `knowledge_check.py` from PostToolUse by default. Tool-call granularity is too fine for multi-edit Harness artifacts and can slow the agent down. Run `knowledge_check.py --strict` at Stop/readiness/closeout/CI boundaries instead. The `post-tool-use` runner mode is experimental and should only be wired manually when immediate feedback is explicitly worth the cost.
 
 Do not move Start Gate, Vision Gate, ADR, Lesson, or Feature ownership judgment into deterministic hook code.
 
-After installing or changing Codex hooks, verify actual runtime evidence instead of relying only on UI visibility or cached files:
+After installing or changing Codex hooks, verify actual runner evidence instead of relying only on UI visibility or cached files:
 
 ```bash
 python <skills-root>/using-harness/scripts/hook_diagnostics.py codex --project-root <repo>
 ```
 
-If the diagnostic reports Codex `compacted/context_compacted` events without `.harness/session-recovery/` artifacts, treat `PreCompact` recovery as not proven on that Codex install and keep using normal Harness handoff or canonical project docs.
-
-Codex plugin-bundled hooks should keep both root-level `hooks.json` and `hooks/hooks.json` available with identical content. The user config must enable both `[features].hooks = true` and `[features].plugin_hooks = true`; UI visibility and trusted hashes do not prove runtime dispatch. Route commands through `hooks/run-harness-hook.cmd` instead of calling `python ./skills/...` directly. On Windows, `commandWindows` must be safe when Codex invokes it through PowerShell: wrap the `%PLUGIN_ROOT%` command in `cmd /d /s /c` so `%PLUGIN_ROOT%` expands in cmd.exe and the `.cmd` wrapper is actually executed. Runtime proof comes from `.harness/hook-events/events.jsonl` or the expected recovery/check output.
+Codex plugin-bundled hooks should keep both root-level `hooks.json` and `hooks/hooks.json` available with identical content. The user config must enable both `[features].hooks = true` and `[features].plugin_hooks = true`; UI visibility and trusted hashes do not prove runtime dispatch. Route commands through `hooks/run-harness-hook.cmd` instead of calling `python ./skills/...` directly. On Windows, `commandWindows` must be safe when Codex invokes it through PowerShell: wrap the `%PLUGIN_ROOT%` command in `cmd /d /s /c` so `%PLUGIN_ROOT%` expands in cmd.exe and the `.cmd` wrapper is actually executed. Runtime proof comes from `.Harness/hook-events/events.jsonl` or the expected Stop check output.
 
 ## Verification Use
 
