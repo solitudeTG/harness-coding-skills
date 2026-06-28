@@ -1,10 +1,10 @@
-# Install AI Coding Harness Skills
+# Install Harness Skills
 
-AI Coding Harness is distributed as a **Skill suite** with an optional hook runtime.
+Harness is distributed as a **Skill suite** with an optional hook runtime.
 
 Basic install: Skills only. Install the directories under `skills/` into the skills directory used by your agent, then restart the agent so it can discover the new Skill metadata.
 
-Enhanced install: Skills + optional Hooks. Default hook examples enable Stop-time completion checks plus lightweight session recovery; hooks are not required for Harness to work.
+Enhanced install: Skills + optional Hooks. Default hook examples enable Stop-time completion checks only; hooks are not required for Harness to work.
 
 Hook installation failure must not roll back Skills, block Skill loading, or make the Skill-only workflow unusable.
 
@@ -13,40 +13,42 @@ Hook installation failure must not roll back Skills, block Skill loading, or mak
 Install globally with the helper script:
 
 ```bash
-git clone https://github.com/solitudeTG/harness-coding-skills.git
-cd harness-coding-skills
+git clone https://github.com/solitudeTG/using-harness.git
+cd using-harness
 bash scripts/install.sh codex
 ```
 
 Windows PowerShell:
 
 ```powershell
-git clone https://github.com/solitudeTG/harness-coding-skills.git
-Set-Location harness-coding-skills
+git clone https://github.com/solitudeTG/using-harness.git
+Set-Location using-harness
 .\scripts\install.ps1 codex
 ```
 
-Restart Codex after installation. In a project, mention Harness or ask the agent to use `using-harness`; the entrypoint Skill will route to the focused `harness-*` skills.
+Restart Codex after installation. In a project, mention Harness or ask the agent to use `using-harness`; the entrypoint Skill will route to the focused workflow skills such as `harness-start-gate` and `harness-readiness-dashboard`.
 
-After installation, `harness-readiness-dashboard` is the Skill to ask for readiness, progress, maturity, gap, distance-to-target, or blocker status. It summarizes evidence and next action; it should not invent a percentage when the missing gates or artifacts are unclear.
+Breaking rename note: the formal system name is `Harness`. The installed slugs are `using-harness` plus short semantic workflow slugs such as `harness-start-gate` and `harness-readiness-dashboard`; pre-rename skill directories should be removed before reinstalling this version. See `docs/decisions/ADR-008-Harness-semantic-skill-routing.md` for the exact migration record.
 
 If your Codex environment has the skill installer available, you can also ask Codex to install this repository as a Skill source.
+
+For Codex Desktop personal plugin installs, the plugin identity is `Harness@personal`. Do not keep an older `harness@personal` personal plugin enabled, because Codex can regenerate its plugin cache and expose the removed `using-harness` / `harness-*` Skill slugs. This repository includes `.codex-plugin/plugin.json`, root `hooks.json`, `hooks/hooks.json`, and the `skills/` directory required for the personal plugin package.
 
 ## Claude Code
 
 Install globally with the helper script:
 
 ```bash
-git clone https://github.com/solitudeTG/harness-coding-skills.git
-cd harness-coding-skills
+git clone https://github.com/solitudeTG/using-harness.git
+cd using-harness
 bash scripts/install.sh claude
 ```
 
 Windows PowerShell:
 
 ```powershell
-git clone https://github.com/solitudeTG/harness-coding-skills.git
-Set-Location harness-coding-skills
+git clone https://github.com/solitudeTG/using-harness.git
+Set-Location using-harness
 .\scripts\install.ps1 claude
 ```
 
@@ -56,7 +58,7 @@ For project-local installation, copy the skills into the project:
 
 ```bash
 mkdir -p .claude/skills
-cp -R /path/to/harness-coding-skills/skills/* .claude/skills/
+cp -R /path/to/using-harness/skills/* .claude/skills/
 ```
 
 Claude Code expects each Skill to have this shape:
@@ -95,7 +97,7 @@ Copy-Item ".\skills\*" "$HOME\.claude\skills\" -Recurse -Force
 
 Installing Skills teaches the agent workflows and installs bundled Harness scripts/templates under `using-harness/`. Adding `AGENTS.md` teaches project-specific operating rules.
 
-Harness does not automatically modify global or project `AGENTS.md` files. When a project needs repository-level rules, copy the bundled `AGENTS.md` template and adapt it manually:
+Harness does not automatically modify global or project `AGENTS.md` files. You may copy the bundled `AGENTS.md` template when a project needs repository-level rules:
 
 ```bash
 cp ~/.codex/skills/using-harness/assets/templates/AGENTS.md /path/to/your-project/AGENTS.md
@@ -115,6 +117,14 @@ Fill in:
 3. Where completion evidence should be recorded.
 ```
 
+Recommended additions:
+
+```text
+- Run Start Gate before non-trivial implementation.
+- If real cases, validation, or user feedback contradict an existing spec, run Spec Drift before changing code.
+- If repeated patches add scenario-specific branches, pause and run Patch Churn Review before continuing.
+```
+
 For longer-lived projects, add the optional Harness memory directories:
 
 ```text
@@ -124,8 +134,6 @@ docs/decisions/
 docs/lessons/
 docs/evidence/
 ```
-
-For projects with repeated patch churn, consider adding a project rule that asks agents to run Spec Drift before changing code when real cases, validation failures, or user feedback contradict the current spec. When repeated patches add scenario-specific branches, the source may need repair before another local fix.
 
 ## Optional Hook Runtime
 
@@ -143,18 +151,11 @@ The runner calls the existing Skill-owned scripts:
 <skills-root>/using-harness/scripts/hook_diagnostics.py
 ```
 
-For Codex plugin-bundled hooks, keep both root-level `hooks.json` and `hooks/hooks.json` available, with identical content, because Codex Desktop installations have shown different discovery evidence during local iteration. Enable both `[features].hooks = true` and `[features].plugin_hooks = true` before expecting runtime dispatch. The command should call `hooks/run-harness-hook.cmd`, which resolves the plugin root from the wrapper location and then runs `skills/using-harness/hooks/harness_hook.py`; on Windows, use `commandWindows` with `%PLUGIN_ROOT%` wrapped by `cmd /d /s /c` so it still works when Codex invokes the hook command through PowerShell. Do not call `python ./skills/...` directly from `hooks.json`, because the hook runtime current working directory is not a stable contract. If hook setup fails, remove the hook config and continue using the Skills-only install.
+For Codex plugin-bundled hooks, use the `Harness@personal` plugin identity and keep both root-level `hooks.json` and `hooks/hooks.json` available, with identical content, because Codex Desktop installations have shown different discovery evidence during local iteration. Enable both `[features].hooks = true` and `[features].plugin_hooks = true` before expecting runtime dispatch. The command should call `hooks/run-harness-hook.cmd`, which resolves the plugin root from the wrapper location and then runs `skills/using-harness/hooks/harness_hook.py`; on Windows, use `commandWindows` with `%PLUGIN_ROOT%` wrapped by `cmd /d /s /c` so it still works when Codex invokes the hook command through PowerShell. Do not call `python ./skills/...` directly from `hooks.json`, because the hook runtime current working directory is not a stable contract. If hook setup fails, remove the hook config and continue using the Skills-only install.
 
-Default hook examples enable Stop plus session recovery hooks. They do not wire PostToolUse because tool-call granularity is too fine for multi-edit Harness artifacts and can slow down ordinary editing. Run `knowledge_check.py --strict` at Stop/readiness/closeout/CI boundaries instead.
+Default hook examples enable only the Stop hook. They do not wire PostToolUse because tool-call granularity is too fine for multi-edit Harness artifacts and can slow down ordinary editing. Run `knowledge_check.py --strict` at Stop/readiness/closeout/CI boundaries instead.
 
-Session recovery uses:
-
-```text
-pre-compact  -> write .harness/session-recovery/by-session/<session_id>.md and update latest.md for manual inspection
-session-start -> on compact recovery only, read the same session snapshot and expose context when the platform supports it
-```
-
-The recovery file is local project state. It is intentionally outside `docs/` because it is runtime context, not canonical Harness memory.
+Harness no longer provides default `pre-compact` / `session-start` recovery hooks. Platform compaction remains the platform's responsibility. Use explicit handoff notes only when the user asks for handoff or an unfinished task is intentionally paused.
 
 Codex example:
 
@@ -174,7 +175,7 @@ OpenCode example:
 <skills-root>/using-harness/hooks/opencode-plugin.example.ts
 ```
 
-OpenCode session recovery is injected during `experimental.session.compacting(input, output)` through `output.context`. Do not wire `session.created` as an automatic recovery reader; new independent sessions must not inherit a prior session's compaction snapshot.
+OpenCode examples no longer wire `experimental.session.compacting(input, output)` for Harness recovery. Do not wire `session.created` as an automatic recovery reader; new independent sessions must not inherit prior task context.
 
 These examples are intentionally additive. Merge the Harness entries into existing hook/plugin configuration instead of replacing user or project hooks.
 
@@ -190,9 +191,9 @@ Windows PowerShell:
 python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --project-root "C:\path\to\your-project"
 ```
 
-The diagnostic performs a runner smoke test and scans Codex session logs for `compacted/context_compacted` events that did not produce `.harness/session-recovery/` artifacts. A warning means the Skill suite is still usable, but the optional Codex `PreCompact` recovery hook is not proven in that environment.
+The diagnostic performs a Stop runner smoke test. A warning means the Skill suite is still usable, but the optional Codex Stop hook is not proven in that environment.
 
-When a Harness hook actually runs, the runner writes a minimal runtime trace to `.harness/hook-events/events.jsonl` under the project root. The trace records event, platform, session id, decision, check, and severity only; it does not store assistant/user message bodies.
+When a Harness hook actually runs, the runner writes a minimal runtime trace to `.Harness/hook-events/events.jsonl` under the project root. The trace records event, platform, session id, decision, check, and severity only; it does not store assistant/user message bodies.
 
 ## Verify
 

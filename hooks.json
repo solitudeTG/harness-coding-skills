@@ -1,32 +1,6 @@
 {
-  "description": "Harness completion and session recovery hooks for Codex.",
+  "description": "Harness completion hooks for Codex.",
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-harness-hook.cmd\" session-start",
-            "commandWindows": "cmd /d /s /c \"\"%PLUGIN_ROOT%\\hooks\\run-harness-hook.cmd\" session-start\"",
-            "statusMessage": "Loading Harness recovery context"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-harness-hook.cmd\" pre-compact",
-            "commandWindows": "cmd /d /s /c \"\"%PLUGIN_ROOT%\\hooks\\run-harness-hook.cmd\" pre-compact\"",
-            "statusMessage": "Saving Harness recovery context"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "matcher": "",

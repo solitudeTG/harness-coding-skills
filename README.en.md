@@ -1,10 +1,10 @@
-# AI Coding Harness
+# Harness
 
 [简体中文](README.md) | English
 
-[![knowledge-check](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml)
+[![knowledge-check](https://github.com/solitudeTG/using-harness/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/using-harness/actions/workflows/knowledge-check.yml)
 
-AI Coding Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code / OpenCode**, with optional hook examples for all three. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
+Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code**, with optional hook examples for Codex, Claude Code, and OpenCode. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
 
 If you are opening this repository for the first time, think of it as engineering guardrails for AI coding work:
 
@@ -16,7 +16,7 @@ It gives agents a reason to pause at the moments that matter: Is the request rea
 
 ## Who This Is For
 
-- Developers using Codex, Claude Code, OpenCode, or similar coding agents on real projects
+- Developers using Codex, Claude Code, or similar coding agents on real projects
 - Teams that want agents to remember project rules, preserve handoff context, and explain changes clearly
 - Projects that have already felt the pain of lost context, evidence-free completion claims, unclear PR narratives, repeated patching, or multi-agent work that does not converge
 
@@ -55,21 +55,29 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 ## What This Repository Provides
 
 - `using-harness`: a high-recall entrypoint Skill that decides whether the current task needs Harness routing
-- Eleven focused `harness-*` Skills for start gates, delegation decisions, knowledge retrieval, Spec Drift checks, document lifecycle, incident learning, vision checks, readiness plus progress / maturity / gap assessment, change narrative, knowledge capture, and project rule promotion
+- Eleven focused semantic workflow Skills such as `harness-start-gate`, `harness-spec-drift`, `harness-readiness-dashboard`, and `harness-knowledge-capture` for start gates, spec drift checks, delegation decisions, knowledge retrieval, document lifecycle, incident learning, vision checks, readiness, change narrative, knowledge capture, and project rule promotion
 - Bundled templates for `AGENTS.md`, Feature, ADR, Lesson, and Evidence records
 - Bundled `knowledge_check.py` and `harness_closeout_check.py` for validating structured Harness documents and closeout blocks
-- Optional Stop and session recovery hook runtime examples for Codex, Claude Code, and OpenCode under `using-harness/hooks/`
-- Codex Desktop hook config, wrapper, and diagnostics path: plugin-level `hooks.json` / `hooks/hooks.json`, `hooks/run-harness-hook.cmd`, `hook_diagnostics.py`, and `.harness/hook-events/events.jsonl` runtime traces
+- Optional Stop hook runtime examples for Codex, Claude Code, and OpenCode under `using-harness/hooks/`
+- Codex Desktop personal plugin package: `.codex-plugin/plugin.json`, plugin-level `hooks.json` / `hooks/hooks.json`, `hooks/run-harness-hook.cmd`, `hook_diagnostics.py`, and `.Harness/hook-events/events.jsonl` runtime traces; the plugin identity is `Harness@personal`
 - `skill_metadata_check.py` for validating Skill metadata, trigger surfaces, and required bundled resources
 - Minimal and project-level examples so adoption can start small and grow only when needed
+
+## Naming Boundary
+
+The formal system name is **Harness**. `Harness` is only a short name after the full name has been defined; when a project also has a test harness, runtime harness, evaluation harness, or business feature named harness, prefer the full name to avoid ambiguity.
+
+The formal Skill slugs are `using-harness` and the eleven semantic workflow Skills such as `harness-start-gate`, `harness-spec-drift`, `harness-readiness-dashboard`, and `harness-knowledge-capture`. If you are upgrading from a pre-rename version, remove the previous Skill directories before reinstalling; see [ADR-007](docs/decisions/ADR-008-Harness-semantic-skill-routing.md) for migration details.
+
+The formal Codex Desktop personal plugin entry is `Harness@personal`. If an older `harness@personal` plugin remains enabled, Codex may regenerate the old plugin cache and expose the removed `using-harness` / `harness-*` slugs.
 
 ## Install In 30 Seconds
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/solitudeTG/harness-coding-skills.git
-cd harness-coding-skills
+git clone https://github.com/solitudeTG/using-harness.git
+cd using-harness
 ```
 
 Install for Codex:
@@ -90,23 +98,23 @@ Windows PowerShell:
 .\scripts\install.ps1 both
 ```
 
-Restart your agent after installation. Start with `using-harness`; it routes to the smaller `harness-*` Skills only when needed.
+Restart your agent after installation. Start with `using-harness`; it routes to the smaller semantic workflow Skills such as `harness-start-gate`, `harness-readiness-dashboard`, and `harness-knowledge-capture` only when needed.
 
-Hooks are optional. The Skills-only install remains the baseline. Default examples enable the Stop hook plus same-session compact recovery so completion claims and context restoration can be assisted without slowing down every edit. The OpenCode recovery example injects context through `experimental.session.compacting(input, output)` and `output.context`; do not wire `session.created` as an automatic recovery reader. See `using-harness/hooks/` and the enhanced install notes in [INSTALL.md](INSTALL.md).
+Hooks are optional. The Skills-only install remains the baseline. Default examples enable only the Stop hook, do not wire default `PostToolUse`, and no longer provide `pre-compact` / `session-start` automatic recovery. See `using-harness/hooks/` and the enhanced install notes in [INSTALL.md](INSTALL.md).
 
-For Codex Desktop, runtime evidence matters more than whether the settings UI lists the hooks. Use the bundled hook diagnostic after installing or updating hooks. It runs a local runner smoke test and scans Codex session logs for compaction events that did not produce Harness recovery artifacts:
+For Codex Desktop, runtime evidence matters more than whether the settings UI lists the hooks. Use the bundled hook diagnostic after installing or updating hooks. It runs a local Stop runner smoke test:
 
 ```powershell
 python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --project-root "C:\path\to\your-project"
 ```
 
-If the diagnostic reports compaction events without recovery artifacts, the optional Codex `PreCompact` recovery path is not proven on that machine; keep using Skills-only, manual handoff, or canonical Harness documents. When a Harness hook actually runs, it writes a minimal runtime trace to `.harness/hook-events/events.jsonl` under the project root.
+If the diagnostic reports a Stop runner warning, the optional Codex Stop hook path is not proven on that machine; keep using Skills-only closeout. When a Harness hook actually runs, it writes a minimal runtime trace to `.Harness/hook-events/events.jsonl` under the project root.
 
 See [INSTALL.md](INSTALL.md) for more installation options.
 
-## Optional Project Rules
+## Minimal Adoption Path
 
-Harness does not automatically modify global or project `AGENTS.md` files. When repository-level agent rules are useful, copy the bundled `AGENTS.md` template into your project:
+Harness does not automatically modify global or project `AGENTS.md` files. You may copy the bundled `AGENTS.md` template into your project when repository-level rules would help future agents:
 
 ```bash
 cp ~/.codex/skills/using-harness/assets/templates/AGENTS.md /path/to/your-project/AGENTS.md
@@ -126,7 +134,15 @@ Then define three things in `AGENTS.md`:
 3. Where should completion evidence be recorded?
 ```
 
-For projects with repeated patch churn, consider adding a project rule that asks agents to run Spec Drift before changing code when real cases, validation failures, or user feedback contradict the current spec. When repeated patches add scenario-specific branches, the source may need repair before another local fix.
+## Optional Project Rules
+
+For longer-lived projects, consider adding these manual rules to the copied `AGENTS.md`:
+
+```text
+- Run Start Gate before non-trivial implementation.
+- If real cases, validation, or user feedback contradict an existing spec, run Spec Drift before changing code.
+- If repeated patches add scenario-specific branches, pause and run Patch Churn Review before continuing.
+```
 
 For projects that evolve across multiple sessions, add:
 
@@ -153,10 +169,10 @@ using-harness/assets/templates/EVIDENCE.md
 Receive task
   -> using-harness decides whether Harness applies
   -> harness-start-gate decides whether work may start
-  -> retrieve project knowledge, clarify intent, or create a Feature / spec / plan / ADR when needed
+  -> retrieve project knowledge, run Spec Drift, clarify intent, or create a Feature / spec / plan / ADR when needed
   -> execute the smallest verifiable change
   -> run verification and record Evidence
-  -> use readiness / change narrative / knowledge capture when preparing review, release, progress, maturity, gap assessment, or handoff
+  -> use readiness / change narrative / knowledge capture when preparing review, release, or handoff
 ```
 
 Not every task needs the whole chain. The point is to choose the lightest workflow that protects the context future work will actually need.
@@ -169,11 +185,11 @@ Not every task needs the whole chain. The point is to choose the lightest workfl
 | `harness-start-gate` | Decide whether non-trivial work may start or first needs clarification, retrieval, Vision Gate, Feature, spec, plan, or ADR. |
 | `harness-delegation-gate` | Decide whether to ask for implementation subagents or an independent reviewer. |
 | `harness-knowledge-retrieval` | Recover project context before acting. |
-| `harness-spec-drift` | Decide whether stale specs, acceptance criteria drift, or real-case feedback require source repair before code. |
+| `harness-spec-drift` | Decide whether a current spec or acceptance criteria is still trustworthy before changing code. |
 | `harness-doc-lifecycle` | Govern stale, superseded, deprecated, or archived documents. |
 | `harness-incident-learning` | Turn bugs, incidents, and patch churn into prevention. |
 | `harness-vision-gate` | Check original intent before implementation, review, merge, done, or handoff. |
-| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, blocker, progress, maturity, and gap status before review, release, handoff, or completion. |
+| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, and blocker status before review, release, handoff, or completion. |
 | `harness-change-narrative` | Explain what changed and why for commits, PRs, handoffs, release notes, or progress summaries. |
 | `harness-knowledge-capture` | Decide whether to record Feature, ADR, Lesson, Evidence, or handoff memory. |
 | `harness-project-rules` | Decide whether a source-backed constraint belongs in `AGENTS.md` or another project-level agent rule file. |
@@ -218,6 +234,10 @@ After global installation, use the bundled script under the installed skill root
 
 - [Minimal Harness example](examples/minimal-harness/README.md): the smallest useful loop around rules, verification, and Evidence
 - [Project Harness example](examples/project-harness/README.md): shows how Feature, ADR, Lesson, and Evidence records work together
+
+## Articles
+
+- [Harness: bringing AI agents into governable software development](docs/articles/Harness-governable-ai-agent-development-flow.md)
 
 ## Design Principle
 

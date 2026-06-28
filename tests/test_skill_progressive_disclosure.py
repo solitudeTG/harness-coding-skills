@@ -17,7 +17,7 @@ def read_skill(name: str) -> str:
 
 
 class SkillProgressiveDisclosureTests(unittest.TestCase):
-    def test_harness_entrypoint_uses_progressive_disclosure(self) -> None:
+    def test_Harness_entrypoint_uses_progressive_disclosure(self) -> None:
         content = read_skill("using-harness")
 
         self.assertIn("Reference Map", content)
@@ -54,18 +54,18 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
                 self.assertIn(ref, content)
 
     def test_script_resources_are_global_execute_first_contract(self) -> None:
-        using_harness = read_skill("using-harness")
+        using_Harness = read_skill("using-harness")
         capture = read_skill("harness-knowledge-capture")
 
-        for content in [using_harness, capture]:
+        for content in [using_Harness, capture]:
             self.assertIn("Execute bundled scripts; do not read script source", content)
             self.assertIn("unless debugging or editing that script", content)
 
     def test_verification_resources_are_run_first_contract(self) -> None:
-        using_harness = read_skill("using-harness")
+        using_Harness = read_skill("using-harness")
         capture = read_skill("harness-knowledge-capture")
 
-        for content in [using_harness, capture]:
+        for content in [using_Harness, capture]:
             self.assertIn("Run verification commands before reading verification source", content)
             self.assertIn("Do not read test files, validator scripts, or workflow files merely to verify", content)
             self.assertIn("Read them only when debugging a failure, editing them, reviewing them, or explaining their behavior", content)
@@ -136,16 +136,16 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
             self.assertIn(scenario, content)
 
     def test_closeout_template_and_install_sync_are_discoverable(self) -> None:
-        using_harness = read_skill("using-harness")
+        using_Harness = read_skill("using-harness")
         capture = read_skill("harness-knowledge-capture")
 
-        self.assertIn("assets/templates/CLOSEOUT_COMPACT.md", using_harness)
+        self.assertIn("assets/templates/CLOSEOUT_COMPACT.md", using_Harness)
         self.assertIn("assets/templates/CLOSEOUT_COMPACT.md", capture)
         self.assertTrue((REPO_ROOT / "scripts" / "install.ps1").exists())
         self.assertTrue((REPO_ROOT / "scripts" / "install.sh").exists())
 
     def test_optional_hook_runtime_resources_are_discoverable(self) -> None:
-        using_harness = read_skill("using-harness")
+        using_Harness = read_skill("using-harness")
         install = (REPO_ROOT / "INSTALL.md").read_text(encoding="utf-8")
 
         for path in [
@@ -160,14 +160,14 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
         ]:
             self.assertTrue(path.exists(), f"missing optional hook resource: {path}")
 
-        self.assertIn("Optional Hook Runtime", using_harness)
-        self.assertIn("Skills-only install remains valid", using_harness)
-        self.assertIn("Default examples install only `stop`, `session-start`, and `pre-compact`", using_harness)
-        self.assertIn("hook_diagnostics.py", using_harness)
+        self.assertIn("Optional Hook Runtime", using_Harness)
+        self.assertIn("Skills-only install remains valid", using_Harness)
+        self.assertIn("Default examples install only `stop`", using_Harness)
+        self.assertIn("hook_diagnostics.py", using_Harness)
         self.assertIn("Basic install: Skills only", install)
         self.assertIn("Enhanced install: Skills + optional Hooks", install)
         self.assertIn("Hook installation failure must not roll back Skills", install)
-        self.assertIn("Default hook examples enable Stop plus session recovery hooks", install)
+        self.assertIn("Default hook examples enable only the Stop hook", install)
         self.assertIn("hook_diagnostics.py", install)
 
     def test_default_hook_examples_do_not_wire_post_tool_use(self) -> None:
@@ -192,7 +192,7 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
             for phrase in forbidden:
                 self.assertNotIn(phrase, content, f"{name} wires {phrase} by default")
 
-    def test_default_hook_examples_wire_session_recovery_hooks(self) -> None:
+    def test_default_hook_examples_wire_stop_only(self) -> None:
         examples = {
             "codex": SKILLS
             / "using-harness"
@@ -210,21 +210,12 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
 
         for name, path in examples.items():
             content = path.read_text(encoding="utf-8")
-            self.assertTrue(
-                "--event" in content or "run-harness-hook.cmd" in content,
-                f"{name} does not invoke the hook runner",
-            )
-            self.assertIn("session-start", content, f"{name} does not wire session-start")
-            self.assertIn("pre-compact", content, f"{name} does not wire pre-compact")
-
-    def test_opencode_hook_example_uses_compaction_context_output(self) -> None:
-        path = SKILLS / "using-harness" / "hooks" / "opencode-plugin.example.ts"
-        content = path.read_text(encoding="utf-8")
-
-        self.assertIn('"experimental.session.compacting": async (input, output)', content)
-        self.assertIn("output.context.push", content)
-        self.assertIn("sessionID", content)
-        self.assertNotIn('"session.created"', content)
+            self.assertIn("stop", content, f"{name} does not wire stop")
+            self.assertNotIn("session-start", content, f"{name} wires session-start")
+            self.assertNotIn("pre-compact", content, f"{name} wires pre-compact")
+            self.assertNotIn("SessionStart", content, f"{name} wires SessionStart")
+            self.assertNotIn("PreCompact", content, f"{name} wires PreCompact")
+            self.assertNotIn("experimental.session.compacting", content)
 
     def test_opencode_stop_uses_event_hook_for_session_idle(self) -> None:
         path = SKILLS / "using-harness" / "hooks" / "opencode-plugin.example.ts"
@@ -248,10 +239,10 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
         path = SKILLS / "using-harness" / "hooks" / "claude-settings.example.json"
         config = json.loads(path.read_text(encoding="utf-8"))
         env = os.environ.copy()
-        env["HARNESS_SKILL_ROOT"] = str(SKILLS / "using-harness")
-        env["HARNESS_HOOK_TRACE"] = "0"
+        env["Harness_SKILL_ROOT"] = str(SKILLS / "using-harness")
+        env["harness_hook_TRACE"] = "0"
 
-        for event in ["SessionStart", "PreCompact", "Stop"]:
+        for event in ["Stop"]:
             command = config["hooks"][event][0]["hooks"][0]["command"]
             for shell_name, shell_command in [
                 ("PowerShell", ["powershell", "-NoProfile", "-Command", command]),
@@ -276,10 +267,7 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
         path = SKILLS / "using-harness" / "hooks" / "codex-hooks.example.json"
         config = json.loads(path.read_text(encoding="utf-8"))
         self.assertIn("hooks", config)
-        for event in ["SessionStart", "PreCompact", "Stop"]:
-            self.assertIn(event, config["hooks"])
-        self.assertEqual(config["hooks"]["SessionStart"][0]["matcher"], "compact")
-        self.assertEqual(config["hooks"]["PreCompact"][0]["matcher"], "")
+        self.assertEqual(set(config["hooks"]), {"Stop"})
 
     def test_codex_hook_example_uses_plugin_root_wrapper_commands(self) -> None:
         path = SKILLS / "using-harness" / "hooks" / "codex-hooks.example.json"
@@ -288,27 +276,22 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
         nested_config = json.loads((REPO_ROOT / "hooks" / "hooks.json").read_text(encoding="utf-8"))
         serialized = json.dumps(config)
 
-        self.assertNotIn("HARNESS_SKILL_ROOT", serialized)
+        self.assertNotIn("Harness_SKILL_ROOT", serialized)
         self.assertNotIn("python ./skills", serialized)
         self.assertIn("CLAUDE_PLUGIN_ROOT", serialized)
         self.assertIn("PLUGIN_ROOT", serialized)
         self.assertEqual(root_config, config)
         self.assertEqual(nested_config, config)
-        for event, normalized in [
-            ("SessionStart", "session-start"),
-            ("PreCompact", "pre-compact"),
-            ("Stop", "stop"),
-        ]:
-            command = config["hooks"][event][0]["hooks"][0]["command"]
-            command_windows = config["hooks"][event][0]["hooks"][0]["commandWindows"]
-            self.assertEqual(
-                command,
-                f"\"${{CLAUDE_PLUGIN_ROOT}}/hooks/run-harness-hook.cmd\" {normalized}",
-            )
-            self.assertEqual(
-                command_windows,
-                f"cmd /d /s /c \"\"%PLUGIN_ROOT%\\hooks\\run-harness-hook.cmd\" {normalized}\"",
-            )
+        command = config["hooks"]["Stop"][0]["hooks"][0]["command"]
+        command_windows = config["hooks"]["Stop"][0]["hooks"][0]["commandWindows"]
+        self.assertEqual(
+            command,
+            "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-harness-hook.cmd\" stop",
+        )
+        self.assertEqual(
+            command_windows,
+            "cmd /d /s /c \"\"%PLUGIN_ROOT%\\hooks\\run-harness-hook.cmd\" stop\"",
+        )
 
     @unittest.skipUnless(sys.platform == "win32", "PowerShell commandWindows regression is Windows-specific")
     def test_codex_command_windows_runs_under_powershell(self) -> None:
@@ -316,9 +299,9 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
         config = json.loads(path.read_text(encoding="utf-8"))
         env = os.environ.copy()
         env["PLUGIN_ROOT"] = str(REPO_ROOT)
-        env["HARNESS_HOOK_TRACE"] = "0"
+        env["harness_hook_TRACE"] = "0"
 
-        for event in ["SessionStart", "PreCompact", "Stop"]:
+        for event in ["Stop"]:
             command_windows = config["hooks"][event][0]["hooks"][0]["commandWindows"]
             result = subprocess.run(
                 ["powershell", "-NoProfile", "-Command", command_windows],
@@ -335,38 +318,57 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
                 f"{event} commandWindows failed under PowerShell\nstdout={result.stdout}\nstderr={result.stderr}",
             )
 
+    def test_codex_plugin_manifest_uses_Harness_identity(self) -> None:
+        manifest_path = REPO_ROOT / ".codex-plugin" / "plugin.json"
+        if not manifest_path.exists():
+            self.skipTest("solitude public package does not include a Codex plugin manifest")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        serialized = json.dumps(manifest)
+
+        self.assertEqual(manifest["name"], "Harness")
+        self.assertEqual(manifest["interface"]["displayName"], "Harness")
+        self.assertIn("Harness skill suite", manifest["description"])
+        self.assertEqual(manifest["skills"], "./skills/")
+        self.assertNotIn('"name": "harness"', serialized)
+        self.assertNotIn('"name": "using-harness"', serialized)
+        self.assertNotIn("AI Coding Harness Skill suite", manifest["description"])
+        for prompt in manifest["interface"]["defaultPrompt"]:
+            self.assertIn("Harness", prompt)
+
+    def test_codex_hook_status_messages_use_Harness_identity(self) -> None:
+        for path in [
+            REPO_ROOT / "hooks.json",
+            REPO_ROOT / "hooks" / "hooks.json",
+            SKILLS / "using-harness" / "hooks" / "codex-hooks.example.json",
+        ]:
+            config = json.loads(path.read_text(encoding="utf-8"))
+            self.assertIn("Harness", config["description"])
+            serialized = json.dumps(config)
+            self.assertNotIn("AI Coding Harness", serialized)
+            self.assertNotIn("Loading Harness", serialized)
+            self.assertNotIn("Saving Harness", serialized)
+            for entries in config["hooks"].values():
+                status = entries[0]["hooks"][0]["statusMessage"]
+                self.assertIn("Harness", status)
+
     def test_readiness_dashboard_trigger_covers_progress_gap_language(self) -> None:
         content = read_skill("harness-readiness-dashboard")
         description = content.split("---", 2)[1]
 
         for phrase in [
-            "progress assessment",
-            "maturity assessment",
-            "distance to target",
-            "roadmap gap",
-            "delivery gap",
             "overall progress",
+            "distance to target",
+            "maturity",
+            "roadmap gap",
             "整体进展",
             "距离目标",
             "还差多少",
-            "当前成熟度",
             "交付缺口",
         ]:
             self.assertIn(phrase, description)
 
-    def test_feature_recall_uses_index_before_broad_reading(self) -> None:
-        using_harness = read_skill("using-harness")
-        retrieval = read_skill("harness-knowledge-retrieval")
-
-        for content in [using_harness, retrieval]:
-            self.assertIn("docs/features/INDEX.md", content)
-            self.assertIn("1-3", content)
-
-        self.assertIn("none found", retrieval)
-        self.assertIn("Do not read every Feature", using_harness)
-
     def test_hot_path_constraints_remain_in_primary_skill_text(self) -> None:
-        using_harness = read_skill("using-harness")
+        using_Harness = read_skill("using-harness")
         capture = read_skill("harness-knowledge-capture")
         start_gate = read_skill("harness-start-gate")
 
@@ -375,7 +377,7 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
             "Core Rule",
             "Superpowers specs and plans are linked material",
         ]:
-            self.assertIn(phrase, using_harness)
+            self.assertIn(phrase, using_Harness)
 
         for phrase in [
             "Artifact Placement",
@@ -391,6 +393,17 @@ class SkillProgressiveDisclosureTests(unittest.TestCase):
             "Patch Churn Check",
         ]:
             self.assertIn(phrase, start_gate)
+
+    def test_feature_recall_uses_index_before_broad_reading(self) -> None:
+        using_Harness = read_skill("using-harness")
+        retrieval = read_skill("harness-knowledge-retrieval")
+
+        for content in [using_Harness, retrieval]:
+            self.assertIn("docs/features/INDEX.md", content)
+            self.assertIn("1-3", content)
+
+        self.assertIn("none found", retrieval)
+        self.assertIn("Do not read every Feature", using_Harness)
 
 
 if __name__ == "__main__":

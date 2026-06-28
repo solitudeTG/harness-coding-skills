@@ -54,7 +54,7 @@ def run_hook(
     import os
 
     env = os.environ.copy()
-    env["HARNESS_HOOK_TRACE"] = "0"
+    env["harness_hook_TRACE"] = "0"
     if extra_env:
         env.update(extra_env)
 
@@ -121,11 +121,11 @@ class HarnessHookTests(unittest.TestCase):
                     "cwd": str(root),
                     "last_assistant_message": "I found the relevant files and will continue.",
                 },
-                extra_env={"HARNESS_HOOK_TRACE": "1"},
+                extra_env={"harness_hook_TRACE": "1"},
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
-            trace_path = root / ".harness" / "hook-events" / "events.jsonl"
+            trace_path = root / ".Harness" / "hook-events" / "events.jsonl"
             self.assertTrue(trace_path.exists())
             records = [
                 json.loads(line)
@@ -143,27 +143,18 @@ class HarnessHookTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             result = run_hook(
-                "pre-compact",
+                "stop",
                 {
                     "session_id": "cwd-session",
                     "cwd": str(root),
-                    "summary": "Payload cwd should own runtime files.",
+                    "last_assistant_message": "I found the relevant files and will continue.",
                 },
-                extra_env={"HARNESS_HOOK_TRACE": "1"},
+                extra_env={"harness_hook_TRACE": "1"},
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue(
-                (root / ".harness" / "hook-events" / "events.jsonl").exists()
-            )
-            self.assertTrue(
-                (
-                    root
-                    / ".harness"
-                    / "session-recovery"
-                    / "by-session"
-                    / "cwd-session.md"
-                ).exists()
+                (root / ".Harness" / "hook-events" / "events.jsonl").exists()
             )
 
     def test_codex_allow_output_uses_empty_json_object(self) -> None:
@@ -260,7 +251,7 @@ class HarnessHookTests(unittest.TestCase):
                 "post-tool-use",
                 {"tool_input": {"file_path": str(bad_feature)}},
                 root=root,
-                extra_env={"HARNESS_HOOK_STRICT_POST_TOOL_USE": "1"},
+                extra_env={"harness_hook_STRICT_POST_TOOL_USE": "1"},
             )
 
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -282,186 +273,12 @@ class HarnessHookTests(unittest.TestCase):
         self.assertEqual(output["decision"], "allow")
         self.assertIn("docs path not found", output["reason"])
 
-    def test_pre_compact_writes_session_recovery_snapshot(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            result = run_hook(
-                "pre-compact",
-                {
-                    "session_id": "session-123",
-                    "hook_event_name": "PreCompact",
-                    "cwd": str(root),
-                    "summary": "Current goal: add SessionStart and PreCompact recovery hooks.",
-                    "custom_instructions": "Preserve Harness context.",
-                },
-                root=root,
-            )
+    def test_removed_session_recovery_events_are_not_accepted(self) -> None:
+        for event in ["pre-compact", "session-start"]:
+            result = run_hook(event, {})
 
-            self.assertEqual(result.returncode, 0, result.stderr)
-            output = parsed_stdout(result)
-            recovery_path = Path(output["recovery_path"])
-
-            self.assertEqual(output["decision"], "allow")
-            self.assertIn("recovery snapshot written", output["reason"])
-            self.assertEqual(
-                recovery_path,
-                root / ".harness" / "session-recovery" / "by-session" / "session-123.md",
-            )
-            self.assertTrue(recovery_path.exists())
-            content = recovery_path.read_text(encoding="utf-8")
-            self.assertIn("# Harness Session Recovery", content)
-            self.assertIn("session-123", content)
-            self.assertIn("Current goal: add SessionStart", content)
-            self.assertIn("Preserve Harness context", content)
-            self.assertTrue((root / ".harness" / "session-recovery" / "latest.md").exists())
-
-    def test_pre_compact_accepts_opencode_session_id_shape(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            result = run_hook(
-                "pre-compact",
-                {
-                    "sessionID": "ses_opencode_123",
-                    "source": "compact",
-                    "summary": "Continue the OpenCode compaction recovery review.",
-                },
-                root=root,
-            )
-
-            self.assertEqual(result.returncode, 0, result.stderr)
-            output = parsed_stdout(result)
-            recovery_path = Path(output["recovery_path"])
-
-            self.assertEqual(
-                recovery_path,
-                root / ".harness" / "session-recovery" / "by-session" / "ses_opencode_123.md",
-            )
-            self.assertTrue(recovery_path.exists())
-
-    def test_session_start_compact_returns_same_session_recovery_context(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            recovery_dir = root / ".harness" / "session-recovery" / "by-session"
-            recovery_dir.mkdir(parents=True)
-            recovery_file = recovery_dir / "session-456.md"
-            recovery_file.write_text(
-                "# Harness Session Recovery\n\nContinue F005 from EV-008.\n",
-                encoding="utf-8",
-            )
-
-            result = run_hook(
-                "session-start",
-                {"session_id": "session-456", "source": "compact"},
-                root=root,
-            )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        output = parsed_stdout(result)
-        self.assertEqual(output["decision"], "allow")
-        self.assertIn("recovery snapshot found", output["reason"])
-        self.assertIn("Continue F005", output["additional_context"])
-
-    def test_session_start_startup_does_not_read_previous_latest_snapshot(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            recovery_dir = root / ".harness" / "session-recovery"
-            recovery_dir.mkdir(parents=True)
-            (recovery_dir / "latest.md").write_text(
-                "# Harness Session Recovery\n\nPrevious unrelated task.\n",
-                encoding="utf-8",
-            )
-
-            result = run_hook(
-                "session-start",
-                {"session_id": "new-session", "source": "startup"},
-                root=root,
-            )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        output = parsed_stdout(result)
-        self.assertEqual(output["decision"], "allow")
-        self.assertIn("not a compact recovery event", output["reason"])
-        self.assertNotIn("additional_context", output)
-
-    def test_session_start_compact_does_not_read_other_session_snapshot(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            recovery_dir = root / ".harness" / "session-recovery" / "by-session"
-            recovery_dir.mkdir(parents=True)
-            (recovery_dir / "old-session.md").write_text(
-                "# Harness Session Recovery\n\nOld session context.\n",
-                encoding="utf-8",
-            )
-
-            result = run_hook(
-                "session-start",
-                {"session_id": "new-session", "source": "compact"},
-                root=root,
-            )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        output = parsed_stdout(result)
-        self.assertEqual(output["decision"], "allow")
-        self.assertIn("no session recovery snapshot", output["reason"])
-        self.assertNotIn("additional_context", output)
-
-    def test_session_start_allows_when_recovery_snapshot_is_missing(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            result = run_hook(
-                "session-start",
-                {"session_id": "session-789", "source": "compact"},
-                root=root,
-            )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        output = parsed_stdout(result)
-        self.assertEqual(output["decision"], "allow")
-        self.assertIn("no session recovery snapshot", output["reason"])
-
-    def test_claude_session_start_emits_additional_context_shape(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            recovery_dir = root / ".harness" / "session-recovery" / "by-session"
-            recovery_dir.mkdir(parents=True)
-            (recovery_dir / "session-claude.md").write_text(
-                "# Harness Session Recovery\n\nUse the F005 Vision Anchor.\n",
-                encoding="utf-8",
-            )
-
-            result = run_hook(
-                "session-start",
-                {"session_id": "session-claude", "source": "compact"},
-                root=root,
-                platform="claude",
-            )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        output = parsed_stdout(result)
-        self.assertEqual(output["hookSpecificOutput"]["hookEventName"], "SessionStart")
-        self.assertIn("Use the F005 Vision Anchor", output["hookSpecificOutput"]["additionalContext"])
-
-    def test_codex_session_start_emits_additional_context_shape(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            recovery_dir = root / ".harness" / "session-recovery" / "by-session"
-            recovery_dir.mkdir(parents=True)
-            (recovery_dir / "session-codex.md").write_text(
-                "# Harness Session Recovery\n\nUse the Codex compact snapshot.\n",
-                encoding="utf-8",
-            )
-
-            result = run_hook(
-                "session-start",
-                {"session_id": "session-codex", "source": "compact"},
-                root=root,
-                platform="codex",
-            )
-
-        self.assertEqual(result.returncode, 0, result.stderr)
-        output = parsed_stdout(result)
-        self.assertEqual(output["hookSpecificOutput"]["hookEventName"], "SessionStart")
-        self.assertIn("Use the Codex compact snapshot", output["hookSpecificOutput"]["additionalContext"])
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("invalid choice", result.stderr)
 
 
 if __name__ == "__main__":

@@ -1,34 +1,12 @@
 {
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python -c \"import os, subprocess, sys; runner = os.path.join(os.environ['HARNESS_SKILL_ROOT'], 'hooks', 'harness_hook.py'); sys.exit(subprocess.call([sys.executable, runner, '--event', 'session-start', '--platform', 'claude']))\""
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python -c \"import os, subprocess, sys; runner = os.path.join(os.environ['HARNESS_SKILL_ROOT'], 'hooks', 'harness_hook.py'); sys.exit(subprocess.call([sys.executable, runner, '--event', 'pre-compact', '--platform', 'claude']))\""
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "python -c \"import os, subprocess, sys; runner = os.path.join(os.environ['HARNESS_SKILL_ROOT'], 'hooks', 'harness_hook.py'); sys.exit(subprocess.call([sys.executable, runner, '--event', 'stop', '--platform', 'claude']))\""
+            "command": "python -c \"import os, subprocess, sys; runner = os.path.join(os.environ['Harness_SKILL_ROOT'], 'hooks', 'harness_hook.py'); sys.exit(subprocess.call([sys.executable, runner, '--event', 'stop', '--platform', 'claude']))\""
           }
         ]
       }

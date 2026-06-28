@@ -1,15 +1,14 @@
 import type { Plugin } from "@opencode-ai/plugin"
 
-type HarnessHookEvent = "post-tool-use" | "stop" | "session-start" | "pre-compact"
+type HarnessHookEvent = "post-tool-use" | "stop"
 
 type HarnessHookOutput = {
   decision?: "allow" | "block"
   reason?: string
-  additional_context?: string
 }
 
 export const HarnessHookPlugin: Plugin = async ({ $, client, directory }) => {
-  const skillRoot = process.env.HARNESS_SKILL_ROOT
+  const skillRoot = process.env.Harness_SKILL_ROOT
   if (!skillRoot) {
     return {}
   }
@@ -86,20 +85,6 @@ export const HarnessHookPlugin: Plugin = async ({ $, client, directory }) => {
         hook_event_name: input.event.type,
         last_assistant_message: await latestAssistantMessage(sessionID),
       })
-    },
-    "experimental.session.compacting": async (input, output) => {
-      const payload = {
-        ...input,
-        session_id: input.sessionID,
-        source: "compact",
-        hook_event_name: "experimental.session.compacting",
-      }
-
-      await runHarnessHook("pre-compact", payload)
-      const recovery = await runHarnessHook("session-start", payload)
-      if (recovery.additional_context) {
-        output.context.push(recovery.additional_context)
-      }
     },
   }
 }
