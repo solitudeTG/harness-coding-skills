@@ -59,7 +59,6 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 - Bundled templates for `AGENTS.md`, Feature, ADR, Lesson, and Evidence records
 - Bundled `knowledge_check.py` and `harness_closeout_check.py` for validating structured Harness documents and closeout blocks
 - Optional Stop hook runtime examples for Codex, Claude Code, and OpenCode under `using-harness/hooks/`
-- Codex Desktop personal plugin package: `.codex-plugin/plugin.json`, plugin-level `hooks.json` / `hooks/hooks.json`, `hooks/run-harness-hook.cmd`, `hook_diagnostics.py`, and `.Harness/hook-events/events.jsonl` runtime traces; the plugin identity is `Harness@personal`
 - `skill_metadata_check.py` for validating Skill metadata, trigger surfaces, and required bundled resources
 - Minimal and project-level examples so adoption can start small and grow only when needed
 
@@ -67,9 +66,7 @@ After each AI-assisted task, the system should be more recoverable, more verifia
 
 The formal system name is **Harness**. `Harness` is only a short name after the full name has been defined; when a project also has a test harness, runtime harness, evaluation harness, or business feature named harness, prefer the full name to avoid ambiguity.
 
-The formal Skill slugs are `using-harness` and the eleven semantic workflow Skills such as `harness-start-gate`, `harness-spec-drift`, `harness-readiness-dashboard`, and `harness-knowledge-capture`. If you are upgrading from a pre-rename version, remove the previous Skill directories before reinstalling; see [ADR-007](docs/decisions/ADR-008-Harness-semantic-skill-routing.md) for migration details.
-
-The formal Codex Desktop personal plugin entry is `Harness@personal`. If an older `harness@personal` plugin remains enabled, Codex may regenerate the old plugin cache and expose the removed `using-harness` / `harness-*` slugs.
+The formal Skill slugs are `using-harness` and the eleven semantic workflow Skills such as `harness-start-gate`, `harness-spec-drift`, `harness-readiness-dashboard`, and `harness-knowledge-capture`. If you are upgrading from a pre-rename version, remove the previous Skill directories before reinstalling; see the [Skill Index](docs/skill-index.md) for migration details.
 
 ## Install In 30 Seconds
 
@@ -108,7 +105,7 @@ For Codex Desktop, runtime evidence matters more than whether the settings UI li
 python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --project-root "C:\path\to\your-project"
 ```
 
-If the diagnostic reports a Stop runner warning, the optional Codex Stop hook path is not proven on that machine; keep using Skills-only closeout. When a Harness hook actually runs, it writes a minimal runtime trace to `.Harness/hook-events/events.jsonl` under the project root.
+If the diagnostic reports a Stop runner warning, the optional Codex Stop hook path is not proven on that machine; keep using Skills-only closeout. When a Harness hook actually runs, it writes a minimal runtime trace to `.harness/hook-events/events.jsonl` under the project root.
 
 See [INSTALL.md](INSTALL.md) for more installation options.
 
@@ -189,7 +186,7 @@ Not every task needs the whole chain. The point is to choose the lightest workfl
 | `harness-doc-lifecycle` | Govern stale, superseded, deprecated, or archived documents. |
 | `harness-incident-learning` | Turn bugs, incidents, and patch churn into prevention. |
 | `harness-vision-gate` | Check original intent before implementation, review, merge, done, or handoff. |
-| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, and blocker status before review, release, handoff, or completion. |
+| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, blocker, progress, maturity, and gap status before review, release, handoff, or completion. |
 | `harness-change-narrative` | Explain what changed and why for commits, PRs, handoffs, release notes, or progress summaries. |
 | `harness-knowledge-capture` | Decide whether to record Feature, ADR, Lesson, Evidence, or handoff memory. |
 | `harness-project-rules` | Decide whether a source-backed constraint belongs in `AGENTS.md` or another project-level agent rule file. |
@@ -235,9 +232,6 @@ After global installation, use the bundled script under the installed skill root
 - [Minimal Harness example](examples/minimal-harness/README.md): the smallest useful loop around rules, verification, and Evidence
 - [Project Harness example](examples/project-harness/README.md): shows how Feature, ADR, Lesson, and Evidence records work together
 
-## Articles
-
-- [Harness: bringing AI agents into governable software development](docs/articles/Harness-governable-ai-agent-development-flow.md)
 
 ## Design Principle
 

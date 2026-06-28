@@ -26,13 +26,11 @@ Set-Location using-harness
 .\scripts\install.ps1 codex
 ```
 
-Restart Codex after installation. In a project, mention Harness or ask the agent to use `using-harness`; the entrypoint Skill will route to the focused workflow skills such as `harness-start-gate` and `harness-readiness-dashboard`.
+Restart Codex after installation. In a project, mention Harness or ask the agent to use `using-harness`; the entrypoint Skill will route to the focused workflow skills such as `harness-start-gate` and `harness-readiness-dashboard` for progress, maturity, and gap checks.
 
-Breaking rename note: the formal system name is `Harness`. The installed slugs are `using-harness` plus short semantic workflow slugs such as `harness-start-gate` and `harness-readiness-dashboard`; pre-rename skill directories should be removed before reinstalling this version. See `docs/decisions/ADR-008-Harness-semantic-skill-routing.md` for the exact migration record.
+Breaking rename note: the formal system name is `Harness`. The installed slugs are `using-harness` plus short semantic workflow slugs such as `harness-start-gate` and `harness-readiness-dashboard`; pre-rename skill directories should be removed before reinstalling this version. See `docs/skill-index.md` for the current skill list.
 
 If your Codex environment has the skill installer available, you can also ask Codex to install this repository as a Skill source.
-
-For Codex Desktop personal plugin installs, the plugin identity is `Harness@personal`. Do not keep an older `harness@personal` personal plugin enabled, because Codex can regenerate its plugin cache and expose the removed `using-harness` / `harness-*` Skill slugs. This repository includes `.codex-plugin/plugin.json`, root `hooks.json`, `hooks/hooks.json`, and the `skills/` directory required for the personal plugin package.
 
 ## Claude Code
 
@@ -193,7 +191,7 @@ python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --p
 
 The diagnostic performs a Stop runner smoke test. A warning means the Skill suite is still usable, but the optional Codex Stop hook is not proven in that environment.
 
-When a Harness hook actually runs, the runner writes a minimal runtime trace to `.Harness/hook-events/events.jsonl` under the project root. The trace records event, platform, session id, decision, check, and severity only; it does not store assistant/user message bodies.
+When a Harness hook actually runs, the runner writes a minimal runtime trace to `.harness/hook-events/events.jsonl` under the project root. The trace records event, platform, session id, decision, check, and severity only; it does not store assistant/user message bodies.
 
 ## Verify
 

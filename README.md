@@ -57,7 +57,6 @@ Run -> Trace -> Diagnose -> Patch Harness -> Eval -> Deploy -> Learn
 - `AGENTS.md`、Feature、ADR、Lesson、Evidence bundled 模板
 - `knowledge_check.py` / `harness_closeout_check.py`：随 `using-harness` 安装，用于校验结构化 Harness 文档和 closeout block
 - 可选 Hook Runtime 示例：Codex、Claude Code 和 OpenCode 的 Stop 示例位于 `using-harness/hooks/`
-- Codex Desktop personal plugin 包：`.codex-plugin/plugin.json`、插件级 `hooks.json` / `hooks/hooks.json`、`hooks/run-harness-hook.cmd`、`hook_diagnostics.py` 和 `.Harness/hook-events/events.jsonl` 运行痕迹；插件身份为 `Harness@personal`
 - `skill_metadata_check.py`：校验 Skill metadata、触发表面和必需 bundled resources
 - 最小示例和项目级示例，方便从轻量使用逐步升级
 
@@ -65,9 +64,7 @@ Run -> Trace -> Diagnose -> Patch Harness -> Eval -> Deploy -> Learn
 
 正式系统名是 **Harness**。`Harness` 只是定义后的短称；当项目内部也有 test harness、runtime harness、evaluation harness 或业务里的 harness 功能时，应优先使用全称避免混淆。
 
-当前正式 skill slug 是 `using-harness` 和十一个短语义 workflow。如果你从重命名前的版本升级，请先移除旧版 skill 目录再重新安装；迁移细节见 [ADR-007](docs/decisions/ADR-008-Harness-semantic-skill-routing.md)。
-
-Codex Desktop personal plugin 的正式入口是 `Harness@personal`。如果本机还启用了旧 `harness@personal`，Codex 可能重新生成旧插件缓存并暴露已移除的 `using-harness` / `harness-*` slugs。
+当前正式 skill slug 是 `using-harness` 和十一个短语义 workflow。如果你从重命名前的版本升级，请先移除旧版 skill 目录再重新安装；迁移细节见 [Skill Index](docs/skill-index.md)。
 
 ## 30 秒安装
 
@@ -106,7 +103,7 @@ Codex Desktop 的 hook 集成需要以运行证据为准，而不是只看设置
 python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --project-root "C:\path\to\your-project"
 ```
 
-如果诊断提示 Stop runner warning，说明该机器上的可选 Codex Stop hook 路径尚未被证明；继续使用 Skills-only closeout 即可。Hook 真正执行时，会在项目下写入 `.Harness/hook-events/events.jsonl` 作为最小运行痕迹。
+如果诊断提示 Stop runner warning，说明该机器上的可选 Codex Stop hook 路径尚未被证明；继续使用 Skills-only closeout 即可。Hook 真正执行时，会在项目下写入 `.harness/hook-events/events.jsonl` 作为最小运行痕迹。
 
 更多安装方式见 [INSTALL.md](INSTALL.md)。
 
@@ -187,7 +184,7 @@ using-harness/assets/templates/EVIDENCE.md
 | `harness-doc-lifecycle` | 处理 stale、superseded、deprecated、archived 等文档生命周期状态。 |
 | `harness-incident-learning` | 把 Bug、事故和补丁震荡转化为可复用防护。 |
 | `harness-vision-gate` | 在实现、Review、Merge、Done 或 Handoff 前校验是否仍然贴合原始目标。 |
-| `harness-readiness-dashboard` | 在 Review、Release、Handoff 或完成声明前汇总门禁、证据、风险和阻塞项。 |
+| `harness-readiness-dashboard` | 在 Review、Release、Handoff 或完成声明前汇总 gate、evidence、risk、blocker、progress、maturity 和 gap 状态。 |
 | `harness-change-narrative` | 为 commit、PR、交接、发布说明或变更总结写清楚“改了什么，为什么这么改”。 |
 | `harness-knowledge-capture` | 判断是否需要沉淀 Feature、ADR、Lesson、Evidence 或 Handoff 记忆。 |
 | `harness-project-rules` | 判断某条经验或约束是否应该晋升到 `AGENTS.md` 等项目级 Agent 规则。 |
@@ -231,9 +228,6 @@ python skills/using-harness/scripts/knowledge_check.py --root . --docs-path docs
 - [最小 Harness 示例](examples/minimal-harness/README.md)：只保留最小规则、验证和 Evidence 习惯
 - [项目级 Harness 示例](examples/project-harness/README.md)：展示 Feature、ADR、Lesson、Evidence 如何协作
 
-## 文章
-
-- [Harness：把 AI Agent 纳入可治理的软件开发流程](docs/articles/Harness-governable-ai-agent-development-flow.md)
 
 ## 设计原则
 
