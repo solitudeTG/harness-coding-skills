@@ -81,18 +81,21 @@ Install for Codex:
 
 ```bash
 bash scripts/install.sh codex
+bash scripts/install.sh --verify codex
 ```
 
 Install for Claude Code:
 
 ```bash
 bash scripts/install.sh claude
+bash scripts/install.sh --verify claude
 ```
 
 Windows PowerShell:
 
 ```powershell
 .\scripts\install.ps1 both
+.\scripts\install.ps1 -Verify both
 ```
 
 Restart your agent after installation. Start with `using-harness`; it routes to the smaller semantic workflow Skills such as `harness-start-gate`, `harness-readiness-dashboard`, and `harness-knowledge-capture` only when needed.

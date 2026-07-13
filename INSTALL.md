@@ -16,6 +16,7 @@ Install globally with the helper script:
 git clone https://github.com/solitudeTG/using-harness.git
 cd using-harness
 bash scripts/install.sh codex
+bash scripts/install.sh --verify codex
 ```
 
 Windows PowerShell:
@@ -24,6 +25,7 @@ Windows PowerShell:
 git clone https://github.com/solitudeTG/using-harness.git
 Set-Location using-harness
 .\scripts\install.ps1 codex
+.\scripts\install.ps1 -Verify codex
 ```
 
 Restart Codex after installation. In a project, mention Harness or ask the agent to use `using-harness`; the entrypoint Skill will route to the focused workflow skills such as `harness-start-gate` and `harness-readiness-dashboard` for progress, maturity, and gap checks.
@@ -40,6 +42,7 @@ Install globally with the helper script:
 git clone https://github.com/solitudeTG/using-harness.git
 cd using-harness
 bash scripts/install.sh claude
+bash scripts/install.sh --verify claude
 ```
 
 Windows PowerShell:
@@ -48,6 +51,7 @@ Windows PowerShell:
 git clone https://github.com/solitudeTG/using-harness.git
 Set-Location using-harness
 .\scripts\install.ps1 claude
+.\scripts\install.ps1 -Verify claude
 ```
 
 Restart Claude Code after installation.
@@ -89,6 +93,40 @@ Windows PowerShell:
 New-Item -ItemType Directory -Force "$HOME\.codex\skills", "$HOME\.claude\skills"
 Copy-Item ".\skills\*" "$HOME\.codex\skills\" -Recurse -Force
 Copy-Item ".\skills\*" "$HOME\.claude\skills\" -Recurse -Force
+```
+
+## Install Verification
+
+The helper scripts install Skills only and verify the result by default. Verification checks that all formal Harness Skill slugs and the bundled validators, templates, usage recorder, and optional hook runner are present.
+
+Run verification without copying files:
+
+```bash
+bash scripts/install.sh --verify codex
+bash scripts/install.sh --verify claude
+```
+
+Windows PowerShell:
+
+```powershell
+.\scripts\install.ps1 -Verify codex
+.\scripts\install.ps1 -Verify claude
+```
+
+For tests, CI, or agent sandbox installs, override the destination instead of touching real global Skill directories:
+
+```bash
+HARNESS_CODEX_SKILLS_DIR=/tmp/codex-skills bash scripts/install.sh codex
+HARNESS_CLAUDE_SKILLS_DIR=/tmp/claude-skills bash scripts/install.sh claude
+```
+
+Windows PowerShell:
+
+```powershell
+$env:HARNESS_CODEX_SKILLS_DIR = "C:\tmp\codex-skills"
+.\scripts\install.ps1 codex
+$env:HARNESS_CLAUDE_SKILLS_DIR = "C:\tmp\claude-skills"
+.\scripts\install.ps1 claude
 ```
 
 ## Optional Project Rules

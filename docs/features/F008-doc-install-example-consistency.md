@@ -56,6 +56,7 @@ Done。README、README.en、INSTALL、docs/workflow 和两个 examples 已同步
 ## Links
 
 - [EV-011 Doc Install Example Consistency](../evidence/EV-011-doc-install-example-consistency.md)
+- [EV-024 Install Script Verification](../evidence/EV-024-install-script-verification.md)
 
 ### Evidence
 
@@ -111,6 +112,8 @@ None yet.
 
 [EV-011 Doc Install Example Consistency](../evidence/EV-011-doc-install-example-consistency.md)
 
+[EV-024 Install Script Verification](../evidence/EV-024-install-script-verification.md)
+
 
 ## Recovery Snapshot
 
@@ -123,7 +126,6 @@ None yet.
 ## Next Step
 
 后续新增公开入口文档时，把 `tests/test_documentation_consistency.py` 扩展到新文件，避免示例与正式 Skill 能力再次漂移。
-
 
 
 

@@ -8,21 +8,26 @@ From the repository root:
 
 ```bash
 bash scripts/install.sh codex
+bash scripts/install.sh --verify codex
 ```
 
 For Claude Code:
 
 ```bash
 bash scripts/install.sh claude
+bash scripts/install.sh --verify claude
 ```
 
 Windows PowerShell:
 
 ```powershell
 .\scripts\install.ps1 both
+.\scripts\install.ps1 -Verify both
 ```
 
 Restart your agent after installation. Use `using-harness` as the entrypoint.
+
+The installer verifies the formal Harness Skill slugs and bundled resources after copying. Set `HARNESS_CODEX_SKILLS_DIR` or `HARNESS_CLAUDE_SKILLS_DIR` when a test, CI job, or agent sandbox must avoid the real global Skill directories.
 
 ## Optional Hooks
 
