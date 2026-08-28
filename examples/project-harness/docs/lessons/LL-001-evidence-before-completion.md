@@ -3,7 +3,7 @@ id: LL-001
 doc_kind: lesson
 status: active
 scope: project
-feature_refs: [docs/features/F001-ai-coding-harness.md]
+feature_refs: [docs/features/F001-harness.md]
 applies_to: [completion, review, handoff]
 created: 2026-05-09
 updated: 2026-05-09

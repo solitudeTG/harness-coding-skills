@@ -1,252 +1,365 @@
 # Harness
 
-[简体中文](README.md) | English
+[简体中文](README.md)
 
-[![knowledge-check](https://github.com/solitudeTG/using-harness/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/using-harness/actions/workflows/knowledge-check.yml)
+[![Knowledge checks](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml/badge.svg)](https://github.com/solitudeTG/harness-coding-skills/actions/workflows/knowledge-check.yml)
 
-Harness is a Skill suite and engineering collaboration template for **Codex / Claude Code**, with optional hook examples for Codex, Claude Code, and OpenCode. It is not trying to make agents write more code in a single sitting. It helps AI-assisted development stay traceable, reviewable, and recoverable across sessions, agents, and human collaborators.
+## Let every AI development task
+## leave engineering facts useful for the next decision.
 
-If you are opening this repository for the first time, think of it as engineering guardrails for AI coding work:
+Harness gives Codex, Claude Code, and other coding agents **recoverable, explainable, and verifiable engineering memory** for codebases that evolve over time.
 
-```text
-Confirm the goal -> retrieve context -> make the smallest coherent change -> close with evidence
-```
+Code tells us what the system is now.
 
-It gives agents a reason to pause at the moments that matter: Is the request real? Are the boundaries clear? How will the result be verified? Can the next session recover the context? Did a failure become durable learning?
+Harness preserves the facts that code cannot reliably explain:
 
-## Who This Is For
+- what a feature is meant to achieve and where its boundary lies;
+- why a design was chosen and which alternatives were rejected;
+- which failures have already occurred and must not recur;
+- which claims have been verified, including their scope and limitations.
 
-- Developers using Codex, Claude Code, or similar coding agents on real projects
-- Teams that want agents to remember project rules, preserve handoff context, and explain changes clearly
-- Projects that have already felt the pain of lost context, evidence-free completion claims, unclear PR narratives, repeated patching, or multi-agent work that does not converge
+The next agent should not have to infer the answer from chat history, Git diffs, and scattered comments:
 
-For a one-off experiment, you may only need a small part of the suite.  
-For a project that keeps evolving, the Harness becomes more valuable.
-
-## Why Harness Exists
-
-AI coding assistants can already produce code quickly. The harder problem is usually not whether an agent can write code, but whether the engineering system gets stronger after the work.
-
-Real projects need answers to questions like:
-
-- Does the agent know the project's long-lived rules?
-- Can a new session recover why earlier work was done?
-- Is a completion claim backed by actual verification evidence?
-- Are decisions, rejected paths, and risks preserved?
-- Do bugs and incidents become reusable prevention?
-- Can humans, agents, and multiple agents collaborate without losing state?
-
-The core idea:
+> Why was the system designed this way?<br>
+> Which options were already rejected?<br>
+> What did this change actually verify?
 
 ```text
-Prompt solves one-time expression.
-Skill solves one-time workflow.
-Harness solves long-term engineering system behavior.
+A prompt expresses a request once.
+A workflow Skill helps complete a task once.
+Harness helps the project retain facts needed for the next task.
 ```
 
-Harness is not documentation theater. It is a lightweight control loop:
+---
+
+## Why Harness
+
+Coding models are already effective at implementing local changes. The hard part is retaining sound engineering judgment through many conversations, agents, reviews, and iterations.
+
+Passing tests do not necessarily mean the right thing was built.
+
+When the goal has drifted, a specification has become stale, a rejected approach is proposed again, or a new agent cannot understand an earlier design choice, neither the code nor a green test suite will reliably provide the answer.
+
+Typical failures include:
+
+- requirements drift while tests continue to pass;
+- an agent faithfully implements stale specifications or acceptance criteria;
+- a feature accumulates patches while its failing abstraction goes unnoticed;
+- reviews see a diff but not the decisions, risks, or rejected alternatives behind it;
+- an agent claims completion without reproducible verification facts;
+- a new session or agent cannot recover critical engineering judgment;
+- documentation grows without changing future engineering decisions.
+
+Harness does not ask you to document every change.
+
+It records facts only when they can affect future judgment, and retrieves only a small, directly relevant context package when history actually matters.
+
+---
+
+## How it works
 
 ```text
-Run -> Trace -> Diagnose -> Patch Harness -> Eval -> Deploy -> Learn
+Development task + known changed paths
+        │
+        ▼
+Read one unified engineering Index
+        │
+        ├── Feature: goal, boundary, specification, acceptance
+        ├── ADR: design choice and rejected alternatives
+        ├── Lesson: real failure and prevention
+        └── Evidence: verification facts, scope, limitations
+        │
+        ▼
+The model plans, implements, tests, and collaborates normally
+        │
+        ▼
+Durable facts are recorded only when an engineering event occurs
 ```
 
-After each AI-assisted task, the system should be more recoverable, more verifiable, and less likely to repeat the same mistake.
+Harness follows two principles:
 
-## What This Repository Provides
+1. **Retrieve precisely, then work autonomously**<br>
+   For work that may affect feature behavior, specifications, architecture, interfaces, data meaning, or acceptance, the main agent reads the unified Index once and uses each Brief to select relevant documents instead of scanning the whole knowledge base.
 
-- `using-harness`: a high-recall entrypoint Skill that decides whether the current task needs Harness routing
-- Eleven focused semantic workflow Skills such as `harness-start-gate`, `harness-spec-drift`, `harness-readiness-dashboard`, and `harness-knowledge-capture` for start gates, spec drift checks, delegation decisions, knowledge retrieval, document lifecycle, incident learning, vision checks, readiness, change narrative, knowledge capture, and project rule promotion
-- Bundled templates for `AGENTS.md`, Feature, ADR, Lesson, and Evidence records
-- Bundled `knowledge_check.py` and `harness_closeout_check.py` for validating structured Harness documents and closeout blocks
-- Optional Stop hook runtime examples for Codex, Claude Code, and OpenCode under `using-harness/hooks/`
-- `skill_metadata_check.py` for validating Skill metadata, trigger surfaces, and required bundled resources
-- Minimal and project-level examples so adoption can start small and grow only when needed
+2. **Record only facts worth retaining**<br>
+   Ordinary small changes need no new document. Durable facts are recorded only for events such as intent conflict, a stable decision, recurring failure, or an important delivery claim.
 
-## Naming Boundary
+No relevant Index entry is a valid result: project history should not interfere with a task that does not need it.
 
-The formal system name is **Harness**. `Harness` is only a short name after the full name has been defined; when a project also has a test harness, runtime harness, evaluation harness, or business feature named harness, prefer the full name to avoid ambiguity.
+---
 
-The formal Skill slugs are `using-harness` and the eleven semantic workflow Skills such as `harness-start-gate`, `harness-spec-drift`, `harness-readiness-dashboard`, and `harness-knowledge-capture`. If you are upgrading from a pre-rename version, remove the previous Skill directories before reinstalling; see the [Skill Index](docs/skill-index.md) for migration details.
+## Four kinds of engineering facts
 
-## Install In 30 Seconds
+| Document | Question it answers | Create or update it when |
+| --- | --- | --- |
+| **Feature** | What are we building, why, within which boundary, and how is it accepted? | A feature needs a durable specification or acceptance criteria |
+| **ADR** | Why was this chosen, and why were other options rejected? | A decision will affect architecture, interfaces, risk, or cost over time |
+| **Lesson** | What failed, why did it fail, and how do we prevent recurrence? | A specification drifts, a regression recurs, or a reusable failure pattern emerges |
+| **Evidence** | Which claim was verified? What was verified, and what remains unverified? | Completion, release, handoff, or an important judgment needs proof |
+
+The unified Index is a lightweight directory of current Features and accepted ADRs; it helps the main agent choose documents but never replaces their content.
+
+---
+
+## Feature is the feature-level SDD spec
+
+Harness does not require a separate Capability or Plan document type.
+
+In Harness, a **Feature is the feature-level SDD spec**. It contains:
+
+- Goal: the user or business outcome;
+- Scope: scope and explicit non-goals;
+- Specification: behavior, rules, constraints, interfaces, and failure behavior;
+- Acceptance: verifiable Given / When / Then scenarios;
+- Current State: current implementation and verification state;
+- Decision Context: historical tradeoffs needed before changing the feature;
+- Links: related ADRs, Lessons, Evidence, and external specifications.
+
+If a team also uses OpenSpec, Superpowers, or another specification tool, link its artifacts from the Feature. Harness remains independently usable without them.
+
+---
+
+## TDD by default, without documentation theater
+
+For deterministic behavior, Harness recommends letting Feature acceptance scenarios drive tests:
+
+```text
+Acceptance scenario
+        ↓
+Test name and assertions
+        ↓
+Red → Green → Refactor
+        ↓
+Final verification recorded as Evidence
+```
+
+This means:
+
+- acceptance criteria are not prose that disappears after implementation;
+- tests are not technical artifacts detached from requirements;
+- Evidence records final known facts, not every temporary attempt.
+
+When test-first is unsuitable—for example, experience evaluation, an external integration, or exploratory validation—describe the alternative method and its limitations in the Feature's `Verification Strategy`.
+
+---
+
+## Six Skills, invoked only when they matter
+
+| Skill | Purpose | Trigger |
+| --- | --- | --- |
+| `harness` | Prompts one unified Index read and agent-led document selection | Work that may affect behavior, specifications, architecture, interfaces, data meaning, or acceptance |
+| `harness-intent` | Resolves a real goal, scope, or boundary conflict | A change conflicts with a Feature, ADR, or public boundary |
+| `harness-decision` | Records a durable tradeoff for future work | A decision establishes an architecture, module, interface, cost, or risk boundary |
+| `harness-learning` | Turns repeated failures into actionable prevention | Specification drift, regression, or repeat failure genuinely occurs |
+| `harness-evidence` | Binds an important claim to verifiable facts | A completion, release, handoff, or significant judgment needs proof |
+| `harness-closeout` | Compresses the facts known in the current task | Pausing, handing off, or ending work |
+
+They are not a mandatory sequence.
+
+The model should handle ordinary decomposition, implementation, testing, review, and collaboration. Harness appears only when project memory, boundaries, decisions, or evidence are actually needed.
+
+---
+
+## OpenSpec, Superpowers, and Harness
+
+Harness does not replace every development method. It solves a different problem:
+
+> Make long-lived engineering facts from AI development recoverable, explainable, and verifiable.
+
+| Tool | Primary focus | Best fit |
+| --- | --- | --- |
+| **Harness** | Engineering memory, feature specifications, design rationale, failure learning, verification evidence | You want the codebase to retain its “why” across sessions and agents |
+| **OpenSpec** | Change-oriented specifications, proposals, designs, and tasks | You want structured, spec-driven change proposals |
+| **Superpowers** | A composable software-development methodology and execution workflow | You want a more complete workflow for planning, TDD, review, and delivery |
+
+OpenSpec stores specifications in the codebase and organizes change proposals, designs, tasks, and specification deltas. Superpowers provides a composable workflow from clarification and planning through TDD and review. [OpenSpec](https://openspec.dev/) · [Superpowers](https://github.com/obra/superpowers)
+
+They can work together:
+
+```text
+OpenSpec or another tool
+    └── produces a proposal or plan for one change
+                │
+                ▼
+Harness Feature
+    └── retains the feature specification and durable boundary
+                │
+                ├── ADR: lasting design rationale
+                ├── Lesson: prevention for repeated failure
+                └── Evidence: verification facts for key claims
+```
+
+Harness also works on its own: Features, ADRs, Lessons, Evidence, and one bounded retrieval form a complete engineering-memory loop.
+
+---
+
+## Quick start
+
+### 1. Install
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/solitudeTG/using-harness.git
-cd using-harness
+git clone https://github.com/solitudeTG/harness-coding-skills.git
+cd harness-coding-skills
 ```
 
 Install for Codex:
 
-```bash
-bash scripts/install.sh codex
-bash scripts/install.sh --verify codex
+```powershell
+.\scripts\install.ps1 codex
+.\scripts\install.ps1 -Verify codex
 ```
 
 Install for Claude Code:
 
-```bash
-bash scripts/install.sh claude
-bash scripts/install.sh --verify claude
+```powershell
+.\scripts\install.ps1 claude
+.\scripts\install.ps1 -Verify claude
 ```
 
-Windows PowerShell:
+Install for both:
 
 ```powershell
 .\scripts\install.ps1 both
 .\scripts\install.ps1 -Verify both
 ```
 
-Restart your agent after installation. Start with `using-harness`; it routes to the smaller semantic workflow Skills such as `harness-start-gate`, `harness-readiness-dashboard`, and `harness-knowledge-capture` only when needed.
-
-Hooks are optional. The Skills-only install remains the baseline. Default examples enable only the Stop hook, do not wire default `PostToolUse`, and no longer provide `pre-compact` / `session-start` automatic recovery. See `using-harness/hooks/` and the enhanced install notes in [INSTALL.md](INSTALL.md).
-
-For Codex Desktop, runtime evidence matters more than whether the settings UI lists the hooks. Use the bundled hook diagnostic after installing or updating hooks. It runs a local Stop runner smoke test:
-
-```powershell
-python "$HOME\.codex\skills\using-harness\scripts\hook_diagnostics.py" codex --project-root "C:\path\to\your-project"
-```
-
-If the diagnostic reports a Stop runner warning, the optional Codex Stop hook path is not proven on that machine; keep using Skills-only closeout. When a Harness hook actually runs, it writes a minimal runtime trace to `.harness/hook-events/events.jsonl` under the project root.
-
-See [INSTALL.md](INSTALL.md) for more installation options.
-
-## Minimal Adoption Path
-
-Harness does not automatically modify global or project `AGENTS.md` files. You may copy the bundled `AGENTS.md` template into your project when repository-level rules would help future agents:
+From Bash:
 
 ```bash
-cp ~/.codex/skills/using-harness/assets/templates/AGENTS.md /path/to/your-project/AGENTS.md
+bash scripts/install.sh codex
+bash scripts/install.sh --verify codex
 ```
 
-Windows PowerShell:
+Restart the target agent after installation so it loads the new Skill metadata.
 
-```powershell
-Copy-Item "$HOME\.codex\skills\using-harness\assets\templates\AGENTS.md" "C:\path\to\your-project\AGENTS.md"
-```
+### 2. Start with a real change
 
-Then define three things in `AGENTS.md`:
+When a task depends on project history, an existing feature specification, or prior decisions, use `harness`:
 
 ```text
-1. What project rules must agents always follow?
-2. Which command proves the project still works?
-3. Where should completion evidence be recorded?
+Add inventory restoration when an order is cancelled.
+
+Known affected paths:
+- src/orders/
+- src/inventory/
+- tests/orders/
 ```
 
-## Optional Project Rules
-
-For longer-lived projects, consider adding these manual rules to the copied `AGENTS.md`:
+Harness performs one bounded retrieval:
 
 ```text
-- Run Start Gate before non-trivial implementation.
-- If real cases, validation, or user feedback contradict an existing spec, run Spec Drift before changing code.
-- If repeated patches add scenario-specific branches, pause and run Patch Churn Review before continuing.
+Known paths
+  → read the unified Index
+  → the main agent semantically selects 0–3 relevant Features and needed ADRs
+  → read directly linked Lessons / Evidence only when needed
 ```
 
-For projects that evolve across multiple sessions, add:
+The model then implements and verifies the change normally.
 
-```text
-docs/BACKLOG.md
-docs/features/
-docs/decisions/
-docs/lessons/
-docs/evidence/
-```
+### 3. Record only when an event occurs
 
-Use the bundled templates from `using-harness/assets/templates/`:
+For example:
 
-```text
-using-harness/assets/templates/FEATURE.md
-using-harness/assets/templates/ADR.md
-using-harness/assets/templates/LESSON.md
-using-harness/assets/templates/EVIDENCE.md
-```
+- “Should a shipped order restore inventory when cancelled?”<br>
+  If this establishes a lasting business rule, record an ADR.
 
-## Typical Workflow
+- “This is the third regression caused by duplicate asynchronous messages.”<br>
+  If there is a reusable root cause and prevention, record a Lesson.
 
-```text
-Receive task
-  -> using-harness decides whether Harness applies
-  -> harness-start-gate decides whether work may start
-  -> retrieve project knowledge, run Spec Drift, clarify intent, or create a Feature / spec / plan / ADR when needed
-  -> execute the smallest verifiable change
-  -> run verification and record Evidence
-  -> use readiness / change narrative / knowledge capture when preparing review, release, or handoff
-```
+- “This feature passed the specified integration tests and is ready for QA.”<br>
+  If the claim must be reviewable later, record Evidence.
 
-Not every task needs the whole chain. The point is to choose the lightest workflow that protects the context future work will actually need.
+You do not need to create a complete documentation system up front. Start with the Feature you are changing.
 
-## Skills
+---
 
-| Skill | Use when |
-| --- | --- |
-| `using-harness` | Route the current task to the right Harness workflow. |
-| `harness-start-gate` | Decide whether non-trivial work may start or first needs clarification, retrieval, Vision Gate, Feature, spec, plan, or ADR. |
-| `harness-delegation-gate` | Decide whether to ask for implementation subagents or an independent reviewer. |
-| `harness-knowledge-retrieval` | Recover project context before acting. |
-| `harness-spec-drift` | Decide whether a current spec or acceptance criteria is still trustworthy before changing code. |
-| `harness-doc-lifecycle` | Govern stale, superseded, deprecated, or archived documents. |
-| `harness-incident-learning` | Turn bugs, incidents, and patch churn into prevention. |
-| `harness-vision-gate` | Check original intent before implementation, review, merge, done, or handoff. |
-| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, risk, blocker, progress, maturity, and gap status before review, release, handoff, or completion. |
-| `harness-change-narrative` | Explain what changed and why for commits, PRs, handoffs, release notes, or progress summaries. |
-| `harness-knowledge-capture` | Decide whether to record Feature, ADR, Lesson, Evidence, or handoff memory. |
-| `harness-project-rules` | Decide whether a source-backed constraint belongs in `AGENTS.md` or another project-level agent rule file. |
+## What Harness does not do
 
-See [docs/skill-index.md](docs/skill-index.md) for more detail.
+Harness does not:
 
-## Repository Structure
+- decide whether a product request is worth building;
+- force every task through planning, delegation, review, or closeout stages;
+- load all historical documents simply because a knowledge base exists;
+- turn every chat, Git diff, or temporary attempt into project memory;
+- replace tests, code review, or real verification with documentation;
+- mistake a complete-looking workflow for reliable engineering.
 
-```text
-skills/       Installable agent workflow Skills, including using-harness bundled scripts/templates
-hooks/        Codex plugin-level hook wrapper and example config
-docs/         Concepts, architecture, and workflow notes
-templates/    Reusable document templates
-examples/     Minimal and project-level Harness examples
-scripts/      Lightweight validation utilities
-```
+It provides the smallest reusable engineering facts precisely where the model cannot reliably derive them from the current code but future work depends on them.
 
-## Validate
+---
+
+## Validate the repository
 
 Validate Skill metadata:
 
-```bash
-python scripts/skill_metadata_check.py --root . --skills-path skills
+```powershell
+python scripts\skill_metadata_check.py --root . --strict
 ```
 
-Validate structured Harness documents:
+Check that the Index is current:
 
-```bash
-python skills/using-harness/scripts/knowledge_check.py --root . --docs-path docs
+```powershell
+python scripts\generate_index.py --root . --check
 ```
 
-Use strict mode when preparing a stronger review or CI gate:
+Validate Harness document structure:
 
-```bash
-python scripts/skill_metadata_check.py --root . --skills-path skills --strict
-python skills/using-harness/scripts/knowledge_check.py --root . --docs-path docs --strict
+```powershell
+python scripts\knowledge_check.py --root . --docs-path docs --strict
 ```
 
-After global installation, use the bundled script under the installed skill root, for example `$HOME/.codex/skills/using-harness/scripts/knowledge_check.py`. Projects may vendor the scripts for CI, but normal Harness use should not require per-project script setup.
+Run tests:
 
-## Examples
+```powershell
+pytest -q
+```
 
-- [Minimal Harness example](examples/minimal-harness/README.md): the smallest useful loop around rules, verification, and Evidence
-- [Project Harness example](examples/project-harness/README.md): shows how Feature, ADR, Lesson, and Evidence records work together
+---
 
+## Design evolution: why the new architecture orchestrates less
 
-## Design Principle
+Earlier AI-coding frameworks often used layered gates, prescribed subflows, and large rule sets to compensate for models that struggled to decompose tasks, choose verification, and retain context.
 
-Harness should reduce repeated rediscovery, repeated mistakes, and evidence-free completion claims. It should not become a ceremony that creates documents for every tiny change.
+For capable coding models, repeating those controls has a cost:
 
-Knowledge before orchestration.  
-Gate before automation.  
-Governance before scale.
+- the same task is classified and reclassified by several gates;
+- the same project material is repeatedly read;
+- overlapping rules consume attention needed to understand and verify the actual change;
+- a default workflow replaces judgment the model could apply directly.
 
-## Status
+This is not an argument against Skills. It changes their role from **controlling model behavior by default** to **providing high-value engineering facts when an event warrants them**.
 
-This project is in early public shaping. The current goal is to publish a clear, minimal, reusable Harness Skill suite and template set so AI-assisted development can move from "held together by a long prompt" toward an engineering system that keeps improving.
+Anthropic has described reducing the Claude Code system prompt by more than 80% for its Claude 5 generation models with no measurable loss on coding evaluations. Its context-engineering direction is to remove repeated constraints, leave room for judgment, and disclose context progressively when it is useful. [The new rules of context engineering for Claude 5 generation models](https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models)
+
+Verification is not removed: deterministic checks such as tests, linting, and builds remain essential. The better boundary is to trigger specialized capabilities when a task needs them, not to chain every Skill into every task. [Building verification loops in Claude Code with skills](https://claude.com/blog/building-verification-loops-in-claude-code-with-skills)
+
+Harness therefore chooses to:
+
+> Trust capable models with ordinary reasoning and execution.<br>
+> Concentrate engineering constraints on facts that models cannot retain by themselves but future evolution depends on.
+
+---
+
+## Project status
+
+- `v1.0.0` is the stable historical baseline;
+- `vnext` is the development branch for the incompatible `v2.0.0` architecture;
+- the new architecture still needs real historical-task benchmarks for retrieval accuracy, irrelevant-context rate, and end-to-end development experience before a formal release.
+
+---
+
+## Documentation
+
+- [Installation](INSTALL.md)
+- [Quick start](docs/quickstart.md)
+- [Skill index](docs/skill-index.md)
+- [Engineering Index](docs/INDEX.md)
+- [Architecture Feature](docs/features/F017-harness-vnext-gpt56-workflow.md)
+- [Architecture ADR](docs/decisions/ADR-010-harness-vnext-event-triggered-memory-layer.md)
+
+---
 
 ## License
 

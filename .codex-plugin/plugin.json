@@ -1,0 +1,23 @@
+{
+  "name": "harness",
+  "version": "2.0.0+codex.20260729000000",
+  "description": "Event-triggered engineering memory and SDD skills for capable coding agents.",
+  "author": {
+    "name": "solitudeTG"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Harness",
+    "shortDescription": "Bounded context, SDD memory, and verifiable engineering facts.",
+    "longDescription": "Harness vNext gives capable coding agents one bounded project-context package, Feature-level SDD specifications, durable decisions and lessons, verification evidence, and compact closeout. It does not impose a default multi-Gate development pipeline.",
+    "developerName": "solitudeTG",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "Recover Harness context for this change",
+      "Record a durable engineering decision",
+      "Create a compact Harness closeout"
+    ],
+    "brandColor": "#1F6FEB"
+  }
+}

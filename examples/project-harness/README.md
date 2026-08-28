@@ -1,23 +1,13 @@
-# Project Harness
+# Project Harness v1 Example
 
-A project-level harness adds durable memory and gates:
+This example preserves the pre-vNext project-harness document shape for historical reference. It is not a vNext runtime template and does not participate in `docs/INDEX.md` generation.
 
-- backlog or active work index
-- feature aggregation pages
-- ADRs
-- lessons
-- evidence records
-- vision and evidence gates
-- document lifecycle rules
+For vNext projects, begin with the templates under `skills/harness/assets/templates/`, keep current Feature and accepted ADR summaries in `docs/INDEX.md`, and use event Skills only when their named event occurs.
 
-Use this when the project lasts across multiple sessions, features, or contributors.
-
-Use `harness-readiness-dashboard` when the project needs a rollup of progress, maturity, gap, distance-to-target, or blocker status before review, release, handoff, or completion.
-
-This example includes a small set of structured docs under `docs/`:
+The archived v1 example includes structured docs under `docs/`:
 
 ```text
-docs/features/F001-ai-coding-harness.md
+docs/features/F001-harness.md
 docs/decisions/ADR-001-markdown-as-source-of-truth.md
 docs/lessons/LL-001-evidence-before-completion.md
 docs/evidence/EV-001-project-harness-example.md
@@ -26,5 +16,5 @@ docs/evidence/EV-001-project-harness-example.md
 Validate it from the repository root:
 
 ```bash
-python skills/using-harness/scripts/knowledge_check.py --root examples/project-harness --docs-path docs
+python scripts/knowledge_check.py --root . --docs-path docs --strict
 ```

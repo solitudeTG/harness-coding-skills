@@ -22,6 +22,6 @@
 
 ### Rule: 项目规则晋升门槛
 - Scope: 任何准备修改 AGENTS.md 或仓库级 Agent 指令的场景。
-- Requirement: Agent MUST run the harness-project-rules promotion gate and get explicit user approval before editing project-level rules.
-- Source: User instruction, 2026-06-27；harness-project-rules skill。
+- Requirement: Agent MUST run the project-rules promotion gate and get explicit user approval before editing project-level rules.
+- Source: User instruction, 2026-06-27；project-rules skill。
 - Rationale: 防止 AGENTS.md 变成知识垃圾场，或让 Agent 自行扩张控制面。

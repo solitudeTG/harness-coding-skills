@@ -1,45 +1,12 @@
 # Skill Index
 
-This repository is a **Skill suite**. Each directory under `skills/` contains one installable Skill with a `SKILL.md` entrypoint. `using-harness` is the high-recall entrypoint; it routes to the smallest specific workflow that protects the project from lost context, unverifiable completion, repeated incidents, or unclear handoff.
+| Skill | 触发事件 | 不做什么 |
+| --- | --- | --- |
+| `harness` | 任务可能影响功能、规格、架构、接口、数据语义或验收 | 不编排开发流程，不替主 Agent 路由正文。 |
+| `harness-intent` | 目标、范围、Feature 或 ADR 冲突 | 不做例行开工检查。 |
+| `harness-decision` | 稳定且会影响未来的取舍 | 不记录局部可逆实现细节。 |
+| `harness-learning` | Spec 漂移、回归、重复失败 | 不做形式化复盘。 |
+| `harness-evidence` | 关键完成、发布、交接或决策声明 | 不写设计理由或计划。 |
+| `harness-closeout` | 暂停、交接、结束 | 不重启检索或全量校验。 |
 
-## Skills
-
-| Skill | Responsibility |
-| --- | --- |
-| `using-harness` | Route the current task to the right harness workflow. |
-| `harness-start-gate` | Decide whether non-trivial work may start or needs clarification, retrieval, Vision Gate, patch-churn review, Feature, spec, plan, or ADR first. |
-| `harness-delegation-gate` | Decide whether to ask for implementation subagents or independent reviewers. |
-| `harness-knowledge-retrieval` | Recover project context before acting. |
-| `harness-spec-drift` | Decide whether stale specs, acceptance criteria drift, or real-case feedback require source repair before code. |
-| `harness-doc-lifecycle` | Interpret stale, superseded, deprecated, or archived documents. |
-| `harness-incident-learning` | Turn fixed failures and repeated patch chains into prevention. |
-| `harness-vision-gate` | Check original intent and abstraction fit before implementation and before review, merge, done, release, or handoff. |
-| `harness-readiness-dashboard` | Summarize gate, reviewer, evidence, patch-churn, progress, maturity, blocker, and gap status before review, release, handoff, or completion. |
-| `harness-change-narrative` | Explain a specific change for commits, PRs, handoffs, and release notes. |
-| `harness-knowledge-capture` | Decide whether durable memory is needed and record the smallest useful artifact. |
-| `harness-project-rules` | Decide whether source-backed Harness memory should become a project-level agent rule. |
-
-## Typical Flow
-
-```text
-Start work
-  -> harness-start-gate
-  -> harness-delegation-gate, when implementation subagents or independent review may reduce risk
-  -> harness-knowledge-retrieval
-  -> harness-spec-drift, when real cases contradict the current spec or acceptance criteria
-  -> harness-vision-gate, when intent or scope may drift before implementation
-  -> pre-work artifact, when Start Gate requires Feature, spec, plan, or ADR
-  -> implementation workflow
-  -> verification
-  -> harness-vision-gate, when deliverable-goal drift is possible
-  -> harness-readiness-dashboard, when a status rollup or blocker list is needed
-  -> harness-change-narrative, when the change needs explanation
-  -> harness-knowledge-capture, before completion or handoff
-  -> harness-project-rules, before editing AGENTS.md or project agent rules
-```
-
-Not every task needs every skill. The point is to choose the lightest workflow that preserves what future work will need.
-
-## Proposals
-
-- [Patch Churn 与归零审视：Harness Skill 迭代方案](proposals/2026-05-15-patch-churn-zero-base-review.md)
+历史 v1 的 12 个 Skill 已归档，不属于 vNext 运行时表面。

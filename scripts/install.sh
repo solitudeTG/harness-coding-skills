@@ -1,169 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-usage() {
-  cat <<'EOF'
-Usage: scripts/install.sh [--verify] [codex|claude|both]
-
-Installs Harness Skills into the selected agent skills directory.
-Hook examples are bundled under using-harness/hooks/ and are copied with the Skills.
-OpenCode uses the bundled opencode-plugin.example.ts as a plugin example rather
-than a dedicated skills-directory install target.
-
-Environment overrides:
-  HARNESS_CODEX_SKILLS_DIR   Override the Codex skills destination.
-  HARNESS_CLAUDE_SKILLS_DIR  Override the Claude Code skills destination.
-
-Examples:
-  bash scripts/install.sh codex
-  bash scripts/install.sh claude
-  bash scripts/install.sh both
-  bash scripts/install.sh --verify codex
-EOF
-}
-
-verify_only=0
+verify=0
 target="both"
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --verify)
-      verify_only=1
-      shift
-      ;;
-    -h|--help|help)
-      usage
-      exit 0
-      ;;
-    codex|claude|both)
-      target="$1"
-      shift
-      ;;
-    *)
-      usage >&2
-      exit 2
-      ;;
-  esac
-done
+[[ "${1:-}" == "--verify" ]] && { verify=1; shift; }
+[[ $# -gt 0 ]] && target="$1"
+[[ "$target" =~ ^(codex|claude|both)$ ]] || { echo "Usage: scripts/install.sh [--verify] [codex|claude|both]" >&2; exit 2; }
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+formal=(harness harness-intent harness-decision harness-learning harness-evidence harness-closeout)
+legacy=(using-harness harness-start-gate harness-delegation-gate harness-knowledge-retrieval harness-spec-drift harness-doc-lifecycle harness-incident-learning harness-vision-gate harness-readiness-dashboard harness-change-narrative harness-knowledge-capture harness-project-rules)
+resources=(harness/scripts/generate_index.py harness/scripts/knowledge_check.py harness/assets/templates/FEATURE.md harness/assets/templates/ADR.md harness/assets/templates/LESSON.md harness/assets/templates/EVIDENCE.md harness/assets/templates/CLOSEOUT_COMPACT.md)
 
-formal_skills=(
-  "using-harness"
-  "harness-start-gate"
-  "harness-delegation-gate"
-  "harness-knowledge-retrieval"
-  "harness-spec-drift"
-  "harness-doc-lifecycle"
-  "harness-incident-learning"
-  "harness-vision-gate"
-  "harness-readiness-dashboard"
-  "harness-change-narrative"
-  "harness-knowledge-capture"
-  "harness-project-rules"
-)
-
-required_bundled_resources=(
-  "using-harness/scripts/knowledge_check.py"
-  "using-harness/scripts/harness_closeout_check.py"
-  "using-harness/scripts/hook_diagnostics.py"
-  "using-harness/scripts/skill_metadata_check.py"
-  "using-harness/scripts/usage_record.py"
-  "using-harness/hooks/harness_hook.py"
-  "using-harness/assets/templates/AGENTS.md"
-)
-
-destination_for() {
-  case "$1" in
-    codex)
-      echo "${HARNESS_CODEX_SKILLS_DIR:-$HOME/.codex/skills}"
-      ;;
-    claude)
-      echo "${HARNESS_CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
-      ;;
-  esac
-}
-
-verify_installation() {
-  local destination="$1"
-  local label="$2"
-  local errors=0
-
-  if [[ ! -d "$destination" ]]; then
-    echo "Verification: failed for $label; destination does not exist: $destination" >&2
-    return 1
-  fi
-
-  for skill in "${formal_skills[@]}"; do
-    if [[ ! -f "$destination/$skill/SKILL.md" ]]; then
-      echo "Verification error: missing $skill/SKILL.md in $destination" >&2
-      errors=$((errors + 1))
-    fi
-  done
-
-  for resource in "${required_bundled_resources[@]}"; do
-    if [[ ! -f "$destination/$resource" ]]; then
-      echo "Verification error: missing bundled resource: $destination/$resource" >&2
-      errors=$((errors + 1))
-    fi
-  done
-
-  if [[ "$errors" -gt 0 ]]; then
-    echo "Verification: failed for $label with $errors error(s)." >&2
-    return 1
-  fi
-
+destination() { [[ "$1" == codex ]] && echo "${HARNESS_CODEX_SKILLS_DIR:-$HOME/.codex/skills}" || echo "${HARNESS_CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"; }
+check() {
+  local destination="$1" label="$2" errors=0
+  for skill in "${formal[@]}"; do [[ -f "$destination/$skill/SKILL.md" ]] || { echo "Verification error: missing $skill/SKILL.md" >&2; errors=$((errors+1)); }; done
+  for skill in "${legacy[@]}"; do [[ ! -e "$destination/$skill" ]] || { echo "Verification error: legacy Skill still exists: $skill" >&2; errors=$((errors+1)); }; done
+  for resource in "${resources[@]}"; do [[ -f "$destination/$resource" ]] || { echo "Verification error: missing resource: $resource" >&2; errors=$((errors+1)); }; done
+  [[ $errors -eq 0 ]] || return 1
   echo "Verification: passed for $label at $destination"
 }
-
-install_to() {
-  local destination="$1"
-  local label="$2"
-  mkdir -p "$destination"
-  cp -R "$repo_root"/skills/* "$destination"/
-  echo "Installed Harness skills to $destination"
-  verify_installation "$destination" "$label"
-}
-
-verify_to() {
-  local destination="$1"
-  local label="$2"
-  echo "Verify-only: no files were copied for $label."
-  verify_installation "$destination" "$label"
-}
-
-print_next_steps() {
-  cat <<'EOF'
-Restart your agent so it can reload Skill metadata.
-Use `using-harness` as the entrypoint after restart.
-Hooks are optional. To check Codex Stop hook runtime after hook setup, run:
-  python <skills-root>/using-harness/scripts/hook_diagnostics.py codex --project-root <project>
-EOF
-}
-
-case "$target" in
-  codex)
-    if [[ "$verify_only" -eq 1 ]]; then
-      verify_to "$(destination_for codex)" "Codex"
-    else
-      install_to "$(destination_for codex)" "Codex"
-    fi
-    ;;
-  claude)
-    if [[ "$verify_only" -eq 1 ]]; then
-      verify_to "$(destination_for claude)" "Claude Code"
-    else
-      install_to "$(destination_for claude)" "Claude Code"
-    fi
-    ;;
-  both)
-    if [[ "$verify_only" -eq 1 ]]; then
-      verify_to "$(destination_for codex)" "Codex"
-      verify_to "$(destination_for claude)" "Claude Code"
-    else
-      install_to "$(destination_for codex)" "Codex"
-      install_to "$(destination_for claude)" "Claude Code"
-    fi
-    ;;
-esac
-
-print_next_steps
+install() { local destination="$1" label="$2"; mkdir -p "$destination"; for skill in "${legacy[@]}"; do rm -rf "$destination/$skill"; done; cp -R "$repo_root/skills/." "$destination/"; check "$destination" "$label"; }
+for name in $( [[ "$target" == both ]] && echo "codex claude" || echo "$target" ); do dest="$(destination "$name")"; [[ $verify -eq 1 ]] && check "$dest" "$name" || install "$dest" "$name"; done
+echo "Restart the agent to reload Harness vNext metadata."

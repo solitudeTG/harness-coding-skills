@@ -5,143 +5,35 @@ param(
     [switch]$Verify
 )
 
-# Installs Skills only. Hook examples, including the OpenCode plugin example,
-# are bundled under using-harness/hooks/ and are copied with the Skills.
 $ErrorActionPreference = "Stop"
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+$FormalSkills = @("harness", "harness-intent", "harness-decision", "harness-learning", "harness-evidence", "harness-closeout")
+$LegacySkills = @("using-harness", "harness-start-gate", "harness-delegation-gate", "harness-knowledge-retrieval", "harness-spec-drift", "harness-doc-lifecycle", "harness-incident-learning", "harness-vision-gate", "harness-readiness-dashboard", "harness-change-narrative", "harness-knowledge-capture", "harness-project-rules")
+$RequiredResources = @("harness\scripts\generate_index.py", "harness\scripts\knowledge_check.py", "harness\assets\templates\FEATURE.md", "harness\assets\templates\ADR.md", "harness\assets\templates\LESSON.md", "harness\assets\templates\EVIDENCE.md", "harness\assets\templates\CLOSEOUT_COMPACT.md")
 
-$FormalSkills = @(
-    "using-harness",
-    "harness-start-gate",
-    "harness-delegation-gate",
-    "harness-knowledge-retrieval",
-    "harness-spec-drift",
-    "harness-doc-lifecycle",
-    "harness-incident-learning",
-    "harness-vision-gate",
-    "harness-readiness-dashboard",
-    "harness-change-narrative",
-    "harness-knowledge-capture",
-    "harness-project-rules"
-)
-
-$RequiredBundledResources = @(
-    "using-harness\scripts\knowledge_check.py",
-    "using-harness\scripts\harness_closeout_check.py",
-    "using-harness\scripts\hook_diagnostics.py",
-    "using-harness\scripts\skill_metadata_check.py",
-    "using-harness\scripts\usage_record.py",
-    "using-harness\hooks\harness_hook.py",
-    "using-harness\assets\templates\AGENTS.md"
-)
-
-function Get-HarnessDestination {
-    param([ValidateSet("codex", "claude")] [string]$Name)
-
-    if ($Name -eq "codex" -and $env:HARNESS_CODEX_SKILLS_DIR) {
-        return $env:HARNESS_CODEX_SKILLS_DIR
-    }
-    if ($Name -eq "claude" -and $env:HARNESS_CLAUDE_SKILLS_DIR) {
-        return $env:HARNESS_CLAUDE_SKILLS_DIR
-    }
-    if ($Name -eq "codex") {
-        return (Join-Path $HOME ".codex\skills")
-    }
-    return (Join-Path $HOME ".claude\skills")
+function Get-Destination([string]$Name) {
+    if ($Name -eq "codex") { return $(if ($env:HARNESS_CODEX_SKILLS_DIR) { $env:HARNESS_CODEX_SKILLS_DIR } else { Join-Path $HOME ".codex\skills" }) }
+    return $(if ($env:HARNESS_CLAUDE_SKILLS_DIR) { $env:HARNESS_CLAUDE_SKILLS_DIR } else { Join-Path $HOME ".claude\skills" })
 }
 
-function Test-HarnessInstall {
-    param(
-        [string]$Destination,
-        [string]$Label
-    )
-
-    $Errors = New-Object System.Collections.Generic.List[string]
-    if (-not (Test-Path $Destination)) {
-        $Errors.Add("destination does not exist: $Destination")
-    }
-
-    foreach ($Skill in $FormalSkills) {
-        $SkillFile = Join-Path $Destination (Join-Path $Skill "SKILL.md")
-        if (-not (Test-Path $SkillFile)) {
-            $Errors.Add("missing $Skill/SKILL.md in $Destination")
-        }
-    }
-
-    foreach ($Resource in $RequiredBundledResources) {
-        $Path = Join-Path $Destination $Resource
-        if (-not (Test-Path $Path)) {
-            $Errors.Add("missing bundled resource: $Path")
-        }
-    }
-
-    if ($Errors.Count -gt 0) {
-        foreach ($Message in $Errors) {
-            [Console]::Error.WriteLine("Verification error: $Message")
-        }
-        throw "Verification: failed for $Label with $($Errors.Count) error(s)."
-    }
-
+function Test-Install([string]$Destination, [string]$Label) {
+    $errors = [System.Collections.Generic.List[string]]::new()
+    foreach ($skill in $FormalSkills) { if (-not (Test-Path (Join-Path $Destination "$skill\SKILL.md"))) { $errors.Add("missing $skill/SKILL.md") } }
+    foreach ($skill in $LegacySkills) { if (Test-Path (Join-Path $Destination $skill)) { $errors.Add("legacy Skill still exists: $skill") } }
+    foreach ($resource in $RequiredResources) { if (-not (Test-Path (Join-Path $Destination $resource))) { $errors.Add("missing resource: $resource") } }
+    if ($errors.Count) { $errors | ForEach-Object { [Console]::Error.WriteLine("Verification error: $_") }; throw "Verification failed for $Label." }
     Write-Host "Verification: passed for $Label at $Destination"
 }
 
-function Install-HarnessSkills {
-    param(
-        [string]$Destination,
-        [string]$Label
-    )
-
+function Install([string]$Destination, [string]$Label) {
     New-Item -ItemType Directory -Force $Destination | Out-Null
+    foreach ($skill in $LegacySkills) { $target = Join-Path $Destination $skill; if (Test-Path $target) { Remove-Item -LiteralPath $target -Recurse -Force } }
     Copy-Item (Join-Path $RepoRoot "skills\*") $Destination -Recurse -Force
-    Write-Host "Installed Harness skills to $Destination"
-    Test-HarnessInstall $Destination $Label
+    Test-Install $Destination $Label
 }
 
-function Invoke-HarnessVerify {
-    param(
-        [string]$Destination,
-        [string]$Label
-    )
-
-    Write-Host "Verify-only: no files were copied for $Label."
-    Test-HarnessInstall $Destination $Label
+foreach ($name in $(if ($Target -eq "both") { @("codex", "claude") } else { @($Target) })) {
+    $destination = Get-Destination $name
+    if ($Verify) { Test-Install $destination $name } else { Install $destination $name }
 }
-
-function Write-HarnessNextSteps {
-    Write-Host "Restart your agent so it can reload Skill metadata."
-    Write-Host "Use ``using-harness`` as the entrypoint after restart."
-    Write-Host "Hooks are optional. To check Codex Stop hook runtime after hook setup, run:"
-    Write-Host "  python <skills-root>/using-harness/scripts/hook_diagnostics.py codex --project-root <project>"
-}
-
-switch ($Target) {
-    "codex" {
-        $Destination = Get-HarnessDestination "codex"
-        if ($Verify) {
-            Invoke-HarnessVerify $Destination "Codex"
-        } else {
-            Install-HarnessSkills $Destination "Codex"
-        }
-    }
-    "claude" {
-        $Destination = Get-HarnessDestination "claude"
-        if ($Verify) {
-            Invoke-HarnessVerify $Destination "Claude Code"
-        } else {
-            Install-HarnessSkills $Destination "Claude Code"
-        }
-    }
-    "both" {
-        $CodexDestination = Get-HarnessDestination "codex"
-        $ClaudeDestination = Get-HarnessDestination "claude"
-        if ($Verify) {
-            Invoke-HarnessVerify $CodexDestination "Codex"
-            Invoke-HarnessVerify $ClaudeDestination "Claude Code"
-        } else {
-            Install-HarnessSkills $CodexDestination "Codex"
-            Install-HarnessSkills $ClaudeDestination "Claude Code"
-        }
-    }
-}
-
-Write-HarnessNextSteps
+Write-Host "Restart the agent to reload Harness vNext metadata. Use 'harness' to read the engineering Index when task context matters; event Skills trigger only when their event occurs."

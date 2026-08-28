@@ -2,7 +2,7 @@
 id: EV-001
 doc_kind: evidence
 scope: project
-feature_refs: [docs/features/F001-ai-coding-harness.md]
+feature_refs: [docs/features/F001-harness.md]
 created: 2026-05-09
 ---
 
@@ -20,7 +20,7 @@ Expected result: zero errors and zero warnings.
 
 ## Artifacts
 
-- Feature: `docs/features/F001-ai-coding-harness.md`
+- Feature: `docs/features/F001-harness.md`
 - ADR: `docs/decisions/ADR-001-markdown-as-source-of-truth.md`
 - Lesson: `docs/lessons/LL-001-evidence-before-completion.md`
 
