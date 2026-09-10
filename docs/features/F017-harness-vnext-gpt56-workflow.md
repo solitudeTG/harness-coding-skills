@@ -96,6 +96,7 @@ GPT-5.6 已具备常规任务拆分、验证选择与协作判断能力；当前
 - [EV-025 vNext 初始实现验证](../evidence/EV-025-harness-vnext-initial-implementation.md)
 - [EV-026 主 Agent 选择的统一工程 Index 实现验证](../evidence/EV-026-agent-selected-engineering-index-implementation.md)
 - [EV-027 Feature 交互意图实现验证](../evidence/EV-027-feature-interaction-intent-implementation.md)
+- [EV-028 vNext 同构同步验证](../evidence/EV-028-vnext-isomorphic-sync.md)
 
 ### Related Features
 
