@@ -59,15 +59,17 @@ It records facts only when they can affect future judgment, and retrieves only a
 ## How it works
 
 ```text
-Development task + known changed paths
+Task semantics (which may include known changed paths)
         │
         ▼
 Read one unified engineering Index
         │
         ├── Feature: goal, boundary, specification, acceptance
-        ├── ADR: design choice and rejected alternatives
-        ├── Lesson: real failure and prevention
-        └── Evidence: verification facts, scope, limitations
+        └── ADR: design choice and rejected alternatives
+        │
+        └── After reading a selected document, read linked material when needed:
+            Lesson: real failure and prevention
+            Evidence: verification facts, scope, limitations
         │
         ▼
 The model plans, implements, tests, and collaborates normally
@@ -110,10 +112,19 @@ In Harness, a **Feature is the feature-level SDD spec**. It contains:
 - Goal: the user or business outcome;
 - Scope: scope and explicit non-goals;
 - Specification: behavior, rules, constraints, interfaces, and failure behavior;
+- For a Feature that changes a user's task flow, understanding of state, or consequential action, Specification can also carry conditional `Interaction Intent`;
 - Acceptance: verifiable Given / When / Then scenarios;
 - Current State: current implementation and verification state;
 - Decision Context: historical tradeoffs needed before changing the feature;
 - Links: related ADRs, Lessons, Evidence, and external specifications.
+
+`Interaction Intent` is neither a component library nor a visual design specification. It is used only where the user journey affects delivery, and records three things:
+
+- User Goal and Context: who enters the flow, in which situation, and to accomplish what;
+- Primary Journey: trigger, understanding, action, system feedback, and the next step after completion;
+- Critical States and Guardrails: empty, failure, permission, or irreversible states that change user decisions, and the protection the system must provide.
+
+It is not a UX form for every Feature. It prevents a result where APIs, screens, and tests are complete but the user still cannot understand how to finish the task. Backend-only work, mechanical local changes, and visual polish do not require it.
 
 If a team also uses OpenSpec, Superpowers, or another specification tool, link its artifacts from the Feature. Harness remains independently usable without them.
 
@@ -152,7 +163,7 @@ When test-first is unsuitable—for example, experience evaluation, an external 
 | `harness-decision` | Records a durable tradeoff for future work | A decision establishes an architecture, module, interface, cost, or risk boundary |
 | `harness-learning` | Turns repeated failures into actionable prevention | Specification drift, regression, or repeat failure genuinely occurs |
 | `harness-evidence` | Binds an important claim to verifiable facts | A completion, release, handoff, or significant judgment needs proof |
-| `harness-closeout` | Compresses the facts known in the current task | Pausing, handing off, or ending work |
+| `harness-closeout` | Compresses the facts known in the current task | Pausing, handing off, or preserving recoverable state |
 
 They are not a mandatory sequence.
 
@@ -250,7 +261,7 @@ Known affected paths:
 Harness performs one bounded retrieval:
 
 ```text
-Known paths
+Task semantics (which may include known paths)
   → read the unified Index
   → the main agent semantically selects 0–3 relevant Features and needed ADRs
   → read directly linked Lessons / Evidence only when needed
@@ -313,12 +324,12 @@ python scripts\knowledge_check.py --root . --docs-path docs --strict
 Run tests:
 
 ```powershell
-pytest -q
+python -m pytest -q
 ```
 
 ---
 
-## Design evolution: why the new architecture orchestrates less
+## What the iterations taught us
 
 Earlier AI-coding frameworks often used layered gates, prescribed subflows, and large rule sets to compensate for models that struggled to decompose tasks, choose verification, and retain context.
 
@@ -340,6 +351,14 @@ Harness therefore chooses to:
 > Trust capable models with ordinary reasoning and execution.<br>
 > Concentrate engineering constraints on facts that models cannot retain by themselves but future evolution depends on.
 
+### When AI can build the whole stack, interaction logic cannot stay only in chat
+
+AI can now implement databases, APIs, permissions, interfaces, and tests in one task. That lowers the cost of full-stack delivery, but makes a different failure easier to miss: the logic, screens, and tests are correct while users still do not know where to start, what to do after a failure, or why the system shows a state.
+
+This does not require a high-fidelity prototype for every change. Components, layouts, visual tokens, and copy still belong to the design system or implementation stage. The Feature should retain only interaction facts that code cannot stably derive: why a user enters, how they understand and complete the primary journey, and how the system protects them around failure, empty, permission, or high-risk states.
+
+Harness therefore makes `Interaction Intent` a conditional Feature specification rather than a default UI Gate, a separate document type, or a seventh Skill. It remains linked to the Feature's Goal, Acceptance, ADRs, and Evidence without adding hot-path cost to work with no user-visible flow. See [ADR-012](docs/decisions/ADR-012-feature-interaction-intent.md).
+
 ---
 
 ## Project status
@@ -358,6 +377,7 @@ Harness therefore chooses to:
 - [Engineering Index](docs/INDEX.md)
 - [Architecture Feature](docs/features/F017-harness-vnext-gpt56-workflow.md)
 - [Architecture ADR](docs/decisions/ADR-010-harness-vnext-event-triggered-memory-layer.md)
+- [Feature interaction intent ADR](docs/decisions/ADR-012-feature-interaction-intent.md)
 
 ---
 
