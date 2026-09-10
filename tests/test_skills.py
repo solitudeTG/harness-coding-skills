@@ -12,7 +12,11 @@ SKILLS = {"harness", "harness-intent", "harness-decision", "harness-learning", "
 
 class SkillSurfaceTests(unittest.TestCase):
     def test_only_six_vnext_skills_exist(self) -> None:
-        found = {path.name for path in (REPO_ROOT / "skills").iterdir() if path.is_dir()}
+        found = {
+            path.name
+            for path in (REPO_ROOT / "skills").iterdir()
+            if path.is_dir() and (path / "SKILL.md").is_file()
+        }
         self.assertEqual(SKILLS, found)
 
     def test_metadata_check_passes(self) -> None:
@@ -24,4 +28,13 @@ class SkillSurfaceTests(unittest.TestCase):
         self.assertIn("docs/INDEX.md", content)
         self.assertIn("zero to three Feature", content)
         self.assertIn("Do not invoke a Start Gate", content)
+        self.assertIn("Interaction Intent", content)
+        self.assertIn("never a standalone artifact or a default Gate", content)
         self.assertNotIn("context.py", content)
+
+    def test_feature_template_has_compact_optional_interaction_contract(self) -> None:
+        content = (REPO_ROOT / "skills" / "harness" / "assets" / "templates" / "FEATURE.md").read_text(encoding="utf-8")
+        self.assertIn("### Interaction Intent", content)
+        self.assertIn("#### User Goal and Context", content)
+        self.assertIn("#### Primary Journey", content)
+        self.assertIn("#### Critical States and Guardrails", content)
